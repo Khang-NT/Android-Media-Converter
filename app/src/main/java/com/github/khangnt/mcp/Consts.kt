@@ -8,3 +8,5 @@ package com.github.khangnt.mcp
 const val DEFAULT_CONNECTION_TIMEOUT = 30000
 const val DEFAULT_IO_TIMEOUT = 30000
 const val DEFAULT_IO_BUFFER_LENGTH = 4 * 1024
+
+const val ID_UNSET = -1L

@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp
+package com.github.khangnt.mcp.exception
 
 import java.io.IOException
 

@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.job
 
 import com.github.khangnt.mcp.annotation.JobStatus
+import io.reactivex.Flowable
 import io.reactivex.Observable
 
 /**
@@ -9,14 +10,14 @@ import io.reactivex.Observable
  */
 
 interface JobManager {
-    fun recordWriting(byteCount: Long)
-    fun getWritingSpeed(): Observable<Long>
+    fun recordWriting(byteCount: Int)
+    fun getWritingSpeed(): Observable<Int>
 
-    fun addJob(job: Job)
-    fun cancelJob(job: Job)
-    fun nextJobIfAny(): Job?
-    fun updateJobStatus(job: Job, @JobStatus status: Long, statusDetail: String? = null)
+    fun addJob(job: Job): Job
+    fun deleteJob(job: Job)
+    fun nextJobToRun(): Job?
+    fun updateJobStatus(job: Job, @JobStatus status: Int, statusDetail: String? = null): Job
 
-    fun getRunningJob(@JobStatus vararg jobStatus: Long): Observable<List<Job>>
+    fun getJob(@JobStatus vararg jobStatus: Int): Flowable<List<Job>>
 }
 

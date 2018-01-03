@@ -10,7 +10,22 @@ import com.github.khangnt.mcp.annotation.JobStatus
 data class Job(
         val id: Long,
         val title: String,
-        @JobStatus val status: Long,
+        @JobStatus val status: Int,
         val statusDetail: String?,
         val command: Command
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Job
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}

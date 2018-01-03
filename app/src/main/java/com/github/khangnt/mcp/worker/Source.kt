@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
-import com.github.khangnt.mcp.HttpResponseCodeException
+import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import com.github.khangnt.mcp.MainApplication
 import okhttp3.OkHttpClient
 import okhttp3.Request

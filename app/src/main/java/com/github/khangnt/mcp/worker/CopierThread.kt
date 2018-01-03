@@ -1,7 +1,7 @@
 package com.github.khangnt.mcp.worker
 
-import com.github.khangnt.mcp.catchAll
-import com.github.khangnt.mcp.copyAndClose
+import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.copyAndClose
 
 /**
  * Created by Khang NT on 1/1/18.

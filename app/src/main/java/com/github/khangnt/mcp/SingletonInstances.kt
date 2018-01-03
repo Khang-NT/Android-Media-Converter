@@ -1,6 +1,8 @@
 package com.github.khangnt.mcp
 
 import android.content.Context
+import com.github.khangnt.mcp.db.JobDb
+import com.github.khangnt.mcp.db.MainSqliteOpenHelper
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -36,7 +38,10 @@ class SingletonInstances(val appContext: Context) {
                 .build()
     }
 
+    private val mainSqliteOpenHelperLazy by lazy { MainSqliteOpenHelper(appContext) }
+    private val jobDatabaseLazy by lazy { JobDb(mainSqliteOpenHelperLazy) }
 
     fun getOkHttpClient(): OkHttpClient = okHttpClientLazy
 
+    fun getJobDatabase(): JobDb = jobDatabaseLazy
 }

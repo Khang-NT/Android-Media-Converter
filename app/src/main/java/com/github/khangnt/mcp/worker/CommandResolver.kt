@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
 import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
-import com.github.khangnt.mcp.catchAll
+import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.job.Command
 import java.io.File
 import java.lang.StringBuilder
