@@ -6,6 +6,8 @@ import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
+import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.closeQuietly
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.Closeable
@@ -18,6 +20,18 @@ import java.net.Socket
  * Created by Khang NT on 1/1/18.
  * Email: khang.neon.1997@gmail.com
  */
+
+object Sources {
+    fun from(inputStream: InputStream): SourceInputStream {
+        return object : SourceInputStream {
+            override fun openInputStream(): InputStream = inputStream
+
+            override fun close() {
+                inputStream.closeQuietly()
+            }
+        }
+    }
+}
 
 interface SourceInputStream : Closeable {
     fun openInputStream(): InputStream
@@ -65,7 +79,7 @@ class SocketSourceOutput(
     override fun openOutputStream(): OutputStream = outputStream
 
     override fun close() {
-        socket.close()
+        catchAll { socket.close() }
     }
 }
 
@@ -93,7 +107,7 @@ class HttpSourceInput(
 
     override fun close() {
         if (requestCalled) {
-            response.close()
+            response.closeQuietly()
         }
     }
 

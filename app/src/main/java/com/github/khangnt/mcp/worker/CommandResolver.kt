@@ -4,8 +4,8 @@ import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
 import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
-import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.job.Command
+import com.github.khangnt.mcp.util.catchAll
 import java.io.File
 import java.lang.StringBuilder
 import java.net.InetSocketAddress
@@ -31,6 +31,7 @@ data class TcpInput(val sourceInput: SourceInputStream, val address: InetSocketA
 data class CommandResolver(
         val command: Command,
         val execCommand: String,
+        val environmentVars: Array<out String>,
         val tcpInputs: List<TcpInput>,
         val sourceOutput: SourceOutputStream
 ) {
@@ -68,7 +69,12 @@ data class CommandResolver(
             val sourceOutput = ContentResolverSource(context, Uri.parse(command.output))
             execCommandBuilder.append(" -f ${command.outputFormat} pipe:1")
 
-            return CommandResolver(command, execCommandBuilder.toString(),
+            val varNames = command.environmentVars.keys.toList()
+            val environmentVars = Array(varNames.size, { index ->
+                "${varNames[index]}=${command.environmentVars[varNames[index]]}"
+            })
+
+            return CommandResolver(command, execCommandBuilder.toString(), environmentVars,
                     Collections.unmodifiableList(tcpInputs), sourceOutput)
         }
 
