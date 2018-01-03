@@ -4,8 +4,8 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
-import com.github.khangnt.mcp.MainApplication
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.Closeable
@@ -70,8 +70,8 @@ class SocketSourceOutput(
 }
 
 class HttpSourceInput(
-        val request: Request,
-        private val okHttpClient: OkHttpClient = MainApplication.singletonInstances.getOkHttpClient()
+        private val request: Request,
+        private val okHttpClient: OkHttpClient = SingletonInstances.getOkHttpClient()
 ): SourceInputStream {
     constructor(url: String) : this(Request.Builder().url(url).build())
 

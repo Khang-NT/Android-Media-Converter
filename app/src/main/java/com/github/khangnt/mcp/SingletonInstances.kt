@@ -3,6 +3,8 @@ package com.github.khangnt.mcp
 import android.content.Context
 import com.github.khangnt.mcp.db.JobDb
 import com.github.khangnt.mcp.db.MainSqliteOpenHelper
+import com.github.khangnt.mcp.job.DefaultJobManager
+import com.github.khangnt.mcp.job.JobManager
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,9 +18,25 @@ import java.util.concurrent.TimeUnit
  * Email: khang.neon.1997@gmail.com
  */
 
-class SingletonInstances(val appContext: Context) {
+class SingletonInstances private constructor(appContext: Context) {
     companion object {
-        const val CACHE_SIZE = 20 * 1024 * 1024L     //20MB
+        private const val CACHE_SIZE = 20 * 1024 * 1024L     //20MB
+
+        private lateinit var INSTANCE: SingletonInstances
+        private var initialized = false
+
+        fun init(context: Context) {
+            check(!initialized, { "Only init once" })
+            INSTANCE = SingletonInstances(context.applicationContext)
+            initialized = true
+        }
+
+        fun isInitialized() = initialized
+
+        fun getOkHttpClient(): OkHttpClient = INSTANCE.okHttpClientLazy
+
+        fun getJobManager(): JobManager = INSTANCE.jobManagerLazy
+
     }
 
     private val mainCacheLazy by lazy {
@@ -39,9 +57,9 @@ class SingletonInstances(val appContext: Context) {
     }
 
     private val mainSqliteOpenHelperLazy by lazy { MainSqliteOpenHelper(appContext) }
+
     private val jobDatabaseLazy by lazy { JobDb(mainSqliteOpenHelperLazy) }
 
-    fun getOkHttpClient(): OkHttpClient = okHttpClientLazy
+    private val jobManagerLazy by lazy { DefaultJobManager(jobDatabaseLazy) }
 
-    fun getJobDatabase(): JobDb = jobDatabaseLazy
 }
