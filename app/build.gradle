@@ -20,6 +20,76 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    final _versionCode = 1
+
+    flavorDimensions 'cpuArch'
+    productFlavors {
+        arm {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'armeabi'
+            }
+
+            versionCode 0 + _versionCode
+            versionNameSuffix "-arm"
+        }
+        arm7 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'armeabi-v7a'
+            }
+
+            versionCode 10000 + _versionCode
+            versionNameSuffix "-arm7"
+        }
+        arm8 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilters 'arm64-v8a'
+            }
+
+            versionCode 20000 + _versionCode
+            versionNameSuffix "-arm8"
+        }
+        x86 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'x86'
+            }
+
+            versionCode 30000 + _versionCode
+            versionNameSuffix "-x86"
+        }
+        x86_64 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'x86_64'
+            }
+
+            versionCode 40000 + _versionCode
+            versionNameSuffix "-x86_64"
+        }
+        mips {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'mips'
+            }
+
+            versionCode 50000 + _versionCode
+            versionNameSuffix "-mips"
+        }
+        mips64 {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'mips64'
+            }
+
+            versionCode 60000 + _versionCode
+            versionNameSuffix "-mips64"
+        }
+    }
+
 }
 
 dependencies {
