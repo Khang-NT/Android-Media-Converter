@@ -1,7 +1,8 @@
 package com.github.khangnt.mcp.worker
 
-import com.github.khangnt.mcp.util.catchAll
-import com.github.khangnt.mcp.util.copyAndClose
+import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
+import com.github.khangnt.mcp.util.closeQuietly
+import com.github.khangnt.mcp.util.copy
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -11,21 +12,24 @@ import com.github.khangnt.mcp.util.copyAndClose
 class CopierThread(
         private val sourceInput: SourceInputStream,
         private val sourceOutput: SourceOutputStream,
-        private val bufferSize: Int,
-        private val progress: (Int) -> Unit,
+        private val bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH,
+        private val onCopied: (Int) -> Unit,
         private val onError: (Throwable) -> Unit
-): Thread() {
+) : Thread() {
 
     override fun run() {
         try {
-            copyAndClose(sourceInput.openInputStream(), sourceOutput.openOutputStream(),
-                    ByteArray(bufferSize), progress)
+            sourceInput.openInputStream().use { input ->
+                sourceOutput.openOutputStream().use { output ->
+                    copy(input, output, bufferLength, onCopied)
+                }
+            }
         } catch (anyError: Throwable) {
             onError(anyError)
         } finally {
-            // ignore error while closing sources
-            catchAll { sourceInput.close() }
-            catchAll { sourceOutput.close() }
+            // close sources
+            sourceInput.closeQuietly()
+            sourceOutput.closeQuietly()
         }
     }
 

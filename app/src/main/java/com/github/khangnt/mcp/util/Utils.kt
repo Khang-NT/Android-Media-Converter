@@ -1,9 +1,11 @@
 package com.github.khangnt.mcp.util
 
+import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.Closeable
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -12,6 +14,10 @@ import java.io.OutputStream
  * Email: khang.neon.1997@gmail.com
  */
 
+// close and catch all error, different with .use extension
+fun Closeable?.closeQuietly() {
+    catchAll { this?.close() }
+}
 
 inline fun catchAll(printLog: Boolean = false, action: () -> Unit) {
     try {
@@ -21,15 +27,17 @@ inline fun catchAll(printLog: Boolean = false, action: () -> Unit) {
     }
 }
 
-inline fun copyAndClose(input: InputStream, output: OutputStream, buffer: ByteArray, progress: (Int) -> Unit) {
+inline fun copy(
+        input: InputStream,
+        output: OutputStream,
+        bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH,
+        onCopied: (Int) -> Unit
+) {
+    val buffer = ByteArray(bufferLength)
     var readLength = 0
-    input.use {
-        output.use {
-            while (input.read(buffer).apply { readLength = this } > 0) {
-                output.write(buffer, 0, readLength)
-                progress(readLength)
-            }
-        }
+    while (input.read(buffer).apply { readLength = this } > 0) {
+        output.write(buffer, 0, readLength)
+        onCopied(readLength)
     }
 }
 
