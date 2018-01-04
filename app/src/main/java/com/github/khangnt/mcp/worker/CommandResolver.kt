@@ -8,6 +8,7 @@ import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
 import java.io.File
 import java.lang.StringBuilder
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.util.*
@@ -21,7 +22,7 @@ data class TcpInput(val sourceInput: SourceInputStream, val address: InetSocketA
     companion object {
         fun findFreeServerAddress(): InetSocketAddress {
             val serverSocket = ServerSocket(0)
-            val address = InetSocketAddress(serverSocket.inetAddress, serverSocket.localPort)
+            val address = InetSocketAddress(InetAddress.getLocalHost(), serverSocket.localPort)
             catchAll { serverSocket.close() }
             return address
         }
