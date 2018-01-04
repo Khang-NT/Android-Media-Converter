@@ -19,8 +19,9 @@ class CopierThread(
 
     override fun run() {
         try {
-            sourceInput.openInputStream().use { input ->
-                sourceOutput.openOutputStream().use { output ->
+            // should open source output first
+            sourceOutput.openOutputStream().use { output ->
+                sourceInput.openInputStream().use { input ->
                     copy(input, output, bufferLength, onCopied)
                 }
             }
