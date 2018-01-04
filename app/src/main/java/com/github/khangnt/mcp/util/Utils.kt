@@ -61,9 +61,9 @@ fun <T> Observable<T>.ignoreError(printLog: Boolean = false): Observable<T> =
 
 fun Int.toConverterSpeed(): String =
         when {
-            this < KB -> "${this}B"
-            this < MB -> "${this / KB}KB"
-            else -> "${this / MB}MB"
+            this < KB -> "${this}B/s"
+            this < MB -> "${this / KB}KB/s"
+            else -> "${this / MB}MB/s"
         }
 
 fun String.toJsonOrNull(): JSONObject? {

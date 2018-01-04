@@ -205,7 +205,7 @@ class ConverterService : Service() {
             ADD_JOB_MESSAGE, CANCEL_JOB_MESSAGE -> {
                 // pass it to Job Handler
                 jobHandler.resetNoJobTimes()
-                jobHandler.sendMessage(message)
+                jobHandler.sendMessage(Message().apply { copyFrom(message) })
                 // cancel any stop Message
                 mainHandler.removeMessages(STOP_SERVICE_MESSAGE)
             }
@@ -255,9 +255,10 @@ class ConverterService : Service() {
                         resetNoJobTimes()
                         runOnMainThread { goToForeground() }
 
+                        currentJob = jobManager.updateJobStatus(nextJob, JobStatus.RUNNING)
                         workerThread = JobWorkerThread(
                                 appContext = applicationContext,
-                                job = nextJob,
+                                job = currentJob!!,
                                 jobManager = jobManager,
                                 onCompleteListener = {
                                     // maybe show notification
@@ -268,8 +269,7 @@ class ConverterService : Service() {
                                     loop()
                                 }
                         ).apply {
-                            currentJob = nextJob
-                            start() // start worker thread
+                            this.start() // start worker thread
                         }
                     } else {
                         // no job found
