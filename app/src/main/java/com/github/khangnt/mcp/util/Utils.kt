@@ -1,6 +1,8 @@
 package com.github.khangnt.mcp.util
 
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
+import com.github.khangnt.mcp.KB
+import com.github.khangnt.mcp.MB
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -47,7 +49,7 @@ fun JSONArray.toListString(): List<String> {
 
 fun JSONObject.toMapString(): Map<String, String> {
     val res = mutableMapOf<String, String>()
-    this.keys().forEach { res.put(it, this.getString(it)) }
+    this.keys().forEach { res.put(it, this.opt(it).toString()) }
     return res
 }
 
@@ -56,3 +58,15 @@ fun <T> Observable<T>.ignoreError(printLog: Boolean = false): Observable<T> =
             if (printLog) Timber.d(error)
             Observable.empty<T>()
         }
+
+fun Int.toConverterSpeed(): String =
+        when {
+            this < KB -> "${this}B"
+            this < MB -> "${this / KB}KB"
+            else -> "${this / MB}MB"
+        }
+
+fun String.toJsonOrNull(): JSONObject? {
+    catchAll { return JSONObject(this) }
+    return null
+}

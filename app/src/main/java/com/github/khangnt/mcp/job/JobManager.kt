@@ -15,6 +15,7 @@ interface JobManager {
 
     fun addJob(job: Job): Job
     fun deleteJob(job: Job)
+    fun deleteJob(jobId: Long)
     fun nextJobToRun(): Job?
     fun updateJobStatus(job: Job, @JobStatus status: Int, statusDetail: String? = null): Job
 

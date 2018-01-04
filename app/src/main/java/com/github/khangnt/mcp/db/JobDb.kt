@@ -75,7 +75,7 @@ class JobDb(private val sqLiteOpenHelper: SQLiteOpenHelper) {
 
     fun deleteJob(job: Job): Int = deleteJob(job.id)
 
-    private fun deleteJob(id: Long): Int {
+    fun deleteJob(id: Long): Int {
         sqLiteOpenHelper.writableDatabase.use { db ->
             return db.delete(JobTable.NAME, "$C_ID == ?", arrayOf(id.toString()))
         }

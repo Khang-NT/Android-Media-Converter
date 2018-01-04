@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp
 
 import android.app.Application
+import timber.log.Timber
 
 /**
  * Created by Khang NT on 1/2/18.
@@ -13,6 +14,10 @@ class MainApplication: Application() {
         super.onCreate()
 
         SingletonInstances.init(this)
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
 }
