@@ -2,14 +2,14 @@ package com.github.khangnt.mcp.job
 
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.db.JobDb
-import com.github.khangnt.mcp.util.PausableThreadPoolExecutor
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.ignoreError
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
 
 /**
@@ -34,20 +34,10 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
     )
 
-    private val dbCommandExecutorQueue: PausableThreadPoolExecutor
-
     private val writingSpeedInOneSecond = intArrayOf(0, 0, 0, 0)
     private val writingSpeedSubject = BehaviorSubject.create<Int>()
     private var pos: Int = 0
     private var timerRunning = false
-
-    init {
-        val threadFactory = ThreadFactory { Thread("JobManagerDbThread") }
-        dbCommandExecutorQueue = PausableThreadPoolExecutor.newSingleThreadExecutor(threadFactory)
-        dbCommandExecutorQueue.setKeepAliveTime(60, TimeUnit.SECONDS)
-        dbCommandExecutorQueue.allowCoreThreadTimeOut(true)
-        dbCommandExecutorQueue.pause() // pause until load db to memory complete
-    }
 
     private fun writingSpeedOneSecond(): Int {
         return writingSpeedInOneSecond[0] + writingSpeedInOneSecond[1] +
@@ -122,7 +112,7 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             }
             if (removed) {
                 runOnDbThread {
-                    jobDb.deleteJob(jobId)
+                    catchAll { jobDb.deleteJob(jobId) }
                 }
             }
         }
@@ -178,7 +168,7 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
     }
 
     private fun runOnDbThread(command: () -> Unit) {
-        dbCommandExecutorQueue.submit(command)
+        Completable.fromAction(command).subscribeOn(Schedulers.single()).subscribe()
     }
 
     private fun loadJobToMemoryIfNeeded() {
@@ -186,7 +176,6 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             if (!loadJobToMemory) {
                 jobDb.getAllJob().forEach { mapJobList[it.status]!!.add(it) }
                 loadJobToMemory = true
-                dbCommandExecutorQueue.resume()
                 notifyJobListChanged(JobStatus.RUNNING, JobStatus.PENDING, JobStatus.COMPLETED, JobStatus.FAILED)
             }
         }
