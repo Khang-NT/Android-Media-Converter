@@ -39,14 +39,16 @@ class JobWorkerThread(
             onError(resolveCommandError, "Resolve command failed: ${resolveCommandError.message}")
             return
         }
-        Timber.d("Command resolved: ${commandResolver.execCommand}\n" +
-                "${commandResolver.environmentVars}")
 
         val process = try {
             startProcess(commandResolver)
+                    .also { Thread.sleep(500) } // delay a bit for process initializing
         } catch (securityException: SecurityException) {
             onError(securityException, "Security error when start " +
                     "FFmpeg process: ${securityException.message}")
+            return
+        } catch (interruptException: InterruptedException) {
+            onError(interruptException, "Job was canceled")
             return
         } catch (startProcessError: Throwable) {
             onError(startProcessError, "Start FFmpeg failed: ${startProcessError.message}")
@@ -134,8 +136,17 @@ class JobWorkerThread(
         onCompleteListener(job)
     }
 
-    private fun startProcess(commandResolver: CommandResolver): Process =
-            Runtime.getRuntime().exec(commandResolver.execCommand, commandResolver.environmentVars)
+    private fun startProcess(commandResolver: CommandResolver): Process {
+        val cmdArray = listOf(
+                "sh", "-c",
+                commandResolver.execCommand
+        )
+        return ProcessBuilder()
+                .apply { environment().putAll(commandResolver.command.environmentVars) }
+                .command(cmdArray)
+                .start()
+    }
+
 
     private fun interruptThreads(threads: List<Thread>, wait: Boolean = false) {
         threads.forEach {

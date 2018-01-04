@@ -52,7 +52,7 @@ class ContentResolverSource(
         if (uri.scheme != ContentResolver.SCHEME_CONTENT
                 && uri.scheme != ContentResolver.SCHEME_FILE) {
             throw IllegalArgumentException("Only accept scheme '${ContentResolver.SCHEME_CONTENT}'" +
-                    "and '${ContentResolver.SCHEME_FILE}'")
+                    "and '${ContentResolver.SCHEME_FILE}' but found ${uri.scheme}")
         }
     }
 
