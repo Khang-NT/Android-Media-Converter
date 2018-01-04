@@ -9,10 +9,12 @@ import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.closeQuietly
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.reflect.Field
 
 /**
  * Created by Khang NT on 1/3/18.
@@ -26,12 +28,25 @@ class JobWorkerThread(
         private val onCompleteListener: (Job) -> Unit,
         private val onErrorListener: (Job, Throwable?) -> Unit
 ) : Thread() {
+    companion object {
+        private var unixProcessPidField: Field? = null
+        private fun getPid(process: Process): Int? {
+            return try {
+                val field = process.javaClass.getDeclaredField("pid")
+                field.isAccessible = true
+                field?.getInt(process)
+            } catch (ignore: Throwable) {
+                null
+            }
+        }
+    }
 
     private val lock = Any()
     private var hasError = false
-    private var processCompleted = false
 
     override fun run() {
+        Timber.d("Start working on job: ${job.title}")
+
         val ffmpegPath = File(appContext.applicationInfo.nativeLibraryDir, FFMPEG_FILE)
         val commandResolver = try {
             CommandResolver.resolve(appContext, job.command, ffmpegPath)
@@ -64,7 +79,7 @@ class JobWorkerThread(
                 sourceOutput = commandResolver.sourceOutput,
                 onCopied = jobManager::recordWriting,
                 onError = { throwable ->
-                    if (!hasError && !isInterrupted && !processCompleted) {
+                    if (!hasError && !isInterrupted) {
                         // this is root cause error
                         onError(throwable, "Error when write output: ${throwable.message}")
                         interrupt()
@@ -84,7 +99,7 @@ class JobWorkerThread(
                     sourceOutput = socketOutput,
                     onCopied = {},
                     onError = { throwable ->
-                        if (!hasError && !isInterrupted && !processCompleted) {
+                        if (!hasError && !isInterrupted) {
                             // this is root cause
                             onError(throwable, "Error when handle input: ${throwable.message}")
                             interrupt()
@@ -106,7 +121,7 @@ class JobWorkerThread(
 
         // wait process complete
         val exitCode = try {
-            process.waitFor().apply { processCompleted = true }
+            process.waitFor()
         } catch (interruptException: InterruptedException) {
             // 1. Maybe this thread is interrupted by parent thread
             // 2. Maybe this thread is interrupted by one of copier thread
@@ -115,7 +130,16 @@ class JobWorkerThread(
                 onError(interruptException, "Job was canceled")
             }
             // shutdown process
-            catchAll { process.destroy() }
+            catchAll {
+                process.inputStream.closeQuietly()
+                process.outputStream.closeQuietly()
+                process.errorStream.closeQuietly()
+                getPid(process)?.let { pid ->
+                    Timber.d("Kill pid: $pid")
+                    android.os.Process.killProcess(pid)
+                }
+                process.destroy()
+            }
             // shutdown copier thread as well
             interruptThreads(copierThreads, wait = false)
             return
