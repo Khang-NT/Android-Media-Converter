@@ -6,4 +6,6 @@
     <color name="backgroundColor">#ffffff</color>
 
     <color name="ic_launcher_background">#F8F8F8</color>
+
+    <color name="screen_overlay">#CCFFFFFF</color>
 </resources>

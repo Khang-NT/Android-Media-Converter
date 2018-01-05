@@ -19,7 +19,7 @@ import timber.log.Timber
  */
 
 abstract class BaseFragment : Fragment() {
-    private val lifecycleProvider = LifecycleProvider(lifecycle)
+    protected val lifecycleProvider = LifecycleProvider(lifecycle)
 
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         lifecycleProvider.notifyOnViewCreate()
