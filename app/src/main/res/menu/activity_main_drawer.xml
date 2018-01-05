@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/nav_group_1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_nav_preset_command"
+            android:icon="@drawable/ic_preset_command_black_24dp"
+            android:title="@string/nav_preset_commands"
+            android:checked="true"/>
+        <item
+            android:id="@+id/item_nav_job_manager"
+            android:icon="@drawable/ic_job_manager_black_24dp"
+            android:title="@string/nav_job_manager"/>
+        <item
+            android:id="@+id/item_nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/nav_settings"/>
+    </group>
+
+    <group
+        android:id="@+id/nav_group_2"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/item_nav_about"
+            android:icon="@drawable/ic_about_black_24dp"
+            android:title="@string/nav_about"/>
+    </group>
+
+</menu>
