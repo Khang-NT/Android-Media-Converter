@@ -278,7 +278,7 @@ class ConverterService : Service() {
                         }
 
                         freeTime += 1
-                        if (freeTime >= JOB_HANDLER_MAX_FREE_TIME) {
+                        if (freeTime >= JOB_HANDLER_MAX_FREE_TIME && !binding) {
                             // request stop
                             mainHandler.sendEmptyMessage(STOP_SERVICE_MESSAGE)
                         } else {
