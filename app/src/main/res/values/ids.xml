@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="recyclerView" type="id"/>
+    <item name="loadingState" type="id"/>
+    <item name="emptyState" type="id"/>
+    <item name="errorState" type="id"/>
+    <item name="errorStateRetryView" type="id"/>
+    <item name="errorStateReasonTextView" type="id"/>
+</resources>
