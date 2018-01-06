@@ -111,6 +111,8 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.6.0'
 
+    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
+
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
