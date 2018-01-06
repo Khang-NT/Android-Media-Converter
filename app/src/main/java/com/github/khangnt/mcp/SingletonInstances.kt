@@ -8,7 +8,7 @@ import com.github.khangnt.mcp.job.JobManager
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -52,7 +52,11 @@ class SingletonInstances private constructor(appContext: Context) {
                 .connectTimeout(DEFAULT_CONNECTION_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 .readTimeout(DEFAULT_IO_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_IO_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
-                .addInterceptor(HttpLoggingInterceptor({ Timber.d(it) }).setLevel(BODY))
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor({ Timber.d(it) }).setLevel(HEADERS))
+                    }
+                }
                 .build()
     }
 
