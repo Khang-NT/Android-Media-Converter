@@ -10,7 +10,7 @@
     <string name="notification_channel_converter_des">Notification show when service is running in background</string>
 
     <string name="converter_service_running">Converter service running</string>
-    <string name="converter_service_running_with_speed">Converter service running, encoding speed: %s</string>
+    <string name="converter_service_running_with_speed">Converter service running: %s</string>
     <string name="nav_preset_commands">Preset commands</string>
     <string name="nav_job_manager">Job manager</string>
     <string name="nav_settings">Settings</string>

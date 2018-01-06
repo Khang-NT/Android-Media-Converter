@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.View
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
-import com.github.khangnt.mcp.util.toConverterSpeed
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,16 +19,15 @@ class RunningHeaderModel(header: String) : HeaderModel(header)
 @SuppressLint("SetTextI18n")
 class ItemHeaderRunningViewHolder(
         itemView: View,
-        speed: Observable<Int>,
+        outputSize: Observable<String>,
         compositeDisposable: CompositeDisposable
 ) : ItemHeaderViewHolder(itemView) {
     private var speedSuffix = ""
     private var header = ""
 
     init {
-        val disposable = speed.throttleLast(500, TimeUnit.MILLISECONDS)
+        val disposable = outputSize.throttleLast(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .map({ if (it > 0) it.toConverterSpeed() else "" })
                 .subscribe({
                     speedSuffix = it
                     tvHeader.text = "$header $speedSuffix"

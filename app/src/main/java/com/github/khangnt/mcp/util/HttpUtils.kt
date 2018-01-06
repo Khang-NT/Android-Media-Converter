@@ -2,8 +2,6 @@ package com.github.khangnt.mcp.util
 
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Call
@@ -11,8 +9,6 @@ import okhttp3.Callback
 import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 
 /**
@@ -45,35 +41,32 @@ fun String.get(): Single<String> {
     })      // force subscribe synchronously, because call will be enqueued immediately
             .subscribeOn(Schedulers.trampoline())
 }
-
-fun downloadFile(url: String, path: File): Flowable<Long> {
-    val request = Request.Builder().url(url).get().build()
-    val call = SingletonInstances.getOkHttpClient().newCall(request)
-    return Flowable.create({ emitter ->
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Timber.d(e, "Download file failed: [$url] to [$path]")
-                emitter.onError(e)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    var total: Long = 0
-                    try {
-                        FileOutputStream(path).use { fileOs ->
-                            response.body()!!.byteStream().use { respIs ->
-                                copy(respIs, fileOs) {
-                                    total += it
-                                    emitter.onNext(total)
-                                }
-                            }
-                        }
-                        emitter.onComplete()
-                    } catch (error: Throwable) {
-                        emitter.onError(error)
-                    }
-                }
-            }
-        })
-    }, BackpressureStrategy.LATEST)
-}
+//
+//fun downloadFile(url: String, path: File): Flowable<Long> {
+//    val request = Request.Builder().url(url).get().build()
+//    val call = SingletonInstances.getOkHttpClient().newCall(request)
+//    return Flowable.create({ emitter ->
+//        call.enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                Timber.d(e, "Download file failed: [$url] to [$path]")
+//                emitter.onError(e)
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                response.use {
+//                    var total: Long = 0
+//                    try {
+//                        FileOutputStream(path).use { fileOs ->
+//                            response.body()!!.byteStream().use { respIs ->
+//                                copy(respIs, fileOs)
+//                            }
+//                        }
+//                        emitter.onComplete()
+//                    } catch (error: Throwable) {
+//                        emitter.onError(error)
+//                    }
+//                }
+//            }
+//        })
+//    }, BackpressureStrategy.LATEST)
+//}

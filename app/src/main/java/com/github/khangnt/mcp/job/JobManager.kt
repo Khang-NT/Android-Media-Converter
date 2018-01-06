@@ -10,8 +10,8 @@ import io.reactivex.Observable
  */
 
 interface JobManager {
-    fun recordWriting(byteCount: Int)
-    fun getWritingSpeed(): Observable<Int>
+    fun recordOutputSize(size: String)
+    fun getOutputSize(): Observable<String>
 
     fun addJob(job: Job): Job
     fun deleteJob(job: Job)

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 class JobManagerFragment : BaseFragment() {
 
     private val jobManager = SingletonInstances.getJobManager()
-    private val adapter = JobAdapter(jobManager.getWritingSpeed()).apply { setHasStableIds(true) }
+    private val adapter = JobAdapter(jobManager.getOutputSize()).apply { setHasStableIds(true) }
     private val pendingHeaderModel = HeaderModel("Pending")
     private val runningHeaderModel = RunningHeaderModel("Running")
     private val finishedHeaderModel = HeaderModel("Finished")

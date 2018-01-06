@@ -13,7 +13,6 @@ class CopierThread(
         private val sourceInput: SourceInputStream,
         private val sourceOutput: SourceOutputStream,
         private val bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH,
-        private val onCopied: (Int) -> Unit,
         private val onError: (Throwable) -> Unit,
         private val onSuccess: () -> Unit = {}
 ) : Thread() {
@@ -22,7 +21,7 @@ class CopierThread(
         try {
             sourceInput.openInputStream().use { input ->
                 sourceOutput.openOutputStream().use { output ->
-                    copy(input, output, bufferLength, onCopied)
+                    copy(input, output, bufferLength)
                     onSuccess.invoke()
                 }
             }

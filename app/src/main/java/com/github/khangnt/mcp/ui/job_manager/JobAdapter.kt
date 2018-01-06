@@ -22,7 +22,7 @@ private const val ITEM_ID_HEADER = 1
 private const val ITEM_ID_JOB = 2
 
 class JobAdapter(
-        private val speedObservable: Observable<Int>
+        private val outputSizeObservable: Observable<String>
 ) : RecyclerView.Adapter<CustomViewHolder<*>>() {
     private var compositeDisposable: CompositeDisposable? = null
     private var itemDataList: List<AdapterModel> = emptyList()
@@ -88,7 +88,7 @@ class JobAdapter(
                 ItemHeaderRunningViewHolder(
                         itemView = getLayoutInflater(parent)
                                 .inflate(R.layout.item_header, parent, false),
-                        speed = speedObservable,
+                        outputSize = outputSizeObservable,
                         compositeDisposable = compositeDisposable!!
                 )
             }

@@ -12,7 +12,6 @@ import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.notification.NotificationHelper
-import com.github.khangnt.mcp.util.toConverterSpeed
 import com.github.khangnt.mcp.util.toJsonOrNull
 import com.github.khangnt.mcp.util.toMapString
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -126,7 +125,7 @@ class ConverterService : Service() {
         // original source emit 4 items per second
         // limit update 2 times per second on main thread
         notificationUpdateDisposable = jobManager
-                .getWritingSpeed().distinctUntilChanged()
+                .getOutputSize().distinctUntilChanged()
                 .throttleLast(NOTIFICATION_UPDATE_INTERVAL, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateNotificationIfNeeded, Timber::d)
@@ -176,13 +175,12 @@ class ConverterService : Service() {
     }
 
     @MainThread
-    private fun updateNotificationIfNeeded(speed: Int) {
+    private fun updateNotificationIfNeeded(outputSize: String) {
         if (inForeground) {
             // only show notification in foreground
-            if (speed > 0) {
+            if (outputSize.isNotBlank()) {
                 notificationBuilder.setContentText(
-                        getString(R.string.converter_service_running_with_speed,
-                                speed.toConverterSpeed())
+                        getString(R.string.converter_service_running_with_speed, outputSize)
                 )
             } else {
                 notificationBuilder.setContentText(getString(R.string.converter_service_running))

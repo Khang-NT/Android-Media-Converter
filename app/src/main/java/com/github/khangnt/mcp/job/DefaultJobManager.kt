@@ -3,14 +3,12 @@ package com.github.khangnt.mcp.job
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.db.JobDb
 import com.github.khangnt.mcp.util.catchAll
-import com.github.khangnt.mcp.util.ignoreError
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by Khang NT on 1/3/18.
@@ -34,43 +32,13 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
     )
 
-    private val writingSpeedInOneSecond = intArrayOf(0, 0, 0, 0)
-    private val writingSpeedSubject = BehaviorSubject.create<Int>()
-    private var pos: Int = 0
-    private var timerRunning = false
+    private val outputSizeSubject = BehaviorSubject.create<String>()
 
-    private fun writingSpeedOneSecond(): Int {
-        return writingSpeedInOneSecond[0] + writingSpeedInOneSecond[1] +
-                writingSpeedInOneSecond[2] + writingSpeedInOneSecond[3];
+    override fun recordOutputSize(size: String) {
+        outputSizeSubject.onNext(size)
     }
 
-    private fun startTimerIfNeeded() {
-        synchronized(writingSpeedInOneSecond) {
-            if (!timerRunning) {
-                timerRunning = true
-                Observable.interval(0, 250, TimeUnit.MILLISECONDS)
-                        .map {
-                            val speed = writingSpeedOneSecond()
-                            writingSpeedSubject.onNext(speed)
-                            pos = it.toInt() % 4
-                            writingSpeedInOneSecond[pos] = 0
-                            return@map speed
-                        }
-                        .filter { it > 0 }
-                        .timeout(15, TimeUnit.SECONDS, Observable.empty())
-                        .ignoreError(printLog = true)
-                        .doFinally { timerRunning = false }
-                        .subscribe()
-            }
-        }
-    }
-
-    override fun recordWriting(byteCount: Int) {
-        startTimerIfNeeded()
-        writingSpeedInOneSecond[pos] += byteCount
-    }
-
-    override fun getWritingSpeed(): Observable<Int> = writingSpeedSubject
+    override fun getOutputSize(): Observable<String> = outputSizeSubject
 
     override fun addJob(job: Job): Job {
         loadJobToMemoryIfNeeded()

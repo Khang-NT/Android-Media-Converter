@@ -1,10 +1,8 @@
 package com.github.khangnt.mcp.worker
 
 import android.content.Context
-import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.FFMPEG_FILE
-import com.github.khangnt.mcp.annotation.JobStatus.COMPLETED
-import com.github.khangnt.mcp.annotation.JobStatus.FAILED
+import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
@@ -14,7 +12,6 @@ import timber.log.Timber
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.reflect.Field
 
 /**
  * Created by Khang NT on 1/3/18.
@@ -29,7 +26,6 @@ class JobWorkerThread(
         private val onErrorListener: (Job, Throwable?) -> Unit
 ) : Thread() {
     companion object {
-        private var unixProcessPidField: Field? = null
         private fun getPid(process: Process): Int? {
             return try {
                 val field = process.javaClass.getDeclaredField("pid")
@@ -73,31 +69,12 @@ class JobWorkerThread(
         // start all copier thread
         val copierThreads = mutableListOf<Thread>()
 
-        // start copy pipe std out -> file output
-        val copyOutputThread = CopierThread(
-                sourceInput = Sources.from(process.inputStream),
-                sourceOutput = commandResolver.sourceOutput,
-                onCopied = jobManager::recordWriting,
-                onError = { throwable ->
-                    if (!hasError && !isInterrupted) {
-                        // this is root cause error
-                        onError(throwable, "Error when write output: ${throwable.message}")
-                        interrupt()
-                    } else {
-                        Timber.d(throwable, "Error from output thread")
-                    }
-                }
-        )
-        copyOutputThread.start()
-        copierThreads.add(copyOutputThread)
-
         // start copy source input -> tcp socket output -> FFmpeg input via tcp protocol
         for (tcpInput in commandResolver.tcpInputs) {
             val socketOutput = SocketSourceOutput(tcpInput.address)
             val copierThread = CopierThread(
                     sourceInput = tcpInput.sourceInput,
                     sourceOutput = socketOutput,
-                    onCopied = {},
                     onError = { throwable ->
                         if (!hasError && !isInterrupted) {
                             // this is root cause
@@ -113,11 +90,9 @@ class JobWorkerThread(
         }
 
         // start logger thread
-        if (BuildConfig.DEBUG) {
-            val loggerThread = LoggerThread(process.errorStream)
-            loggerThread.start()
-            copierThreads.add(loggerThread)
-        }
+        val loggerThread = LoggerThread(process.errorStream, jobManager)
+        loggerThread.start()
+        copierThreads.add(loggerThread)
 
         // wait process complete
         val exitCode = try {
@@ -142,6 +117,9 @@ class JobWorkerThread(
             }
             // shutdown copier thread as well
             interruptThreads(copierThreads, wait = false)
+
+            // delete temp file as well
+            commandResolver.tempFile.delete()
             return
         }
 
@@ -152,12 +130,28 @@ class JobWorkerThread(
             // unhappy exit code
             val ex = UnhappyExitCodeException(code = exitCode)
             onError(ex, ex.message!!)
+
+            // delete temp file as well
+            commandResolver.tempFile.delete()
             return
         }
 
-        // Successful
-        job = jobManager.updateJobStatus(job, COMPLETED)
-        onCompleteListener(job)
+        // Convert successful, now copy temp output to real target output
+        job = jobManager.updateJobStatus(job, RUNNING, "Writing converted file to target")
+        val copyOutputRunnable = CopierThread(
+                sourceInput = commandResolver.tempFileSourceInput,
+                sourceOutput = commandResolver.sourceOutput,
+                onError = {
+                    onError(it, "Write to output file failed: ${it.message}. Please check output path.")
+                    commandResolver.tempFile.delete()
+                },
+                onSuccess = {
+                    job = jobManager.updateJobStatus(job, COMPLETED)
+                    onCompleteListener(job)
+                    commandResolver.tempFile.delete()
+                }
+        )
+        copyOutputRunnable.run() // not start(), avoid spawn new thread
     }
 
     private fun startProcess(commandResolver: CommandResolver): Process {
@@ -187,22 +181,31 @@ class JobWorkerThread(
             if (!hasError) {
                 hasError = true
 
-                Timber.d(throwable, message)
+                Timber.d(throwable, "%s", message)
                 job = jobManager.updateJobStatus(job, FAILED, message)
                 onErrorListener(job, throwable)
             }
         }
     }
 
-    private class LoggerThread(val input: InputStream): Thread() {
+    private class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
+        private val regex = Regex("size=\\s*(\\d+\\s?[k|m|g][b|B])")
+
+        init {
+            jobManager.recordOutputSize("")
+        }
+
         override fun run() {
             catchAll {
                 InputStreamReader(input).use { inputReader ->
                     inputReader.forEachLine { line ->
+                        regex.find(line)?.apply { jobManager.recordOutputSize(groupValues[1]) }
                         Timber.d(line)
                     }
                 }
             }
+            jobManager.recordOutputSize("")
         }
     }
+
 }

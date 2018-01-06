@@ -2,8 +2,7 @@ package com.github.khangnt.mcp.worker
 
 import android.content.Context
 import android.net.Uri
-import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
-import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
+import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
 import java.io.File
@@ -33,7 +32,9 @@ data class CommandResolver(
         val command: Command,
         val execCommand: String,
         val tcpInputs: List<TcpInput>,
-        val sourceOutput: SourceOutputStream
+        val sourceOutput: SourceOutputStream,
+        val tempFile: File,
+        val tempFileSourceInput: SourceInputStream
 ) {
     companion object {
         fun resolve(
@@ -65,19 +66,31 @@ data class CommandResolver(
             }
 
             execCommandBuilder.append(" ").append(command.args)
-            // pipe output
+
             val sourceOutput = ContentResolverSource(context, Uri.parse(command.output))
-            execCommandBuilder.append(" -f ${command.outputFormat} pipe:1")
+
+            // temp file to save ffmpeg output
+            val tempFile = try {
+                val file = File(context.externalCacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+                if (file.parentFile.canWrite()) {
+                    file
+                } else {
+                    File(context.cacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+                }
+            } catch (all: Exception) {
+                File(context.cacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+            }
+
+            val tempOutputUri = Uri.fromFile(tempFile)
+            val tempSourceInput = ContentResolverSource(context, tempOutputUri)
+            execCommandBuilder.append(" -y -f ${command.outputFormat} '$tempOutputUri'")
 
             return CommandResolver(command, execCommandBuilder.toString(),
-                    Collections.unmodifiableList(tcpInputs), sourceOutput)
+                    Collections.unmodifiableList(tcpInputs), sourceOutput,
+                    tempFile, tempSourceInput)
         }
 
-        private fun getTcpUri(
-                address: InetSocketAddress,
-                readTimeout: Int = DEFAULT_IO_TIMEOUT,
-                connectTimeout: Int = DEFAULT_CONNECTION_TIMEOUT
-        ): String {
+        private fun getTcpUri(address: InetSocketAddress): String {
             return "tcp://${address.hostName}:${address.port}" +
                     "?listen=1"
         }

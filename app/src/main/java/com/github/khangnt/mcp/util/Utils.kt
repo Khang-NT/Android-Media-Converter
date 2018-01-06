@@ -31,17 +31,15 @@ inline fun catchAll(printLog: Boolean = false, action: () -> Unit) {
     }
 }
 
-inline fun copy(
+fun copy(
         input: InputStream,
         output: OutputStream,
-        bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH,
-        onCopied: (Int) -> Unit
+        bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH
 ) {
     val buffer = ByteArray(bufferLength)
     var readLength = 0
     while (input.read(buffer).apply { readLength = this } > 0) {
         output.write(buffer, 0, readLength)
-        onCopied(readLength)
     }
 }
 
