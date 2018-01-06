@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 private const val PRESET_COMMAND_FRAG_TAG = "TAG:PresetFragment"
 private const val JOB_MANAGER_FRAG_TAG = "TAG:JobManagerFragment"
 private const val SETTING_FRAG_TAG = "TAG:SettingFragment"
+private const val ABOUT_FRAG_TAG = "TAG:AboutFragment"
 
 private const val KEY_BACK_STACK = "KEY:BackStack"
 private const val KEY_CURRENT_FRAGMENT = "KEY:CurrentFragment"
@@ -65,6 +66,7 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
                 R.id.item_nav_job_manager -> JOB_MANAGER_FRAG_TAG
                 R.id.item_nav_preset_command -> PRESET_COMMAND_FRAG_TAG
                 R.id.item_nav_setting -> SETTING_FRAG_TAG
+                R.id.item_nav_about -> ABOUT_FRAG_TAG
                 else -> null
             }
             if (fragmentToShow !== null) {
@@ -97,6 +99,7 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
                 PRESET_COMMAND_FRAG_TAG -> PresetCommandFragment()
                 JOB_MANAGER_FRAG_TAG -> JobManagerFragment()
                 SETTING_FRAG_TAG -> PresetCommandFragment()
+                ABOUT_FRAG_TAG -> AboutFragment()
                 else -> throw IllegalArgumentException("Unknown fragment tag: $fragmentTag")
             }
 
@@ -105,12 +108,14 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
                 PRESET_COMMAND_FRAG_TAG -> getString(R.string.nav_preset_commands)
                 JOB_MANAGER_FRAG_TAG -> getString(R.string.nav_job_manager)
                 SETTING_FRAG_TAG -> getString(R.string.nav_settings)
+                ABOUT_FRAG_TAG -> getString(R.string.nav_about)
                 else -> throw IllegalArgumentException("Unknown fragment tag: $fragmentTag")
             }
 
     private fun showFragment(fragmentTag: String, addToBackStack: Boolean) {
         val shouldAddToBackStack = addToBackStack &&
-                currentFragment != SETTING_FRAG_TAG // shouldn't back to setting page
+                currentFragment != SETTING_FRAG_TAG &&  // shouldn't back to setting
+                currentFragment != ABOUT_FRAG_TAG       // or about page
 
         if (shouldAddToBackStack) {
             backStack.remove(currentFragment) // remove currentFragment in back stack if exists

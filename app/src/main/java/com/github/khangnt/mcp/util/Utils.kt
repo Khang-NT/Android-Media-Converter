@@ -1,5 +1,8 @@
 package com.github.khangnt.mcp.util
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.KB
 import com.github.khangnt.mcp.MB
@@ -74,4 +77,9 @@ fun String.toJsonOrNull(): JSONObject? {
 fun <T> List<T>.toImmutable(): List<T> {
     // clone original then wrap inside unmodifiable list
     return Collections.unmodifiableList(ArrayList(this))
+}
+
+fun openUrl(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(Intent.createChooser(intent, "Open $url"))
 }
