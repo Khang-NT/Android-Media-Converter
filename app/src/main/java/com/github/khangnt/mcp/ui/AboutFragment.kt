@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.fragment_about.*
 
 
 /**
- * Created by Khang NT on 1/7/18.
- * Email: khang.neon.1997@gmail.com
+ * About page UI is inspired by Phonograph
+ * https://github.com/kabouzeid/Phonograph
  */
 
 class AboutFragment: BaseFragment() {
