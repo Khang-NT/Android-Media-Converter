@@ -113,6 +113,7 @@ class JobManagerFragment : BaseFragment(), ServiceConnection {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        recyclerViewGroup.recyclerView?.adapter = null
         loadDataDisposable?.dispose() // stop load data
     }
 
