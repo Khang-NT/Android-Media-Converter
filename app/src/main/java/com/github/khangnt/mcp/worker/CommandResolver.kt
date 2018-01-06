@@ -79,9 +79,7 @@ data class CommandResolver(
                 connectTimeout: Int = DEFAULT_CONNECTION_TIMEOUT
         ): String {
             return "tcp://${address.hostName}:${address.port}" +
-                    "?listen=1" +
-                    "&timeout=$readTimeout" +
-                    "&listen_timeout=$connectTimeout"
+                    "?listen=1"
         }
     }
 }
