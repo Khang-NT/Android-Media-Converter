@@ -1,6 +1,8 @@
 package com.github.khangnt.mcp.job
 
 import com.github.khangnt.mcp.annotation.JobStatus
+import com.github.khangnt.mcp.annotation.JobStatus.PENDING
+import com.github.khangnt.mcp.annotation.JobStatus.RUNNING
 
 /**
  * Created by Khang NT on 12/30/17.
@@ -28,4 +30,28 @@ data class Job(
     override fun hashCode(): Int {
         return id.hashCode()
     }
+}
+
+val jobComparator: Comparator<Job> = Comparator { job1, job2 ->
+    if (job1.status == job2.status) {
+        return@Comparator job2.id.compareTo(job1.id)
+    }
+
+    if (job1.status == RUNNING) {
+        return@Comparator -1
+    }
+
+    if (job2.status == RUNNING) {
+        return@Comparator 1
+    }
+
+    if (job1.status == PENDING) {
+        return@Comparator -1
+    }
+
+    if (job2.status == PENDING) {
+        return@Comparator 1
+    }
+
+    return@Comparator job2.id.compareTo(job1.id)
 }

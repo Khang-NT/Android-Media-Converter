@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui
 
-import android.arch.lifecycle.Lifecycle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -14,7 +13,6 @@ import java.util.Collections.emptyList
  * https://github.com/marverenic/Jockey/blob/master/app/src/main/java/com/marverenic/music/ui/BaseActivity.java
  */
 abstract class BaseActivity: AppCompatActivity() {
-    protected val lifecycleProvider = LifecycleProvider(lifecycle)
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
@@ -40,10 +38,6 @@ abstract class BaseActivity: AppCompatActivity() {
         (container ?: getSnackBarContainer())?.let { view ->
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
         }
-    }
-
-    fun runOnDestroy(action: ActivityEventCallback) {
-        lifecycleProvider.runOnEvent(Lifecycle.Event.ON_DESTROY, this, action)
     }
 
 }

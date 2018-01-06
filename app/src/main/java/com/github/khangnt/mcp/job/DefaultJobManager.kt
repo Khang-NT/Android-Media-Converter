@@ -152,7 +152,7 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
         return newJob
     }
 
-    override fun getJob(vararg jobStatus: Int): Flowable<List<Job>> {
+    override fun getJob(vararg jobStatus: Int): Flowable<MutableList<Job>> {
         loadJobToMemoryIfNeeded()
 
         val subjects = jobStatus.map { mapSubject[it]!!.toFlowable(BackpressureStrategy.LATEST) }

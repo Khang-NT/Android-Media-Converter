@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.ui.job_manager.JobManagerFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -17,13 +18,12 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedListener {
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.let {
-//            drawerToggleListener = ActionBarDrawerToggle(activity, drawerLayout, toolbar, R
-//                    .string.open_drawer_des, R.string.close_drawer_des)
-//            drawerLayout.addDrawerListener(drawerToggleListener)
-            return@let inflater.inflate(R.layout.fragment_main, container, false)
-        }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = container?.let {
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +35,10 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
                 R.string.open_drawer_des, R.string.close_drawer_des)
         drawerLayout.addDrawerListener(drawerToggleListener)
         drawerToggleListener.syncState()
+
+        childFragmentManager.beginTransaction()
+                .replace(R.id.contentContainer, JobManagerFragment())
+                .commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

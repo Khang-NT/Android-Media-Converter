@@ -19,6 +19,6 @@ interface JobManager {
     fun nextJobToRun(): Job?
     fun updateJobStatus(job: Job, @JobStatus status: Int, statusDetail: String? = null): Job
 
-    fun getJob(@JobStatus vararg jobStatus: Int): Flowable<List<Job>>
+    fun getJob(@JobStatus vararg jobStatus: Int): Flowable<MutableList<Job>>
 }
 

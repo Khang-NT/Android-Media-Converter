@@ -10,6 +10,8 @@ import timber.log.Timber
 import java.io.Closeable
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -69,4 +71,9 @@ fun Int.toConverterSpeed(): String =
 fun String.toJsonOrNull(): JSONObject? {
     catchAll { return JSONObject(this) }
     return null
+}
+
+fun <T> List<T>.toImmutable(): List<T> {
+    // clone original then wrap inside unmodifiable list
+    return Collections.unmodifiableList(ArrayList(this))
 }

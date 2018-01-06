@@ -8,4 +8,9 @@
     <color name="ic_launcher_background">#F8F8F8</color>
 
     <color name="screen_overlay">#CCFFFFFF</color>
+    
+    <color name="blue_grey_500">#607D8B</color>
+    <color name="teal_500">#009688</color>
+    <color name="red_500">#F44336</color>
+    <color name="green_600">#43A047</color>
 </resources>

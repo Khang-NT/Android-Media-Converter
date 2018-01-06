@@ -17,4 +17,8 @@
     <string name="nav_about">About</string>
     <string name="close_drawer_des">Close side menu</string>
     <string name="open_drawer_des">Open side menu</string>
+
+    <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
+    <string name="job_list_load_error_message">Load Job failed</string>
+    <string name="retry">Retry</string>
 </resources>

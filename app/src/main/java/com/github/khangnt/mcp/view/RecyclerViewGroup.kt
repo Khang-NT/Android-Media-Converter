@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.view
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -17,18 +18,18 @@ class RecyclerViewGroup @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private var recyclerView: View? = null
-    private var emptyView: View? = null
-    private var errorView: View? = null
-    private var errorReason: TextView? = null
-    private var loadingView: View? = null
+    var recyclerView: RecyclerView? = null
+    var emptyView: View? = null
+    var errorView: View? = null
+    var errorReason: TextView? = null
+    var loadingView: View? = null
 
     var onRetry: (() -> Unit)? = null
 
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams?) {
         super.addView(child, index, params)
         when (child.id) {
-            R.id.recyclerView -> recyclerView = child
+            R.id.recyclerView -> recyclerView = child as RecyclerView
             R.id.loadingState -> loadingView = child
             R.id.emptyState -> emptyView = child
             R.id.errorState -> {

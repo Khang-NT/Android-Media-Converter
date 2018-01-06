@@ -1,15 +1,10 @@
 package com.github.khangnt.mcp.ui
 
 import android.app.Activity
-import android.arch.lifecycle.Lifecycle
-import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import timber.log.Timber
 
 
@@ -19,14 +14,6 @@ import timber.log.Timber
  */
 
 abstract class BaseFragment : Fragment() {
-    protected val lifecycleProvider = LifecycleProvider(lifecycle)
-
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        lifecycleProvider.notifyOnViewCreate()
-        return createView(inflater, container, savedInstanceState)
-    }
-
-    open fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = null
 
     /**
      * If this fragment is attached to a [BaseActivity], then this callback will be triggered
@@ -55,19 +42,6 @@ abstract class BaseFragment : Fragment() {
         } else {
             null
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        lifecycleProvider.notifyOnDestroyView()
-    }
-
-    fun runOnDestroy(action: FragmentEventCallback) {
-        lifecycleProvider.runOnEvent(Lifecycle.Event.ON_DESTROY, this, action)
-    }
-
-    fun runOnDestroyView(action: FragmentEventCallback) {
-        lifecycleProvider.runOnDestroyView { action.invoke(this) }
     }
 
 }

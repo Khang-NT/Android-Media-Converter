@@ -126,6 +126,8 @@ class ConverterService : Service() {
         jobHandler.sendEmptyMessage(INIT_MESSAGE)
     }
 
+    fun getJobManager(): JobManager = jobManager
+
     override fun onStartCommand(intentNullable: Intent?, flags: Int, startId: Int): Int {
         intentNullable?.let { intent ->
             val shouldPostponeStopMessage = when(intent.action) {

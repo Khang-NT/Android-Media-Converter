@@ -5,5 +5,6 @@
     <dimen name="margin_tiny">4dp</dimen>
 
     <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="progress_bar_size">60dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>
