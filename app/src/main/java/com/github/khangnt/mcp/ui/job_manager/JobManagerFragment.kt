@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.job_manager
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import com.github.khangnt.mcp.job.jobComparator
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -34,6 +36,12 @@ class JobManagerFragment : BaseFragment() {
     private val finishedHeaderModel = HeaderModel("Finished")
 
     private var loadDataDisposable: Disposable? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // fixme: this line just aim to fix task with status "RUNNING" but actually it's stopped
+        context!!.startService(Intent(context!!, ConverterService::class.java))
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
