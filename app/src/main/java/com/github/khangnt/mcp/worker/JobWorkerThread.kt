@@ -213,7 +213,7 @@ class JobWorkerThread(
                             stringBuilder.append(size)
                         }
                         if (bitrate !== null) {
-                            stringBuilder.append(" bitrate=").append(bitrate)
+                            stringBuilder.append(" br=").append(bitrate)
                         }
                         if (!stringBuilder.isBlank()) {
                             jobManager.recordOutputSize(stringBuilder.toString())
