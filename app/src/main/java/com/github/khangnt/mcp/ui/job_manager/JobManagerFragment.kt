@@ -86,6 +86,7 @@ class JobManagerFragment : BaseFragment() {
                     }
                 }, { error ->
                     Timber.e(error, "Load job list failed")
+                    adapter.setData(emptyList())
                     recyclerViewGroup.error(error.message)
                 })
     }

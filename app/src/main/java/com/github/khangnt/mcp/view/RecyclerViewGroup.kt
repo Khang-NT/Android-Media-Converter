@@ -45,21 +45,18 @@ class RecyclerViewGroup @JvmOverloads constructor(
     }
 
     fun loading() {
-        recyclerView?.visibility = INVISIBLE
         loadingView?.visibility = VISIBLE
         emptyView?.visibility = GONE
         errorView?.visibility = GONE
     }
 
     fun empty() {
-        recyclerView?.visibility = INVISIBLE
         loadingView?.visibility = GONE
         emptyView?.visibility = VISIBLE
         errorView?.visibility = GONE
     }
 
     fun error(reason: String? = null) {
-        recyclerView?.visibility = INVISIBLE
         loadingView?.visibility = GONE
         emptyView?.visibility = GONE
         errorView?.visibility = VISIBLE
@@ -70,7 +67,6 @@ class RecyclerViewGroup @JvmOverloads constructor(
     }
 
     fun successWithData() {
-        recyclerView?.visibility = VISIBLE
         loadingView?.visibility = GONE
         emptyView?.visibility = GONE
         errorView?.visibility = GONE
