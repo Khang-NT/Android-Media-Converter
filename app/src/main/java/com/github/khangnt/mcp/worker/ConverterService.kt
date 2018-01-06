@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.worker
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.*
 import android.support.annotation.MainThread
@@ -84,6 +85,14 @@ private fun Bundle.toJob(): Job? {
 }
 
 class ConverterService : Service() {
+    companion object {
+        fun cancelJob(context: Context, jobId: Long) {
+            val deleteJobIntent = Intent(context, ConverterService::class.java)
+            deleteJobIntent.action = ACTION_CANCEL_JOB
+            deleteJobIntent.putExtra(EXTRA_JOB_ID, jobId)
+            context.startService(deleteJobIntent)
+        }
+    }
 
     private val binder = ConverterServiceBinder(this)
     private val jobManager: JobManager = SingletonInstances.getJobManager()

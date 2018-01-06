@@ -100,17 +100,19 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
     override fun deleteJob(jobId: Long) {
         loadJobToMemoryIfNeeded()
         synchronized(lock) {
-            var removed = false
+            var jobStatus: Int? = null
             mapJobList.values.forEach { jobList ->
                 val listIterator = jobList.listIterator()
                 while (listIterator.hasNext()) {
-                    if (listIterator.next().id == jobId) {
+                    val next = listIterator.next()
+                    if (next.id == jobId) {
                         listIterator.remove()
-                        removed = true
+                        jobStatus = next.status
                     }
                 }
             }
-            if (removed) {
+            if (jobStatus != null) {
+                notifyJobListChanged(jobStatus!!)
                 runOnDbThread {
                     catchAll { jobDb.deleteJob(jobId) }
                 }
