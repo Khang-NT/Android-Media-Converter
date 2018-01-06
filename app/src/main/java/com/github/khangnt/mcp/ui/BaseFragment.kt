@@ -22,7 +22,7 @@ abstract class BaseFragment : Fragment() {
      * @return Whether or not this event was consumed. If false, the activity will handle the event.
      * @see Activity.onBackPressed
      */
-    fun onBackPressed(): Boolean {
+    open fun onBackPressed(): Boolean {
         return false
     }
 

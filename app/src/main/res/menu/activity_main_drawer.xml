@@ -9,12 +9,12 @@
         <item
             android:id="@+id/item_nav_preset_command"
             android:icon="@drawable/ic_preset_command_black_24dp"
-            android:title="@string/nav_preset_commands"
-            android:checked="true"/>
+            android:title="@string/nav_preset_commands"/>
         <item
             android:id="@+id/item_nav_job_manager"
             android:icon="@drawable/ic_job_manager_black_24dp"
-            android:title="@string/nav_job_manager"/>
+            android:title="@string/nav_job_manager"
+            android:checked="true"/>
         <item
             android:id="@+id/item_nav_setting"
             android:icon="@drawable/ic_settings_black_24dp"
