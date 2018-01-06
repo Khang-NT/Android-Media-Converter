@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Media Converter</string>
+    <string name="app_short_intro">Open source media converter app build on top of FFmpeg.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -22,4 +23,7 @@
     <string name="job_list_load_error_message">Load Job failed</string>
     <string name="retry">Retry</string>
     <string name="preset_command_empty_message">This page still on development and will available soon. You can create new Job via YMusic app.</string>
+
+    <string name="fork_on_github">Fork on Github</string>
+    <string name="licenses">Licenses</string>
 </resources>
