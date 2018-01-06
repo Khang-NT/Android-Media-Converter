@@ -14,15 +14,16 @@ class CopierThread(
         private val sourceOutput: SourceOutputStream,
         private val bufferLength: Int = DEFAULT_IO_BUFFER_LENGTH,
         private val onCopied: (Int) -> Unit,
-        private val onError: (Throwable) -> Unit
+        private val onError: (Throwable) -> Unit,
+        private val onSuccess: () -> Unit = {}
 ) : Thread() {
 
     override fun run() {
         try {
-            // should open source output first
-            sourceOutput.openOutputStream().use { output ->
-                sourceInput.openInputStream().use { input ->
+            sourceInput.openInputStream().use { input ->
+                sourceOutput.openOutputStream().use { output ->
                     copy(input, output, bufferLength, onCopied)
+                    onSuccess.invoke()
                 }
             }
         } catch (anyError: Throwable) {

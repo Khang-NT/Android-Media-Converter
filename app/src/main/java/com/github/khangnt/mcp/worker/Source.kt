@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
+import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import com.github.khangnt.mcp.util.catchAll
@@ -68,10 +69,12 @@ class ContentResolverSource(
 
 class SocketSourceOutput(
         address: InetSocketAddress,
-        timeout: Int = DEFAULT_CONNECTION_TIMEOUT
+        timeout: Int = DEFAULT_CONNECTION_TIMEOUT,
+        soTimeout: Int = DEFAULT_IO_TIMEOUT
 ) : SourceOutputStream {
     private val socket = Socket()
     private val outputStream: OutputStream by lazy {
+        socket.soTimeout = soTimeout
         socket.connect(address, timeout)
         socket.getOutputStream()
     }
