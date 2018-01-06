@@ -189,7 +189,7 @@ class JobWorkerThread(
     }
 
     private class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
-        private val regex = Regex("size=\\s*(\\d+\\s?[k|m|g][b|B])")
+        private val regex = Regex("(\\w+=\\s*([^\\s]+))")
 
         init {
             jobManager.recordOutputSize("")
@@ -199,7 +199,25 @@ class JobWorkerThread(
             catchAll {
                 InputStreamReader(input).use { inputReader ->
                     inputReader.forEachLine { line ->
-                        regex.find(line)?.apply { jobManager.recordOutputSize(groupValues[1]) }
+                        var size: String? = null
+                        var bitrate: String? = null
+                        regex.findAll(line).forEach { matchResult ->
+                            if (matchResult.groupValues[1].startsWith("size=")) {
+                                size = matchResult.groupValues[2]
+                            } else if (matchResult.groupValues[1].startsWith("bitrate=")) {
+                                bitrate = matchResult.groupValues[2]
+                            }
+                        }
+                        val stringBuilder = StringBuilder()
+                        if (size !== null) {
+                            stringBuilder.append(size)
+                        }
+                        if (bitrate !== null) {
+                            stringBuilder.append(" bitrate=").append(bitrate)
+                        }
+                        if (!stringBuilder.isBlank()) {
+                            jobManager.recordOutputSize(stringBuilder.toString())
+                        }
                         Timber.d(line)
                     }
                 }
