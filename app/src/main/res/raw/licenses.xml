@@ -19,11 +19,6 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Glide</name>
-        <url>https://github.com/bumptech/glide</url>
-        <copyright>Copyright 2014 Google, Inc. All rights reserved.</copyright>
-    </notice>
-    <notice>
         <name>RxJava 2</name>
         <url>https://github.com/ReactiveX/RxJava</url>
         <copyright>Copyright (c) 2016-present, RxJava Contributors.</copyright>
