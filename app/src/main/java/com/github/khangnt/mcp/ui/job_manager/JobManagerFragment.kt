@@ -1,11 +1,6 @@
 package com.github.khangnt.mcp.ui.job_manager
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +12,6 @@ import com.github.khangnt.mcp.job.jobComparator
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.worker.ConverterService
-import com.github.khangnt.mcp.worker.ConverterServiceBinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -32,10 +25,8 @@ import java.util.concurrent.TimeUnit
  * Email: khang.neon.1997@gmail.com
  */
 
-class JobManagerFragment : BaseFragment(), ServiceConnection {
-    var converterService: ConverterService? = null
+class JobManagerFragment : BaseFragment() {
 
-    private lateinit var appContext: Context
     private val jobManager = SingletonInstances.getJobManager()
     private val adapter = JobAdapter(jobManager.getWritingSpeed()).apply { setHasStableIds(true) }
     private val pendingHeaderModel = HeaderModel("Pending")
@@ -43,18 +34,6 @@ class JobManagerFragment : BaseFragment(), ServiceConnection {
     private val finishedHeaderModel = HeaderModel("Finished")
 
     private var loadDataDisposable: Disposable? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        appContext = context!!.applicationContext
-        boundService()
-    }
-
-    private fun boundService() {
-        val intent = Intent(context, ConverterService::class.java)
-        appContext.startService(intent)
-        appContext.bindService(intent, this, Context.BIND_AUTO_CREATE)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -115,19 +94,6 @@ class JobManagerFragment : BaseFragment(), ServiceConnection {
         super.onDestroyView()
         recyclerViewGroup.recyclerView?.adapter = null
         loadDataDisposable?.dispose() // stop load data
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        appContext.unbindService(this)
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        converterService = null
-    }
-
-    override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-        converterService = (binder as? ConverterServiceBinder)?.service
     }
 
 }
