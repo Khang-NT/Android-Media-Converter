@@ -1,6 +1,9 @@
 package com.github.khangnt.mcp.worker
 
+import android.content.ContentResolver
 import android.content.Context
+import android.media.MediaScannerConnection
+import android.net.Uri
 import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
@@ -148,6 +151,13 @@ class JobWorkerThread(
                 onSuccess = {
                     job = jobManager.updateJobStatus(job, COMPLETED)
                     onCompleteListener(job)
+                    with(Uri.parse(commandResolver.command.output)) {
+                        if (scheme == ContentResolver.SCHEME_FILE) {
+                            val filePath = path
+                            MediaScannerConnection.scanFile(appContext, arrayOf(filePath),
+                                    null, null)
+                        }
+                    }
                     commandResolver.tempFile.delete()
                 }
         )
