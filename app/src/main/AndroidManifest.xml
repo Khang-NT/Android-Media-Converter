@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <permission android:name="${applicationId}.permission.MANAGE_JOB"
+    <permission
+        android:name="${applicationId}.permission.MANAGE_JOB"
         android:protectionLevel="signature"/>
     <uses-permission android:name="${applicationId}.permission.MANAGE_JOB"/>
 
@@ -28,15 +29,20 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".worker.ConverterService"
+        <service
+            android:name=".worker.ConverterService"
             android:enabled="true"
             android:exported="true"
             android:permission="${applicationId}.permission.MANAGE_JOB">
             <intent-filter>
-                <action android:name="${applicationId}.action.add_job" />
-                <action android:name="${applicationId}.action.cancel_job" />
+                <action android:name="${applicationId}.action.add_job"/>
+                <action android:name="${applicationId}.action.cancel_job"/>
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ui.PermissionTransparentActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent"/>
     </application>
 
 </manifest>

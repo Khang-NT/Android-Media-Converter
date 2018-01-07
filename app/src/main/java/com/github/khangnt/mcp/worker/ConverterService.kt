@@ -1,8 +1,12 @@
 package com.github.khangnt.mcp.worker
 
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+import android.net.Uri
 import android.os.*
 import android.support.annotation.MainThread
 import android.support.v4.app.NotificationCompat
@@ -12,6 +16,10 @@ import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.notification.NotificationHelper
+import com.github.khangnt.mcp.ui.EXTRA_PENDING_INTENT
+import com.github.khangnt.mcp.ui.PermissionTransparentActivity
+import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.toJsonOrNull
 import com.github.khangnt.mcp.util.toMapString
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -68,7 +76,7 @@ private fun Bundle.toJob(): Job? {
         Timber.d("Invalid Job in bundle: ${this}")
         return null
     }
-    return Job (
+    return Job(
             id = ID_UNSET,
             title = title,
             status = JobStatus.PENDING,
@@ -92,6 +100,8 @@ class ConverterService : Service() {
             context.startService(deleteJobIntent)
         }
     }
+
+    private var pendingAddJobIntentCode: Int = 100
 
     private val binder = ConverterServiceBinder(this)
     private val jobManager: JobManager = SingletonInstances.getJobManager()
@@ -138,15 +148,26 @@ class ConverterService : Service() {
 
     override fun onStartCommand(intentNullable: Intent?, flags: Int, startId: Int): Int {
         intentNullable?.let { intent ->
-            val shouldPostponeStopMessage = when(intent.action) {
+            val shouldPostponeStopMessage = when (intent.action) {
                 ACTION_ADD_JOB -> {
-                    val msg = Message().apply {
-                        what = ADD_JOB_MESSAGE
-                        data = intent.extras
-                    }
-                    mainHandler.sendMessage(msg)
+                    if (!hasWriteStoragePermission(this)) {
+                        // don't add job without write external storage permission granted
+                        val pendingIntent = PendingIntent.getService(this,
+                                pendingAddJobIntentCode++, intent.cloneFilter().putExtras(intent),
+                                PendingIntent.FLAG_ONE_SHOT)
+                        startActivity(Intent(this, PermissionTransparentActivity::class.java)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .putExtra(EXTRA_PENDING_INTENT, pendingIntent))
+                        false
+                    } else {
+                        val msg = Message().apply {
+                            what = ADD_JOB_MESSAGE
+                            data = intent.extras
+                        }
+                        mainHandler.sendMessage(msg)
 
-                    true
+                        true
+                    }
                 }
                 ACTION_CANCEL_JOB -> {
                     val msg = Message().apply {
@@ -298,6 +319,17 @@ class ConverterService : Service() {
                 }
                 ADD_JOB_MESSAGE -> {
                     msg.data?.toJob()?.let { job ->
+                        with(Uri.parse(job.command.output)) {
+                            if (scheme.startsWith("content")) {
+                                catchAll {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                        contentResolver.takePersistableUriPermission(this,
+                                                FLAG_GRANT_READ_URI_PERMISSION or
+                                                        FLAG_GRANT_WRITE_URI_PERMISSION)
+                                    }
+                                }
+                            }
+                        }
                         jobManager.addJob(job)
                         loop()
                     }
