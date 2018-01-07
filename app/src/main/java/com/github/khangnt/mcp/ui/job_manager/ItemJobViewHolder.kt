@@ -2,9 +2,11 @@ package com.github.khangnt.mcp.ui.job_manager
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatTextView
+import android.util.SparseArray
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +17,8 @@ import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdModel
+import com.github.khangnt.mcp.util.UriUtils
+import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.ConverterService
 
 /**
@@ -25,6 +29,8 @@ import com.github.khangnt.mcp.worker.ConverterService
 data class JobModel(val job: Job) : AdapterModel, HasIdModel {
     override val modelId: Long = job.id
 }
+
+private val cacheOutputPath = SparseArray<String>()
 
 class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
 
@@ -71,8 +77,14 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             }
             tvJobStatus.text = statusBuilder.toString()
 
-            // fixme: make human readable location
-            tvJobLocation.text = command.output
+            var path = cacheOutputPath.get(id.toInt())
+            if (path === null) {
+                catchAll { path = UriUtils.getPathFromUri(context, Uri.parse(command.output)) }
+                if (path !== null) {
+                    cacheOutputPath.put(id.toInt(), path)
+                }
+            }
+            tvJobLocation.text = path ?: command.output
 
             ivDeleteJob.setOnClickListener {
                 ConverterService.cancelJob(context, jobId = id)
