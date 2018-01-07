@@ -7,7 +7,7 @@
 
     <permission
         android:name="${applicationId}.permission.MANAGE_JOB"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="normal"/>
     <uses-permission android:name="${applicationId}.permission.MANAGE_JOB"/>
 
     <application
