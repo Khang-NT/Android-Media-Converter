@@ -5,11 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <permission
-        android:name="${applicationId}.permission.MANAGE_JOB"
-        android:protectionLevel="normal"/>
-    <uses-permission android:name="${applicationId}.permission.MANAGE_JOB"/>
-
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -32,8 +27,7 @@
         <service
             android:name=".worker.ConverterService"
             android:enabled="true"
-            android:exported="true"
-            android:permission="${applicationId}.permission.MANAGE_JOB">
+            android:exported="true">
             <intent-filter>
                 <action android:name="${applicationId}.action.add_job"/>
                 <action android:name="${applicationId}.action.cancel_job"/>
