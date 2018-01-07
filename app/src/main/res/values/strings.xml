@@ -28,4 +28,5 @@
     <string name="licenses">Licenses</string>
     <string name="app_version_format">Version %s</string>
     <string name="permission_not_granted">Permission denied, action was cancelled</string>
+    <string name="job_output_location">Location: %s</string>
 </resources>

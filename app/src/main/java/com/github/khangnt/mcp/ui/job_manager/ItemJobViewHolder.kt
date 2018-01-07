@@ -84,7 +84,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                     cacheOutputPath.put(id.toInt(), path)
                 }
             }
-            tvJobLocation.text = path ?: command.output
+            tvJobLocation.text = context.getString(R.string.job_output_location,
+                    path ?: command.output)
 
             ivDeleteJob.setOnClickListener {
                 ConverterService.cancelJob(context, jobId = id)
