@@ -27,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "0.3"
+        versionName "0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         playAccountConfig = playAccountConfigs.defaultAccountConfig
@@ -64,7 +64,7 @@ android {
         }
     }
 
-    final _versionCode = 3
+    final _versionCode = 5
 
     flavorDimensions 'cpuArch'
     productFlavors {
