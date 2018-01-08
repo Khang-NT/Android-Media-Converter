@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -23,10 +24,13 @@ private const val ABOUT_FRAG_TAG = "TAG:AboutFragment"
 private const val KEY_BACK_STACK = "KEY:BackStack"
 private const val KEY_CURRENT_FRAGMENT = "KEY:CurrentFragment"
 
+const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
+
 class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private var currentFragment: String? = null
     private val backStack = mutableListOf<String>()
+    private var navMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,17 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
             backStack.addAll(temp)
 
             currentFragment = it.getString(KEY_CURRENT_FRAGMENT, currentFragment)
+        }
+    }
+
+    override fun onNewActivityIntent(intent: Intent) {
+        super.onNewActivityIntent(intent)
+        if (intent.getBooleanExtra(EXTRA_OPEN_JOB_MANAGER, false)
+                && currentFragment != JOB_MANAGER_FRAG_TAG) {
+            currentFragment = JOB_MANAGER_FRAG_TAG
+            if (view !== null) {
+                showFragment(currentFragment!!, false)
+            }
         }
     }
 
@@ -55,8 +70,15 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
         drawerLayout.addDrawerListener(drawerToggleListener)
         drawerToggleListener.syncState()
 
+        navMenu = navigationView.menu
+
         // just ensure current fragment is showing, don't add it to back stack
         showFragment(currentFragment!!, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navMenu = null
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -133,6 +155,14 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
 
         currentFragment = fragmentTag
         collapsingToolbar.title = fragmentTitle(fragmentTag)
+        if (currentFragment == PRESET_COMMAND_FRAG_TAG) {
+            navMenu?.findItem(R.id.item_nav_preset_command)?.isChecked = true
+        } else if (currentFragment == JOB_MANAGER_FRAG_TAG) {
+            navMenu?.findItem(R.id.item_nav_job_manager)?.isChecked = true
+        } else {
+            navMenu?.findItem(R.id.item_nav_preset_command)?.isChecked = false
+            navMenu?.findItem(R.id.item_nav_job_manager)?.isChecked = false
+        }
     }
 
 }

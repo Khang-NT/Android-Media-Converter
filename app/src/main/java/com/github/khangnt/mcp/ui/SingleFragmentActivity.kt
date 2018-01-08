@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
@@ -24,10 +25,16 @@ abstract class SingleFragmentActivity : BaseActivity() {
 
         if (supportFragmentManager.findFragmentByTag(CONTENT_FRAGMENT_TAG) == null) {
             val fragment = onCreateFragment(savedInstanceState)
+            (fragment as? BaseFragment)?.setActivityIntent(intent)
             supportFragmentManager.beginTransaction()
                     .add(getFragmentContainerId(), fragment, CONTENT_FRAGMENT_TAG)
                     .commit()
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        (getContentFragment() as? BaseFragment)?.onNewActivityIntent(intent)
     }
 
     /**
