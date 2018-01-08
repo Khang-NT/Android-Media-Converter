@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.github.khangnt.mcp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -27,7 +28,8 @@
         <service
             android:name=".worker.ConverterService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="${applicationId}.action.add_job"/>
                 <action android:name="${applicationId}.action.cancel_job"/>
