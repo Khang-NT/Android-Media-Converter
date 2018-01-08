@@ -1,11 +1,27 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
+    }
+}
+
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.triplet.play'
 
 android {
     compileSdkVersion 27
+
+    playAccountConfigs {
+        defaultAccountConfig {
+            jsonFile = file('service_account.json')
+        }
+    }
+
     defaultConfig {
         applicationId "com.github.khangnt.mcp"
         minSdkVersion 16
@@ -13,6 +29,8 @@ android {
         versionCode 1
         versionName "0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
     signingConfigs {
@@ -144,4 +162,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+
+play {
+    track = 'beta'
+    untrackOld = true
 }
