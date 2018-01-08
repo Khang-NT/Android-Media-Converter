@@ -29,4 +29,15 @@
     <string name="app_version_format">Version %s</string>
     <string name="permission_not_granted">Permission denied, action was cancelled</string>
     <string name="job_output_location">Location: %s</string>
+    <string name="share_file_subject">Sharing File…</string>
+    <string name="share_chooser">Share to</string>
+    <string name="open_file_chooser">Open file</string>
+    <string name="open_folder_chooser">Open folder: %s</string>
+    <string name="unknown_file_path">Unknown file path</string>
+
+    <string name="action_yes">Yes</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="dialog_confirm_delete_job_output">Delete Job and file</string>
+    <string name="dialog_confirm_delete_job_output_mess">Do you want to delete this job and its file? %s\nThis action can\'t UNDO!</string>
 </resources>

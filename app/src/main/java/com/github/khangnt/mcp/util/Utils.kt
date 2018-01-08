@@ -26,12 +26,13 @@ fun Closeable?.closeQuietly() {
     catchAll { this?.close() }
 }
 
-inline fun catchAll(printLog: Boolean = false, action: () -> Unit) {
+inline fun <T> catchAll(printLog: Boolean = false, action: () -> T): T? {
     try {
-        action()
+        return action()
     } catch (ignore: Throwable) {
         if (printLog) Timber.d(ignore)
     }
+    return null
 }
 
 fun copy(
