@@ -7,3 +7,4 @@
 .externalNativeBuild
 .idea
 release_key.jks
+publish_apks
