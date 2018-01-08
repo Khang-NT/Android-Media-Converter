@@ -54,6 +54,8 @@ class JobWorkerThread(
             return
         }
 
+        val startTime = System.currentTimeMillis()
+
         val process = try {
             startProcess(commandResolver)
                     .also { Thread.sleep(500) } // delay a bit for process initializing
@@ -159,6 +161,9 @@ class JobWorkerThread(
                         }
                     }
                     commandResolver.tempFile.delete()
+
+                    Timber.d("Conversion success, take %d ms, output: %s",
+                            System.currentTimeMillis() - startTime, job.command.output)
                 }
         )
         copyOutputRunnable.run() // not start(), avoid spawn new thread

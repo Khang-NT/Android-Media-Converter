@@ -11,9 +11,7 @@ import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.Closeable
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
 
@@ -57,9 +55,9 @@ class ContentResolverSource(
         }
     }
 
-    override fun openInputStream(): InputStream = contentResolver.openInputStream(uri)
+    override fun openInputStream(): InputStream = BufferedInputStream(contentResolver.openInputStream(uri))
 
-    override fun openOutputStream(): OutputStream = contentResolver.openOutputStream(uri)
+    override fun openOutputStream(): OutputStream = BufferedOutputStream(contentResolver.openOutputStream(uri))
 
     override fun close() {
         // does nothing
@@ -106,7 +104,7 @@ class HttpSourceInput(
         }
     }
 
-    override fun openInputStream(): InputStream = response.body()!!.byteStream()
+    override fun openInputStream(): InputStream = BufferedInputStream(response.body()!!.byteStream())
 
     override fun close() {
         if (requestCalled) {
