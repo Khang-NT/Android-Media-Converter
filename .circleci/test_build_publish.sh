@@ -7,13 +7,13 @@ commandBuilder="clean testArm7DebugUnitTest lintArm7Debug assembleArm7Debug -Pdi
 
 if [ -z "$CIRCLE_PR_REPONAME" ]; then
     ## It is not fork repo -> + test and build release arm7
-    commandBuilder="$commandBuilder testArm7Release lintArm7Release assembleArm7Release"
+    commandBuilder="$commandBuilder testArm7ReleaseUnitTest lintArm7Release assembleArm7Release"
     echo "===========> Build releases"
 fi
 
 if [[ "$CIRCLE_TAG" =~ ^release-.* ]]; then
     ## Release -> build all
-    commandBuilder="clean buildRelease publishApks -PdisablePreDex"
+    commandBuilder="clean testReleaseUnitTest lintRelease assembleRelease publishApks -PdisablePreDex"
 else
     echo "===========> Skip PlayStore publish"
 fi
