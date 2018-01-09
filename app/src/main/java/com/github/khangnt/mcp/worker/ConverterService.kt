@@ -147,6 +147,11 @@ class ConverterService : Service() {
     fun getJobManager(): JobManager = jobManager
 
     override fun onStartCommand(intentNullable: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // go to foreground immediately, maybe service started with Context#startForegroundService
+            // if no job to run, service will stop foreground soon
+            goToForeground()
+        }
         intentNullable?.let { intent ->
             val shouldPostponeStopMessage = when (intent.action) {
                 ACTION_ADD_JOB -> {
@@ -190,6 +195,7 @@ class ConverterService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopForeground()
         jobHandlerThread.quit()
         jobHandler.forceShutdown()
         notificationUpdateDisposable?.dispose()
