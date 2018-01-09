@@ -153,12 +153,12 @@ publishConfig {
     track = 'beta'
     apkFiles = files(
             "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-arm7-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-arm8-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-mips-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-mips64-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-x86-release.apk",
-            "$buildDir/outputs/apk/arm/release/app-x86_64-release.apk",
+            "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
+            "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
+            "$buildDir/outputs/apk/mips/release/app-mips-release.apk",
+            "$buildDir/outputs/apk/mips64/release/app-mips64-release.apk",
+            "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
+            "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
     )
     println(apkFiles)
     serviceAccountJson = 'app/service_account.json'
