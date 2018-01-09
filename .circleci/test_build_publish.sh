@@ -24,7 +24,10 @@ fi
 
 if [ ! -z "$CIRCLE_TAG" ]; then
     echo "===========> Create Github release"
-    go get github.com/tcnksm/ghr
+    curl -O https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
+    sudo tar -xvf go1.6.linux-amd64.tar.gz
+    chmod +x go/bin/go
+    ./go/bin/go get github.com/tcnksm/ghr
     ghr \
         -t "$GITHUB_TOKEN" \
         -u 'Khang-NT' \
