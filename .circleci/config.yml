@@ -8,6 +8,11 @@ jobs:
       JVM_OPTS: -Xmx4608m
     steps:
       - checkout
+      - run:
+          name: Init Environment
+          command: |
+            echo "" >> gradle.properties;
+            echo "key_store_password=$KEY_STORE_PASS" >> gradle.properties;
       - restore_cache:
           key: "dependencies-cache"
       - run:
