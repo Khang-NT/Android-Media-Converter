@@ -13,8 +13,8 @@ jobs:
           command: |
             echo "" >> gradle.properties;
             echo "key_store_password=$KEY_STORE_PASS" >> gradle.properties;
-            openssl aes-256-cbc -d -a -in service_account.json.enc -out app/service_account.json -k $KEY_STORE_PASS || true;
-            openssl aes-256-cbc -d -a -in release_key.jks.enc -out app/release_key.jks -k $KEY_STORE_PASS || true;
+            openssl aes-256-cbc -d -a -in service_account.json.enc -out app/service_account.json -k "$KEY_STORE_PASS" || true;
+            openssl aes-256-cbc -d -a -in release_key.jks.enc -out app/release_key.jks -k "$KEY_STORE_PASS" || true;
       - restore_cache:
           key: "dependencies-cache"
       - run:

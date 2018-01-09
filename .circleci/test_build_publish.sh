@@ -8,6 +8,7 @@ commandBuilder="clean testArm7DebugUnitTest lintArm7Debug assembleArm7Debug -Pdi
 if [ -z "$CIRCLE_PR_REPONAME" ]; then
     ## It is not fork repo -> + test and build release arm7
     commandBuilder="$commandBuilder testArm7Release lintArm7Release assembleArm7Release"
+    echo "===========> Build releases"
 fi
 
 if [[ "$CIRCLE_TAG" =~ ^release-.* ]]; then
@@ -22,7 +23,7 @@ fi
 ./copy_artifacts.sh
 
 if [ ! -z "$CIRCLE_TAG" ]; then
-    echo "===========> Create github release"
+    echo "===========> Create Github release"
     go get github.com/tcnksm/ghr
     ghr \
         -t "$GITHUB_TOKEN" \
