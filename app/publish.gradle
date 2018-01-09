@@ -99,21 +99,23 @@ class PublishTask extends DefaultTask {
 
         def editId = edits.insert(publishConfig.packageName, null).execute().getId()
 
-        // set track
-        def track = new Track().setTrack(publishConfig.track)
-        edits.tracks().update(publishConfig.packageName, editId, publishConfig.track, track).execute()
+        def versionCodes = new ArrayList<Integer>()
 
         // upload apks
         publishConfig.apkFiles.each {
             println("Start uploading $it")
             def apkContent = new FileContent('application/vnd.android.package-archive', it)
             def apk = edits.apks().upload(publishConfig.packageName, editId, apkContent).execute()
+            versionCodes.add(apk.getVersionCode())
             println("Upload success  $it")
             println(apk)
         }
 
+        // set track for all version code
+        def track = new Track().setTrack(publishConfig.track).setVersionCodes(versionCodes)
+        edits.tracks().update(publishConfig.packageName, editId, publishConfig.track, track).execute()
+
         // commit
-        edits.commit(publishConfig.packageName, editId).execute()
-        println("Publish success")
+        println("Publish success ${edits.commit(publishConfig.packageName, editId).execute()}")
     }
 }
