@@ -19,9 +19,9 @@ done
 pushd app/build/outputs/mapping
 for path in $(find . -name 'mapping.txt');
 do
-    mkdir -p "$mapping_folder/$path"
+    mkdir -p $(dirname "$mapping_folder/$path")
     cp ${path} "$mapping_folder/$path"
 done
 popd
 
-cp app/build/reports/* ${report_folder}
+cp -r app/build/reports/* ${report_folder}
