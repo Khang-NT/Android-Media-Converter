@@ -1,3 +1,3 @@
 ![](app/src/main/res/mipmap-xhdpi/ic_launcher.png)  
 # Android-Media-Converter
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE) [![CircleCI](https://circleci.com/gh/Khang-NT/Android-Media-Converter.svg?style=svg)](https://circleci.com/gh/Khang-NT/Android-Media-Converter) [![Latest Release](https://img.shields.io/github/release/Khang-NT/Android-Media-Converter.svg)](https://github.com/Khang-NT/Android-Media-Converter/releases)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE) [![CircleCI](https://img.shields.io/circleci/project/github/Khang-NT/Android-Media-Converter.svg)](https://circleci.com/gh/Khang-NT/Android-Media-Converter) [![Latest Release](https://img.shields.io/github/release/Khang-NT/Android-Media-Converter.svg)](https://github.com/Khang-NT/Android-Media-Converter/releases)
