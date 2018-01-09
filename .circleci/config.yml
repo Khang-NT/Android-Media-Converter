@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build_and_test:
+    working_directory: ~/source
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx4608m
+    steps:
+      - checkout
+      - restore_cache:
+          key: "dependencies-cache"
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: "dependencies-cache"
+      - run:
+          name: Lint and compile apk for arm7
+          command: ./gradlew clean lintArm7Debug lintArm7Release assembleArm7Debug assembleArm7Release -PdisablePreDex
+      - run:
+          name: Copy artifacts
+          command: ./copy_artifacts.sh
+      - store_artifacts:
+          path: artifacts
+
+workflows:
+  version: 2
+
+  ymusic_workflows:
+    jobs:
+      - build_and_test:
+          filters:
+            tags:
+              only: /.*/
