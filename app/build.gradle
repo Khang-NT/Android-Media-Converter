@@ -145,3 +145,21 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
+apply from: 'publish.gradle'
+
+publishConfig {
+    packageName = 'com.github.khangnt.mcp'
+    track = 'beta'
+    apkFiles = files(
+            "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-arm7-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-arm8-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-mips-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-mips64-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-x86-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-x86_64-release.apk",
+    )
+    println(apkFiles)
+    serviceAccountJson = 'app/service_account.json'
+}

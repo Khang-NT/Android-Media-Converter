@@ -1,0 +1,119 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.google.apis:google-api-services-androidpublisher:v2-rev49-1.23.0'
+    }
+}
+
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.http.FileContent
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.androidpublisher.AndroidPublisher
+import com.google.api.services.androidpublisher.AndroidPublisherScopes
+import com.google.api.services.androidpublisher.model.Track
+
+apply plugin: PublishPlugin
+
+class PublishPlugin implements Plugin<Project> {
+    void apply(Project project) {
+        def config = project.extensions.create('publishConfig', PublishConfigExtension, project)
+        project.tasks.create('publishApks', PublishTask) {
+            group = "Publishing"
+            publishConfig = config
+        }
+    }
+}
+
+class PublishConfigExtension {
+    final ConfigurableFileCollection apkFiles
+    String track
+    String serviceAccountJson
+    String packageName
+
+    PublishConfigExtension(Project project) {
+        track = 'alpha'
+        apkFiles = project.files()
+    }
+
+    FileCollection getApkFiles() {
+        return apkFiles
+    }
+
+    void setApkFiles(FileCollection files) {
+        apkFiles.setFrom(files)
+    }
+
+    String getTrack() {
+        return track
+    }
+
+    String getServiceAccountJson() {
+        return serviceAccountJson
+    }
+
+    String getPackageName() {
+        return packageName
+    }
+
+    void setPackageName(String packageName) {
+        this.packageName = packageName
+    }
+}
+
+class PublishTask extends DefaultTask {
+    private static final JSON_FACTORY = JacksonFactory.getDefaultInstance()
+    private static final HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport()
+
+    PublishConfigExtension publishConfig = null
+
+    @TaskAction
+    def publish() {
+        if (publishConfig == null) {
+            throw IllegalStateException("Missing publishConfig")
+        }
+        if (publishConfig.apkFiles.isEmpty()) {
+            throw IllegalStateException("Must specify at least one APK in 'apkFiles'")
+        }
+        if (!["production", "beta", "alpha"].contains(publishConfig.track)) {
+            throw IllegalArgumentException("Invalid track: ${publishConfig.track}")
+        }
+        if (publishConfig.serviceAccountJson == null) {
+            throw IllegalStateException("Missing 'serviceAccountJson'")
+        }
+        if (publishConfig.packageName == null) {
+            throw IllegalStateException("Missing 'packageName'")
+        }
+
+        def serviceAccountIs = new FileInputStream(publishConfig.serviceAccountJson)
+        def credential = GoogleCredential
+                .fromStream(serviceAccountIs, HTTP_TRANSPORT, JSON_FACTORY)
+                .createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
+
+        def androidPublisher = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+                .build()
+        def edits = androidPublisher.edits()
+
+        def editId = edits.insert(publishConfig.packageName, null).execute().getId()
+
+        // set track
+        def track = new Track().setTrack(publishConfig.track)
+        edits.tracks().update(publishConfig.packageName, editId, publishConfig.track, track).execute()
+
+        // upload apks
+        publishConfig.apkFiles.each {
+            println("Start uploading $it")
+            def apkContent = new FileContent('application/vnd.android.package-archive', it)
+            def apk = edits.apks().upload(publishConfig.packageName, editId, apkContent).execute()
+            println("Upload success  $it")
+            println(apk)
+        }
+
+        // commit
+        edits.commit(publishConfig.packageName, editId).execute()
+        println("Publish success")
+    }
+}

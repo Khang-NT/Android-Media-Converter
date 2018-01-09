@@ -8,3 +8,4 @@
 .idea
 release_key.jks
 publish_apks
+service_account.json
