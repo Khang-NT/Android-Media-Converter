@@ -36,19 +36,18 @@ class NotificationHelper(val appContext: Context) {
         @SuppressLint("NewApi") // kotlin lint bug
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // create channel
-            notificationManager.getNotificationChannel(CONVERTER_NOTIFICATION_CHANNEL) ?:
-                    let {
-                        val notificationChannel = NotificationChannel(
-                                CONVERTER_NOTIFICATION_CHANNEL,
-                                appContext.getString(R.string.notification_channel_converter),
-                                NotificationManager.IMPORTANCE_LOW
-                        )
-                        notificationChannel.description =
-                                appContext.getString(R.string.notification_channel_converter_des)
-                        notificationChannel.enableLights(false)
-                        notificationChannel.enableVibration(false)
-                        notificationManager.createNotificationChannel(notificationChannel)
-                    }
+            if (notificationManager.getNotificationChannel(CONVERTER_NOTIFICATION_CHANNEL) == null) {
+                val notificationChannel = NotificationChannel(
+                        CONVERTER_NOTIFICATION_CHANNEL,
+                        appContext.getString(R.string.notification_channel_converter),
+                        NotificationManager.IMPORTANCE_LOW
+                )
+                notificationChannel.description =
+                        appContext.getString(R.string.notification_channel_converter_des)
+                notificationChannel.enableLights(false)
+                notificationChannel.enableVibration(false)
+                notificationManager.createNotificationChannel(notificationChannel)
+            }
         }
     }
 

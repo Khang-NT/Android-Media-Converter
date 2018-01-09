@@ -92,7 +92,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                     .putExtra(Intent.EXTRA_STREAM, outputUri)
                     .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_file_subject))
             grantWritePermission(outputUri, intent)
+            disableStrictMode()
             context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_chooser)))
+            restoreStrictMode()
         }
         ivOpen.setOnClickListener {
             var outputUri = Uri.parse(currentJob!!.command.output)
