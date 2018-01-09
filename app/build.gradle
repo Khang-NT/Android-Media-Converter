@@ -160,6 +160,5 @@ publishConfig {
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
             "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
     )
-    println(apkFiles)
     serviceAccountJson = 'app/service_account.json'
 }
