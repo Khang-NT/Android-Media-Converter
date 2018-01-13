@@ -4,11 +4,13 @@ import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
+import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
+import com.github.khangnt.mcp.reportNonFatal
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import timber.log.Timber
@@ -174,6 +176,7 @@ class JobWorkerThread(
                 "sh", "-c",
                 commandResolver.execCommand
         )
+        Crashlytics.log("Start process with command: ${commandResolver.execCommand}")
         return ProcessBuilder()
                 .apply { environment().putAll(commandResolver.command.environmentVars) }
                 .command(cmdArray)
@@ -196,9 +199,11 @@ class JobWorkerThread(
             if (!hasError) {
                 hasError = true
 
-                Timber.d(throwable, "%s", message)
                 job = jobManager.updateJobStatus(job, FAILED, message)
                 onErrorListener(job, throwable)
+
+                Timber.d(throwable, "%s", message)
+                reportNonFatal(throwable, "JobWorkerThread#onError", message)
             }
         }
     }
@@ -233,6 +238,7 @@ class JobWorkerThread(
                         if (!stringBuilder.isBlank()) {
                             jobManager.recordOutputSize(stringBuilder.toString())
                         }
+                        Crashlytics.log(line)
                         Timber.d(line)
                     }
                 }
