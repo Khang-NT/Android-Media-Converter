@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.worker
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -48,6 +49,8 @@ private const val JOB_HANDLER_MAX_FREE_TIME = 10_000 / JOB_HANDLER_LOOP_INTERVAL
 
 private const val NOTIFICATION_UPDATE_INTERVAL = 500L
 
+private const val SERVICE_WAKE_LOCK_TAG = "ConverterServiceWakeLock"
+
 const val ACTION_ADD_JOB = "${BuildConfig.APPLICATION_ID}.action.add_job"
 const val ACTION_CANCEL_JOB = "${BuildConfig.APPLICATION_ID}.action.cancel_job"
 
@@ -58,6 +61,7 @@ const val EXTRA_JOB_CMD_OUTPUT_URI = "ConverterService:JobCmdOutputUri"
 const val EXTRA_JOB_CMD_OUTPUT_FMT = "ConverterService:JobCmdOutputFmt"
 const val EXTRA_JOB_CMD_ARGS = "ConverterService:JobCmdOutputArgs"
 const val EXTRA_JOB_CMD_ENV_VARS_JSON = "ConverterService:JobCmdOutputEnvVars"
+
 
 private fun Bundle.toJob(): Job? {
     val title: String = getString(EXTRA_JOB_TITLE, "Untitled")
@@ -117,6 +121,8 @@ class ConverterService : Service() {
     private val jobHandlerThread: HandlerThread
     private lateinit var jobHandler: JobHandler
 
+    private lateinit var serviceWakeLock: PowerManager.WakeLock
+
     init {
         jobHandlerThread = HandlerThread("JobHandlerThread")
         jobHandlerThread.start() // start handler thread first, use it onCreate
@@ -142,6 +148,9 @@ class ConverterService : Service() {
 
         jobHandler = JobHandler(jobHandlerThread.looper)
         jobHandler.sendEmptyMessage(INIT_MESSAGE)
+
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        serviceWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SERVICE_WAKE_LOCK_TAG)
     }
 
     fun getJobManager(): JobManager = jobManager
@@ -216,11 +225,15 @@ class ConverterService : Service() {
         }
     }
 
+    @SuppressLint("WakelockTimeout")
     @MainThread
     private fun goToForeground() {
         if (!inForeground) {
             inForeground = true
             startForeground(CONVERTER_NOTIFICATION_ID, notificationBuilder.build())
+        }
+        if (!serviceWakeLock.isHeld) {
+            serviceWakeLock.acquire()
         }
     }
 
@@ -229,6 +242,9 @@ class ConverterService : Service() {
         if (inForeground) {
             inForeground = false
             stopForeground(true)
+        }
+        if (serviceWakeLock.isHeld) {
+            serviceWakeLock.release()
         }
     }
 
