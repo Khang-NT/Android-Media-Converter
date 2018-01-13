@@ -57,7 +57,7 @@ data class CommandResolver(
                     "http", "https" -> {
                         val freeServerAddress = TcpInput.findFreeServerAddress()
                         execCommandBuilder.append(" '${getTcpUri(freeServerAddress)}'")
-                        tcpInputs.add(TcpInput(HttpSourceInput(uri.toString()), freeServerAddress))
+                        tcpInputs.add(TcpInput(HttpSourceInput(context, uri.toString()), freeServerAddress))
                     }
                     else -> {
                         throw IllegalArgumentException("Can't resolve input $input")
