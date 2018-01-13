@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.worker
 
-import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -9,6 +8,7 @@ import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
+import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import timber.log.Timber
@@ -153,12 +153,12 @@ class JobWorkerThread(
                 onSuccess = {
                     job = jobManager.updateJobStatus(job, COMPLETED)
                     onCompleteListener(job)
-                    with(Uri.parse(commandResolver.command.output)) {
-                        if (scheme == ContentResolver.SCHEME_FILE) {
-                            val filePath = path
-                            MediaScannerConnection.scanFile(appContext, arrayOf(filePath),
-                                    null, null)
-                        }
+                    catchAll {
+                        UriUtils.getPathFromUri(appContext, Uri.parse(commandResolver.command.output))
+                    }?.let { filePath ->
+                        // notify media scanner
+                        MediaScannerConnection.scanFile(appContext, arrayOf(filePath),
+                                null, null)
                     }
                     commandResolver.tempFile.delete()
 
