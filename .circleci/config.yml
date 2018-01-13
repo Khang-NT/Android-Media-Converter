@@ -13,6 +13,7 @@ jobs:
           command: |
             echo "" >> gradle.properties;
             echo "key_store_password=$KEY_STORE_PASS" >> gradle.properties;
+            echo "apiKey=$FABRIC_API_KEY" > app/fabric.properties;
             openssl aes-256-cbc -d -a -in service_account.json.enc -out app/service_account.json -k "$KEY_STORE_PASS" -md md5 || true;
             openssl aes-256-cbc -d -a -in release_key.jks.enc -out app/release_key.jks -k "$KEY_STORE_PASS" -md md5 || true;
       - restore_cache:
