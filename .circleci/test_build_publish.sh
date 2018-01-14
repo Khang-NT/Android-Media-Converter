@@ -24,25 +24,15 @@ fi
 
 if [ ! -z "$CIRCLE_TAG" ]; then
     echo "===========> Create Github release"
-
-    curl -O https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
-    sudo tar -xf go1.6.linux-amd64.tar.gz
-    sudo chmod +x go/bin/go
-
-    export GOROOT=$HOME/go
-    export GOPATH=$HOME/go_workspace
-    export PATH=$PATH:$GOROOT/bin
-    mkdir -p $GOROOT
-    mkdir -p $GOPATH
-
-    ./go/bin/go get github.com/tcnksm/ghr
-    ghr \
+    curl -L -O 'https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip'
+    unzip ghr_v0.5.4_linux_amd64.zip -d .
+    sudo chmod +x ghr
+    ./ghr \
         -t "$GITHUB_TOKEN" \
         -u 'Khang-NT' \
         -r 'Android-Media-Converter' \
         -c "$CIRCLE_SHA1" \
         -delete \
-        -draft \
         "$CIRCLE_TAG" artifacts/apks
 fi
 
