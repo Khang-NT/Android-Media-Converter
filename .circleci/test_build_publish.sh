@@ -27,6 +27,8 @@ if [ ! -z "$CIRCLE_TAG" ]; then
     curl -O https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
     sudo tar -xf go1.6.linux-amd64.tar.gz
     sudo chmod +x go/bin/go
+    export GOROOT=$HOME/go
+    export PATH=$PATH:$GOROOT/bin
     ./go/bin/go get github.com/tcnksm/ghr
     ghr \
         -t "$GITHUB_TOKEN" \
