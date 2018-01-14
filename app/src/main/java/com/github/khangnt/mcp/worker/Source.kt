@@ -8,7 +8,6 @@ import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
 import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
-import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -81,12 +80,12 @@ class SocketSourceOutput(
     override fun openOutputStream(): OutputStream = outputStream
 
     override fun close() {
-        catchAll { socket.close() }
+        socket.closeQuietly()
     }
 }
 
 class HttpSourceInput(
-        private val context: Context,
+        context: Context,
         private val request: Request,
         private val okHttpClient: OkHttpClient = SingletonInstances.getOkHttpClient()
 ): SourceInputStream {
