@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
+import com.github.khangnt.mcp.getKnownReasonOf
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.reportNonFatal
@@ -177,6 +178,7 @@ class JobWorkerThread(
                 commandResolver.execCommand
         )
         Crashlytics.log("Start process with command: ${commandResolver.execCommand}")
+        Timber.d("Start process with command: ${commandResolver.execCommand}")
         return ProcessBuilder()
                 .apply { environment().putAll(commandResolver.command.environmentVars) }
                 .command(cmdArray)
@@ -199,7 +201,8 @@ class JobWorkerThread(
             if (!hasError) {
                 hasError = true
 
-                job = jobManager.updateJobStatus(job, FAILED, message)
+                val errorDetail = getKnownReasonOf(throwable, appContext, message)
+                job = jobManager.updateJobStatus(job, FAILED, errorDetail)
                 onErrorListener(job, throwable)
 
                 Timber.d(throwable, "%s", message)
