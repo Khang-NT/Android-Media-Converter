@@ -30,8 +30,10 @@ if [ ! -z "$CIRCLE_TAG" ]; then
     sudo chmod +x go/bin/go
 
     export GOROOT=$HOME/go
+    export GOPATH=$HOME/go_workspace
     export PATH=$PATH:$GOROOT/bin
     mkdir -p $GOROOT
+    mkdir -p $GOPATH
 
     ./go/bin/go get github.com/tcnksm/ghr
     ghr \
