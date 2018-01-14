@@ -177,6 +177,7 @@ class JobWorkerThread(
                 commandResolver.execCommand
         )
         Crashlytics.log("Start process with command: ${commandResolver.execCommand}")
+        Timber.d("Start process with command: ${commandResolver.execCommand}")
         return ProcessBuilder()
                 .apply { environment().putAll(commandResolver.command.environmentVars) }
                 .command(cmdArray)

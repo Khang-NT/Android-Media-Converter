@@ -49,7 +49,7 @@ android {
             applicationIdSuffix ".dev"
             signingConfig signingConfigs.debug
 
-//            ext.enableCrashlytics = false
+            ext.enableCrashlytics = false
         }
 
         release {
