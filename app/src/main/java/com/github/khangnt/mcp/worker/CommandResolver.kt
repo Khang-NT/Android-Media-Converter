@@ -70,14 +70,14 @@ data class CommandResolver(
 
             // temp file to save ffmpeg output
             val tempFile = try {
-                val file = File(context.externalCacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+                val file = File(context.getExternalFilesDir(null), FFMPEG_TEMP_OUTPUT_FILE)
                 if (file.parentFile.canWrite()) {
                     file
                 } else {
-                    File(context.cacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+                    File(context.filesDir, FFMPEG_TEMP_OUTPUT_FILE)
                 }
             } catch (all: Exception) {
-                File(context.cacheDir, FFMPEG_TEMP_OUTPUT_FILE)
+                File(context.filesDir, FFMPEG_TEMP_OUTPUT_FILE)
             }
 
             val tempOutputUri = Uri.fromFile(tempFile)
