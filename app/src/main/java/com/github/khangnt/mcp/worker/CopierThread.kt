@@ -3,6 +3,8 @@ package com.github.khangnt.mcp.worker
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.util.closeQuietly
 import com.github.khangnt.mcp.util.copy
+import java.io.InputStream
+import java.io.OutputStream
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -18,17 +20,19 @@ class CopierThread(
 ) : Thread() {
 
     override fun run() {
+        var input: InputStream? = null
+        var output: OutputStream? = null
         try {
-            sourceInput.openInputStream().use { input ->
-                sourceOutput.openOutputStream().use { output ->
-                    copy(input, output, bufferLength)
-                    onSuccess.invoke()
-                }
-            }
+            input = sourceInput.openInputStream()
+            output = sourceOutput.openOutputStream()
+            copy(input, output, bufferLength)
+            onSuccess.invoke()
         } catch (anyError: Throwable) {
             onError(anyError)
         } finally {
             // close sources
+            input.closeQuietly()
+            output.closeQuietly()
             sourceInput.closeQuietly()
             sourceOutput.closeQuietly()
         }
