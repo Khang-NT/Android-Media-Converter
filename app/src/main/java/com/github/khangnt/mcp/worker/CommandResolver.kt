@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.worker
 
 import android.content.Context
 import android.net.Uri
+import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
@@ -78,6 +79,11 @@ data class CommandResolver(
                 }
             } catch (all: Exception) {
                 File(context.filesDir, FFMPEG_TEMP_OUTPUT_FILE)
+            }
+
+            if (!tempFile.parentFile.exists()) {
+                val res = if (tempFile.parentFile.mkdirs()) "success" else "failed"
+                Crashlytics.log("Create parent dir $res: $tempFile")
             }
 
             val tempOutputUri = Uri.fromFile(tempFile)
