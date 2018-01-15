@@ -39,8 +39,9 @@ private fun inWhiteList(error: Throwable): Boolean =
         rootCauseIs(InterruptedException::class.java, error) ||
                 rootCauseIs(InterruptedIOException::class.java, error) ||
                 rootCauseIs(UnknownHostException::class.java, error) ||
-                SSLException::class.java == error.javaClass ||
+                rootCauseIs(SSLException::class.java, error) ||
                 rootCauseIs(HttpResponseCodeException::class.java, error)
+
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
     if (!BuildConfig.DEBUG && !inWhiteList(throwable)) {
@@ -51,8 +52,8 @@ fun reportNonFatal(throwable: Throwable, where: String, message: String? = null)
 
 fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): String {
     if (rootCauseIs(UnknownHostException::class.java, error) ||
-            SSLException::class.java == error.javaClass) {
-        return context.getString(R.string.error_no_internet)
+            rootCauseIs(SSLException::class.java, error)) {
+        return context.getString(R.string.network_error)
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
         return "Http response: ${httpResponseCodeException.message}"
