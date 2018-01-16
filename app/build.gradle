@@ -36,6 +36,12 @@ android {
             keyAlias "androiddebugkey"
             keyPassword "android"
         }
+        release {
+            keyAlias 'MediaConverter'
+            keyPassword key_store_password
+            storeFile file('release_key.jks')
+            storePassword key_store_password
+        }
     }
 
     buildTypes {
@@ -47,6 +53,7 @@ android {
         }
 
         release {
+            signingConfig signingConfigs.release
 
             shrinkResources true
             minifyEnabled true
