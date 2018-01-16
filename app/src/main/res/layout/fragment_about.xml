@@ -119,7 +119,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:textColor="?android:textColorPrimary"
-                        tools:text="@string/rate_us" />
+                        android:text="@string/rate_us" />
                 </LinearLayout>
 
                 <LinearLayout
