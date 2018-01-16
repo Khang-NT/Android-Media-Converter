@@ -55,7 +55,8 @@ fun reportNonFatal(throwable: Throwable, where: String, message: String? = null)
 fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): String {
     if (rootCauseIs(UnknownHostException::class.java, error) ||
             rootCauseIs(SSLException::class.java, error) ||
-            rootCauseIs(ConnectException::class.java, error)) {
+            rootCauseIs(ConnectException::class.java, error) ||
+            error.message?.contains("unexpected end of stream", ignoreCase = true) == true) {
         return context.getString(R.string.network_error)
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
