@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_about.*
 
 class AboutFragment: BaseFragment() {
     private val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
+    private val PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.github.khangnt.mcp"
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -29,6 +30,10 @@ class AboutFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
+
+        rateUs.setOnClickListener {
+            openUrl(view.context, PLAYSTORE_URL)
+        }
 
         forkOnGithub.setOnClickListener {
             openUrl(view.context, GITHUB_REPO)
