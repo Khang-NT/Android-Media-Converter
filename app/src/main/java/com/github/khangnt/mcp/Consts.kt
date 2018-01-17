@@ -10,7 +10,7 @@ const val DEFAULT_IO_TIMEOUT = 30000
 const val DEFAULT_IO_BUFFER_LENGTH = 4 * 1024
 
 const val FFMPEG_FILE = "libffmpeg.so"
-const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_temp"
+const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_out.temp"
 
 const val ID_UNSET = -1L
 

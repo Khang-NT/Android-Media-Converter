@@ -20,13 +20,14 @@ class CopierThread(
 ) : Thread() {
 
     override fun run() {
+        var success = false
         var input: InputStream? = null
         var output: OutputStream? = null
         try {
             input = sourceInput.openInputStream()
             output = sourceOutput.openOutputStream()
             copy(input, output, bufferLength)
-            onSuccess.invoke()
+            success = true
         } catch (anyError: Throwable) {
             onError(anyError)
         } finally {
@@ -36,6 +37,7 @@ class CopierThread(
             sourceInput.closeQuietly()
             sourceOutput.closeQuietly()
         }
+        if (success) onSuccess.invoke()
     }
 
 }

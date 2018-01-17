@@ -2,7 +2,9 @@ package com.github.khangnt.mcp
 
 import android.content.Context
 import com.crashlytics.android.Crashlytics
+import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import java.io.InterruptedIOException
+import java.lang.ClassCastException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 
@@ -22,11 +24,24 @@ fun <T : Throwable> rootCauseIs(clazz: Class<T>, error: Throwable): Boolean {
     return false
 }
 
+fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T {
+    var temp: Throwable? = this
+    while (temp !== null) {
+        if (clazz.isInstance(temp)) {
+            return clazz.cast(temp)
+        }
+        temp = temp.cause
+    }
+    throw ClassCastException("Can't cast $this to $clazz")
+}
+
 private fun inWhiteList(error: Throwable): Boolean =
         rootCauseIs(InterruptedException::class.java, error) ||
                 rootCauseIs(InterruptedIOException::class.java, error) ||
                 rootCauseIs(UnknownHostException::class.java, error) ||
-                SSLException::class.java == error.javaClass
+                rootCauseIs(SSLException::class.java, error) ||
+                rootCauseIs(HttpResponseCodeException::class.java, error)
+
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
     if (!BuildConfig.DEBUG && !inWhiteList(throwable)) {
@@ -37,8 +52,12 @@ fun reportNonFatal(throwable: Throwable, where: String, message: String? = null)
 
 fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): String {
     if (rootCauseIs(UnknownHostException::class.java, error) ||
-            SSLException::class.java == error.javaClass) {
-        return context.getString(R.string.error_no_internet)
+            rootCauseIs(SSLException::class.java, error) ||
+            error.message?.contains("unexpected end of stream", ignoreCase = true) == true) {
+        return context.getString(R.string.network_error)
+    } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
+        val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
+        return "Http response: ${httpResponseCodeException.message}"
     }
     return fallback
 }

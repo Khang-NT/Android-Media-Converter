@@ -159,7 +159,7 @@ class ConverterService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // go to foreground immediately, maybe service started with Context#startForegroundService
             // if no job to run, service will stop foreground soon
-            goToForeground()
+            goToForeground(force = true)
         }
         intentNullable?.let { intent ->
             val shouldPostponeStopMessage = when (intent.action) {
@@ -227,8 +227,8 @@ class ConverterService : Service() {
 
     @SuppressLint("WakelockTimeout")
     @MainThread
-    private fun goToForeground() {
-        if (!inForeground) {
+    private fun goToForeground(force: Boolean = false) {
+        if (!inForeground || force) {
             inForeground = true
             startForeground(CONVERTER_NOTIFICATION_ID, notificationBuilder.build())
         }

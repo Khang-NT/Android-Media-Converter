@@ -5,15 +5,14 @@ import android.content.Context
 import android.net.Uri
 import android.net.wifi.WifiManager
 import com.github.khangnt.mcp.DEFAULT_CONNECTION_TIMEOUT
-import com.github.khangnt.mcp.DEFAULT_IO_TIMEOUT
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import com.github.khangnt.mcp.util.closeQuietly
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import timber.log.Timber
 import java.io.*
-import java.net.InetSocketAddress
-import java.net.Socket
+import java.net.ServerSocket
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -65,22 +64,37 @@ class ContentResolverSource(
 
 }
 
-class SocketSourceOutput(
-        address: InetSocketAddress,
-        timeout: Int = DEFAULT_CONNECTION_TIMEOUT,
-        soTimeout: Int = DEFAULT_IO_TIMEOUT
+class ServerSocketSourceOutput(
+        private val serverSocket: ServerSocket,
+        timeout: Int = DEFAULT_CONNECTION_TIMEOUT
 ) : SourceOutputStream {
-    private val socket = Socket()
+
+    private var acceptedConnection = false
+
+    init {
+        serverSocket.soTimeout = timeout
+    }
+
     private val outputStream: OutputStream by lazy {
-        socket.soTimeout = soTimeout
-        socket.connect(address, timeout)
-        socket.getOutputStream()
+        acceptedConnection = true
+        Timber.d("Start accepting connection: $serverSocket")
+        val socket = serverSocket.accept()
+        Timber.d("Accepted connection: $socket")
+        object : BufferedOutputStream(socket.getOutputStream()) {
+            override fun close() {
+                socket.closeQuietly()
+                super.close()
+            }
+        }
     }
 
     override fun openOutputStream(): OutputStream = outputStream
 
     override fun close() {
-        socket.closeQuietly()
+        if (acceptedConnection) {
+            outputStream.closeQuietly()
+        }
+        serverSocket.closeQuietly()
     }
 }
 
