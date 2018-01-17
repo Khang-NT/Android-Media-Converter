@@ -5,7 +5,6 @@ import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import java.io.InterruptedIOException
 import java.lang.ClassCastException
-import java.net.ConnectException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 
@@ -41,8 +40,7 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(InterruptedIOException::class.java, error) ||
                 rootCauseIs(UnknownHostException::class.java, error) ||
                 rootCauseIs(SSLException::class.java, error) ||
-                rootCauseIs(HttpResponseCodeException::class.java, error) ||
-                rootCauseIs(ConnectException::class.java, error)
+                rootCauseIs(HttpResponseCodeException::class.java, error)
 
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
@@ -55,7 +53,6 @@ fun reportNonFatal(throwable: Throwable, where: String, message: String? = null)
 fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): String {
     if (rootCauseIs(UnknownHostException::class.java, error) ||
             rootCauseIs(SSLException::class.java, error) ||
-            rootCauseIs(ConnectException::class.java, error) ||
             error.message?.contains("unexpected end of stream", ignoreCase = true) == true) {
         return context.getString(R.string.network_error)
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
