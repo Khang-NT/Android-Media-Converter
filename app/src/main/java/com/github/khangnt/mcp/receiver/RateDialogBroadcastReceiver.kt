@@ -23,7 +23,7 @@ class RateDialogBroadcastReceiver : BroadcastReceiver() {
 
     private fun showRateDialog(context: Context?) {
         private val PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.github.khangnt.mcp"
-        val rateDialog = AlertDialog.Builder(context).create()
+        val rateDialog = AlertDialog.Builder(context!!).create()
 
         rateDialog.setTitle(context.getString(R.string.rate_us_title))
         rateDialog.setMessage(context.getString(R.string.rate_us_message))
