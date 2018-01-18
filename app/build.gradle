@@ -27,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "0.6.6"
+        versionName "0.6.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -64,7 +64,7 @@ android {
         }
     }
 
-    final _versionCode = 14
+    final _versionCode = 15
 
     flavorDimensions 'cpuArch'
     productFlavors {
