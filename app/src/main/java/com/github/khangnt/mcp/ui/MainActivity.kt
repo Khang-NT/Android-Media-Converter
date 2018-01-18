@@ -22,6 +22,11 @@ class MainActivity : SingleFragmentActivity() {
         if (!hasWriteStoragePermission(this)) {
             requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), 0)
         }
+        checkJobs()
+    }
+
+    private fun checkJobs() {
+        // TBD
     }
 
     override fun onStart() {
