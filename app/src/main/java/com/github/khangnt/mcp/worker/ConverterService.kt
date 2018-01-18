@@ -160,6 +160,7 @@ class ConverterService : Service() {
             // go to foreground immediately, maybe service started with Context#startForegroundService
             // if no job to run, service will stop foreground soon
             goToForeground(force = true)
+            jobHandler.sendEmptyMessage(LOOP_MESSAGE)
         }
         intentNullable?.let { intent ->
             val shouldPostponeStopMessage = when (intent.action) {
