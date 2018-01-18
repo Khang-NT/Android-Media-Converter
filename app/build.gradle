@@ -18,6 +18,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 
+def keyStorePass = hasProperty("key_store_password") ? key_store_password : ""
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -25,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "0.6.6"
+        versionName "0.6.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,9 +40,9 @@ android {
         }
         release {
             keyAlias 'MediaConverter'
-            keyPassword key_store_password
+            keyPassword keyStorePass
             storeFile file('release_key.jks')
-            storePassword key_store_password
+            storePassword keyStorePass
         }
     }
 
@@ -62,7 +64,7 @@ android {
         }
     }
 
-    final _versionCode = 14
+    final _versionCode = 15
 
     flavorDimensions 'cpuArch'
     productFlavors {

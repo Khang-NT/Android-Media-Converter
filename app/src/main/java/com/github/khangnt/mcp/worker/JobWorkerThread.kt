@@ -3,8 +3,6 @@ package com.github.khangnt.mcp.worker
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
-import com.crashlytics.android.Crashlytics
-import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.getKnownReasonOf
@@ -15,7 +13,6 @@ import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import timber.log.Timber
-import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 
@@ -49,9 +46,8 @@ class JobWorkerThread(
     override fun run() {
         Timber.d("Start working on job: ${job.title}")
 
-        val ffmpegPath = File(appContext.applicationInfo.nativeLibraryDir, FFMPEG_FILE)
         val commandResolver = try {
-            CommandResolver.resolve(appContext, job.command, ffmpegPath)
+            CommandResolver.resolve(appContext, job.command)
         } catch (resolveCommandError: Throwable) {
             onError(resolveCommandError, "Resolve command failed: ${resolveCommandError.message}")
             return
@@ -59,37 +55,25 @@ class JobWorkerThread(
 
         val startTime = System.currentTimeMillis()
 
-        val process = try {
-            startProcess(commandResolver)
-                    .also { Thread.sleep(500) } // delay a bit for process initializing
-        } catch (securityException: SecurityException) {
-            onError(securityException, "Security error when start " +
-                    "FFmpeg process: ${securityException.message}")
-            return
-        } catch (interruptException: InterruptedException) {
-            onError(interruptException, "Job was canceled")
-            return
-        } catch (startProcessError: Throwable) {
-            onError(startProcessError, "Start FFmpeg failed: ${startProcessError.message}")
-            return
-        }
-
-        // start all copier thread
         val copierThreads = mutableListOf<Thread>()
 
-        // start copy source input -> tcp socket output -> FFmpeg input via tcp protocol
-        for (tcpInput in commandResolver.tcpInputs) {
-            val socketOutput = SocketSourceOutput(tcpInput.address)
+        // start Server sockets and listen connection from FFmpeg
+        // after FFmpeg connected, ServerSocket will send input to FFmpeg (TCP protocol)
+        for (serverSocketInput in commandResolver.serverSocketInputs) {
             val copierThread = CopierThread(
-                    sourceInput = tcpInput.sourceInput,
-                    sourceOutput = socketOutput,
+                    sourceInput = serverSocketInput.sourceInput,
+                    sourceOutput = ServerSocketSourceOutput(serverSocketInput.serverSocket),
                     onError = { throwable ->
                         if (!hasError && !isInterrupted) {
                             // this is root cause
-                            onError(throwable, "Error when handle input: ${throwable.message}")
+                            onError(
+                                    error = throwable,
+                                    message = "Error when handle input: ${throwable.message}"
+                            )
                             interrupt()
                         } else {
-                            Timber.d(throwable, "Error from input thread: ${tcpInput.address}")
+                            Timber.d(throwable, "Error from input thread: %s",
+                                    serverSocketInput.serverSocket)
                         }
                     }
             )
@@ -97,10 +81,33 @@ class JobWorkerThread(
             copierThreads.add(copierThread)
         }
 
-        // start logger thread
-        val loggerThread = LoggerThread(process.errorStream, jobManager)
-        loggerThread.start()
-        copierThreads.add(loggerThread)
+        if (hasError) {
+            interruptThreads(copierThreads, wait = false)
+            return
+        }
+
+        var process: Process? = null
+        try {
+            process = startProcess(commandResolver)
+                    .also {
+                        // start logger thread
+                        val loggerThread = LoggerThread(it.errorStream, jobManager)
+                        loggerThread.start()
+                        copierThreads.add(loggerThread)
+                    }
+        } catch (securityException: SecurityException) {
+            onError(securityException, "Security error when start " +
+                    "FFmpeg process: ${securityException.message}")
+        } catch (interruptException: InterruptedException) {
+            onError(interruptException, "Job was canceled")
+        } catch (startProcessError: Throwable) {
+            onError(startProcessError, "Start FFmpeg failed: ${startProcessError.message}")
+        }
+
+        if (process === null) {
+            interruptThreads(copierThreads, wait = false)
+            return
+        }
 
         // wait process complete
         val exitCode = try {
@@ -169,7 +176,7 @@ class JobWorkerThread(
                             System.currentTimeMillis() - startTime, job.command.output)
                 }
         )
-        copyOutputRunnable.run() // not start(), avoid spawn new thread
+        copyOutputRunnable.run() // run Thread object as a Runnable
     }
 
     private fun startProcess(commandResolver: CommandResolver): Process {
@@ -177,8 +184,8 @@ class JobWorkerThread(
                 "sh", "-c",
                 commandResolver.execCommand
         )
-        Crashlytics.log("Start process with command: ${commandResolver.execCommand}")
         Timber.d("Start process with command: ${commandResolver.execCommand}")
+        Timber.d("Final output: ${commandResolver.command.output}")
         return ProcessBuilder()
                 .apply { environment().putAll(commandResolver.command.environmentVars) }
                 .command(cmdArray)
@@ -196,17 +203,17 @@ class JobWorkerThread(
         }
     }
 
-    private fun onError(throwable: Throwable, message: String) {
+    private fun onError(error: Throwable, message: String) {
         synchronized(lock) {
             if (!hasError) {
                 hasError = true
 
-                val errorDetail = getKnownReasonOf(throwable, appContext, message)
+                val errorDetail = getKnownReasonOf(error, appContext, message)
                 job = jobManager.updateJobStatus(job, FAILED, errorDetail)
-                onErrorListener(job, throwable)
+                onErrorListener(job, error)
 
-                Timber.d(throwable, "%s", message)
-                reportNonFatal(throwable, "JobWorkerThread#onError", message)
+                Timber.d(error, "%s", message)
+                reportNonFatal(error, "JobWorkerThread#onError", message)
             }
         }
     }
@@ -241,7 +248,6 @@ class JobWorkerThread(
                         if (!stringBuilder.isBlank()) {
                             jobManager.recordOutputSize(stringBuilder.toString())
                         }
-                        Crashlytics.log(line)
                         Timber.d(line)
                     }
                 }
