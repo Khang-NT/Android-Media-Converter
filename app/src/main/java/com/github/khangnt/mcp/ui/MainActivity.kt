@@ -1,10 +1,14 @@
 package com.github.khangnt.mcp.ui
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.github.khangnt.mcp.BuildConfig
+import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.receiver.RateDialogBroadcastReceiver
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 
@@ -26,7 +30,15 @@ class MainActivity : SingleFragmentActivity() {
     }
 
     private fun checkJobs() {
-        // TBD
+        val isRated = getSharedPrefs().isRated
+        if (!isRated) {
+            showRateDialog()
+        }
+    }
+
+    private fun showRateDialog() {
+        val intent = Intent(SHOW_RATE_DIALOG_ACTION)
+        applicationContext.sendBroadcast(intent)
     }
 
     override fun onStart() {
