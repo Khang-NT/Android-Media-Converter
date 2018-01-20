@@ -3,7 +3,6 @@ package com.github.khangnt.mcp.worker
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
-import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.getKnownReasonOf
@@ -175,8 +174,6 @@ class JobWorkerThread(
 
                     Timber.d("Conversion success, take %d ms, output: %s",
                             System.currentTimeMillis() - startTime, job.command.output)
-
-                    getSharedPrefs().successJobsCount = getSharedPrefs().successJobsCount + 1
                 }
         )
         copyOutputRunnable.run() // run Thread object as a Runnable
