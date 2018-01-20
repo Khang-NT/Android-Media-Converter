@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.ui.SHOW_RATE_DIALOG_ACTION
 import com.github.khangnt.mcp.util.openUrl
 
@@ -32,18 +33,19 @@ class RateDialogBroadcastReceiver : BroadcastReceiver() {
         rateDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.rate_us_love_it), {
             dialogInterface, i ->
             openUrl(context, PLAYSTORE_URL)
+            getSharedPrefs().isRated = true
         })
 
         // Not now button
         rateDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.rate_us_not_now), {
             dialogInterface, i ->
-
+            // do nothing
         })
 
         // Never button
         rateDialog.setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.rate_us_never), {
             dialogInterface, i ->
-
+            getSharedPrefs().isRated = true
         })
 
         rateDialog.show()
