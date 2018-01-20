@@ -20,6 +20,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getInt(R.string.pref_key_success_jobs_count, 0)
         set(jobSuccessCount) = putInt(R.string.pref_key_success_jobs_count, jobSuccessCount)
 
+    var delayRateDialogUntil: Long
+        get() = getLong(R.string.pref_key_rate_dialog_delay, 0)
+        set(delayUntil) = putLong(R.string.pref_key_rate_dialog_delay, delayUntil)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

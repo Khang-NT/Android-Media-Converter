@@ -49,6 +49,4 @@
     <string name="rate_us_never">Never</string>
     <string name="rate_us">Rate us</string>
 
-    <string name="pref_key_is_rated">is_rated</string>
-    <string name="pref_key_success_jobs_count">success_count</string>
 </resources>

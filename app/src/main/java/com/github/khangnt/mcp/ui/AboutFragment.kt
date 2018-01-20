@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.BuildConfig
+import com.github.khangnt.mcp.GITHUB_REPO
+import com.github.khangnt.mcp.PLAY_STORE_URL
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.util.openUrl
 import de.psdev.licensesdialog.LicensesDialog
@@ -18,8 +20,7 @@ import kotlinx.android.synthetic.main.fragment_about.*
  */
 
 class AboutFragment: BaseFragment() {
-    private val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
-    private val PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.github.khangnt.mcp"
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -32,7 +33,7 @@ class AboutFragment: BaseFragment() {
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         rateUs.setOnClickListener {
-            openUrl(view.context, PLAYSTORE_URL)
+            openUrl(view.context, PLAY_STORE_URL)
         }
 
         forkOnGithub.setOnClickListener {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_key_is_rated" translatable="false">is_rated</string>
+    <string name="pref_key_success_jobs_count" translatable="false">success_count</string>
+    <string name="pref_key_rate_dialog_delay" translatable="false">rate_dialog_delay</string>
+</resources>

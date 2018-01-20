@@ -19,3 +19,6 @@ const val CONVERTER_NOTIFICATION_CHANNEL = "ConverterChannel"
 
 const val KB = 1024
 const val MB = KB * 1024
+
+const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
+const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.github.khangnt.mcp"
