@@ -31,7 +31,7 @@ class MainActivity : SingleFragmentActivity() {
 
     private fun checkJobs() {
         val isRated = getSharedPrefs().isRated
-        if (!isRated) {
+        if ((!isRated) && getSharedPrefs().successJobsCount >= 3) {
             showRateDialog()
         }
     }
