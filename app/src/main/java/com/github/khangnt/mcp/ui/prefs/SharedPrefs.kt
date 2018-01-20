@@ -16,6 +16,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getBoolean(R.string.pref_key_is_rated, false)
         set(rated) = putBoolean(R.string.pref_key_is_rated, rated)
 
+    var successJobsCount: Int
+        get() = getInt(R.string.pref_key_success_jobs_count, 0)
+        set(jobSuccessCount) = putInt(R.string.pref_key_success_jobs_count, jobSuccessCount)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }
