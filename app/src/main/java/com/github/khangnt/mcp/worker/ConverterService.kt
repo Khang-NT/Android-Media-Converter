@@ -62,6 +62,10 @@ const val EXTRA_JOB_CMD_OUTPUT_FMT = "ConverterService:JobCmdOutputFmt"
 const val EXTRA_JOB_CMD_ARGS = "ConverterService:JobCmdOutputArgs"
 const val EXTRA_JOB_CMD_ENV_VARS_JSON = "ConverterService:JobCmdOutputEnvVars"
 
+const val ACTION_JOB_STATUS_CHANGED = "${BuildConfig.APPLICATION_ID}.action.job_status_changed"
+const val EXTRA_JOB_STATUS = "ConverterService:JobStatus"
+const val EXTRA_JOB_OUTPUT = "ConverterService:JobOutput"
+
 
 private fun Bundle.toJob(): Job? {
     val title: String = getString(EXTRA_JOB_TITLE, "Untitled")
@@ -211,6 +215,18 @@ class ConverterService : Service() {
         notificationUpdateDisposable?.dispose()
     }
 
+    private fun onJobStatusChanged(job: Job) {
+        if (job.status == JobStatus.COMPLETED) {
+            SingletonInstances.getSharedPrefs().successJobsCount += 1
+        }
+
+        val intent = Intent(ACTION_JOB_STATUS_CHANGED)
+        intent.putExtra(EXTRA_JOB_ID, job.id)
+        intent.putExtra(EXTRA_JOB_STATUS, job.status)
+        intent.putExtra(EXTRA_JOB_OUTPUT, job.command.output)
+        sendBroadcast(intent)
+    }
+
     @MainThread
     private fun updateNotificationIfNeeded(outputSize: String) {
         if (inForeground) {
@@ -285,11 +301,12 @@ class ConverterService : Service() {
                     // these jobs were running last time, but service restart -> they should fail
                     // mark them as "Cancelled because service restart"
                     previousRunning.forEach { job ->
-                        jobManager.updateJobStatus(
+                        val failedJob = jobManager.updateJobStatus(
                                 job = job,
                                 status = JobStatus.FAILED,
                                 statusDetail = "Cancelled because service restart"
                         )
+                        onJobStatusChanged(failedJob)
                     }
 
                     loop()
@@ -309,20 +326,22 @@ class ConverterService : Service() {
                         runOnMainThread { goToForeground() }
 
                         currentJob = jobManager.updateJobStatus(nextJob, JobStatus.RUNNING)
+                        onJobStatusChanged(currentJob!!)
+
                         workerThread = JobWorkerThread(
                                 appContext = applicationContext,
                                 job = currentJob!!,
                                 jobManager = jobManager,
-                                onCompleteListener = {
-                                    // maybe show notification
+                                onCompleteListener = { job ->
+                                    onJobStatusChanged(job)
                                     loop()
                                 },
-                                onErrorListener = { _, _ ->
-                                    // maybe show notification
+                                onErrorListener = { job, _ ->
+                                    onJobStatusChanged(job)
                                     loop()
                                 }
                         ).apply {
-                            this.start() // start worker thread
+                            start() // start worker thread
                         }
                     } else {
                         // no job found
