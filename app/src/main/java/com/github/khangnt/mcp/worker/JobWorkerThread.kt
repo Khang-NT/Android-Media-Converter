@@ -183,33 +183,52 @@ class JobWorkerThread(
 
     private class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
         private val regex = Regex("(\\w+=\\s*([^\\s]+))")
+        private val durationRe = Regex("Duration:\\s(\\d\\d:\\d\\d:\\d\\d)")
         var lastLine: String? = null
+        var durationSeconds: Long? = null
 
         init {
             jobManager.recordLiveLog("")
         }
 
         override fun run() {
+            var converting = false
             catchAll {
                 InputStreamReader(input).use { inputReader ->
                     inputReader.forEachLine { line ->
                         lastLine = line
+
+                        if (durationSeconds === null && !converting) {
+                            durationRe.find(line)?.let { match ->
+                                durationSeconds = parseDurationString(match.groupValues[1])
+                            }
+                        }
+
                         var size: String? = null
                         var bitrate: String? = null
+                        var time: String? = null
                         regex.findAll(line).forEach { matchResult ->
                             if (matchResult.groupValues[1].startsWith("size=")) {
                                 size = matchResult.groupValues[2]
                             } else if (matchResult.groupValues[1].startsWith("bitrate=")) {
                                 bitrate = matchResult.groupValues[2]
+                            } else if (matchResult.groupValues[1].startsWith("time=")) {
+                                time = matchResult.groupValues[2]
                             }
                         }
                         val stringBuilder = StringBuilder()
                         if (size !== null) {
+                            converting = true
                             stringBuilder.append(size)
                         }
-                        if (bitrate !== null) {
+
+                        if (durationSeconds !== null && durationSeconds!! > 0 && time !== null) {
+                            val percent = (parseDurationString(time!!) ?: 0) * 100 / durationSeconds!!
+                            stringBuilder.append(" $percent%")
+                        } else if (bitrate !== null) {
                             stringBuilder.append(" br=").append(bitrate)
                         }
+
                         if (!stringBuilder.isBlank()) {
                             jobManager.recordLiveLog(stringBuilder.toString())
                         }
@@ -218,6 +237,19 @@ class JobWorkerThread(
                 }
             }
             jobManager.recordLiveLog("")
+        }
+
+        /**
+         * Parse time in format hh:mm:ss to number of seconds
+         */
+        private fun parseDurationString(duration: String): Long? {
+            val split = duration.take(8).split(":")
+            if (split.size == 3) {
+                return (split[0].toLongOrNull() ?: 0) * 3600 +
+                        (split[1].toLongOrNull() ?: 0) * 60 +
+                        (split[2].toLongOrNull() ?: 0)
+            }
+            return null
         }
     }
 
