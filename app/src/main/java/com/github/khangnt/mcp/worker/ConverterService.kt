@@ -389,6 +389,7 @@ class ConverterService : Service() {
                         if (!inForeground) {
                             runOnMainThread { goToForeground() }
                         }
+                        loop()
                     } else {
                         if (inForeground) {
                             runOnMainThread { stopForeground() }
