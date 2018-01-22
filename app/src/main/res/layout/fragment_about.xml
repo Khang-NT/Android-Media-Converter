@@ -80,7 +80,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:src="@drawable/ic_about_black_24dp"
-                        app:tint="@color/gray46" />
+                        app:tint="@color/gray_600" />
 
                     <TextView
                         android:id="@+id/tvAppVersion"
@@ -110,7 +110,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:src="@drawable/star"
-                        app:tint="@color/gray46" />
+                        app:tint="@color/gray_600" />
 
                     <TextView
                         android:id="@+id/tvRateUs"
@@ -138,7 +138,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:src="@drawable/github_circle"
-                        app:tint="@color/gray46"/>
+                        app:tint="@color/gray_600"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -165,7 +165,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:src="@drawable/file_document_box"
-                        app:tint="@color/gray46"/>
+                        app:tint="@color/gray_600"/>
 
                     <TextView
                         android:layout_width="wrap_content"

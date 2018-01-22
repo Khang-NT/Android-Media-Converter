@@ -30,16 +30,18 @@ import java.util.concurrent.TimeUnit
 class JobManagerFragment : BaseFragment() {
 
     private val jobManager = SingletonInstances.getJobManager()
-    private val adapter = JobAdapter(jobManager.getOutputSize()).apply { setHasStableIds(true) }
-    private val pendingHeaderModel = HeaderModel("Pending")
+    private val adapter = JobAdapter(jobManager.getLiveLogObservable()).apply { setHasStableIds(true) }
     private val runningHeaderModel = RunningHeaderModel("Running")
+    private val preparingHeaderModel = HeaderModel("Preparing")
+    private val readyHeaderModel = HeaderModel("Ready")
+    private val pendingHeaderModel = HeaderModel("Pending")
     private val finishedHeaderModel = HeaderModel("Finished")
 
     private var loadDataDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // fixme: this line just aim to fix task with status "RUNNING" but actually it's stopped
+        // launch service
         context!!.startService(Intent(context!!, ConverterService::class.java))
     }
 
@@ -60,7 +62,7 @@ class JobManagerFragment : BaseFragment() {
 
     private fun loadData() {
         recyclerViewGroup.loading()
-        loadDataDisposable = jobManager.getJob(RUNNING, PENDING, COMPLETED, FAILED)
+        loadDataDisposable = jobManager.getJob(RUNNING, PREPARING, READY, PENDING, COMPLETED, FAILED)
                 .throttleLast(400, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext { Collections.sort(it, jobComparator) }
@@ -73,6 +75,10 @@ class JobManagerFragment : BaseFragment() {
                             previousStatus = item.status
                             if (item.status == RUNNING) {
                                 listModels.add(runningHeaderModel)
+                            } else if (item.status == PREPARING) {
+                                listModels.add(preparingHeaderModel)
+                            } else if (item.status == READY) {
+                                listModels.add(readyHeaderModel)
                             } else if (item.status == PENDING) {
                                 listModels.add(pendingHeaderModel)
                             } else if (!addedFinishedHeader) {
