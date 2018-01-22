@@ -19,10 +19,7 @@ import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.notification.NotificationHelper
 import com.github.khangnt.mcp.ui.EXTRA_PENDING_INTENT
 import com.github.khangnt.mcp.ui.PermissionTransparentActivity
-import com.github.khangnt.mcp.util.catchAll
-import com.github.khangnt.mcp.util.hasWriteStoragePermission
-import com.github.khangnt.mcp.util.toJsonOrNull
-import com.github.khangnt.mcp.util.toMapString
+import com.github.khangnt.mcp.util.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -145,7 +142,7 @@ class ConverterService : Service() {
         // original source emit 4 items per second
         // limit update 2 times per second on main thread
         notificationUpdateDisposable = jobManager
-                .getOutputSize().distinctUntilChanged()
+                .getLiveLogObservable().distinctUntilChanged()
                 .throttleLast(NOTIFICATION_UPDATE_INTERVAL, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateNotificationIfNeeded, Timber::d)
@@ -273,7 +270,7 @@ class ConverterService : Service() {
         when (message.what) {
             ADD_JOB_MESSAGE, CANCEL_JOB_MESSAGE -> {
                 // pass it to Job Handler
-                jobHandler.resetNoJobTimes()
+                jobHandler.resetFreeTimes()
                 jobHandler.sendMessage(Message().apply { copyFrom(message) })
                 // cancel any stop Message
                 mainHandler.removeMessages(STOP_SERVICE_MESSAGE)
@@ -290,67 +287,118 @@ class ConverterService : Service() {
 
     inner class JobHandler(looper: Looper) : Handler(looper) {
 
-        private var currentJob: Job? = null
+        private var runningJob: Job? = null
+        private var preparingJob: Job? = null
         private var workerThread: JobWorkerThread? = null
+        private var prepareThread: JobPrepareThread? = null
+
         private var freeTime = 0
 
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 INIT_MESSAGE -> {
                     val previousRunning = jobManager.getJob(JobStatus.RUNNING).blockingFirst()
-                    // these jobs were running last time, but service restart -> they should fail
-                    // mark them as "Cancelled because service restart"
+                    // mark previous running job as ready so it can restart
                     previousRunning.forEach { job ->
-                        val failedJob = jobManager.updateJobStatus(
+                        jobManager.updateJobStatus(
                                 job = job,
-                                status = JobStatus.FAILED,
-                                statusDetail = "Cancelled because service restart"
-                        )
-                        onJobStatusChanged(failedJob)
+                                status = JobStatus.READY,
+                                statusDetail = "Ready to restart."
+                        ).apply { onJobStatusChanged(this) }
+                    }
+
+                    val previousPreparing = jobManager.getJob(JobStatus.PREPARING).blockingFirst()
+                    // mark previous preparing job as pending, so it can restart prepare process
+                    previousPreparing.forEach { job ->
+                        jobManager.updateJobStatus(
+                                job = job,
+                                status = JobStatus.PENDING,
+                                statusDetail = "Ready to prepare again."
+                        ).apply { onJobStatusChanged(this) }
                     }
 
                     loop()
                 }
                 LOOP_MESSAGE -> {
-                    if (workerThread?.isAlive == true) {
-                        // current thread still running
+                    if (workerThread?.isAlive == true
+                            && prepareThread?.isAlive == true) {
+                        // all busy
                         loop()
                         return
                     }
+                    var isFree = true
 
-                    // start working new job
+                    if (workerThread?.isAlive != true) {
+                        val nextJobToRun = jobManager.nextReadyJob()
+                        if (nextJobToRun != null) {
+                            isFree = false
 
-                    val nextJob = jobManager.nextJobToRun()
-                    if (nextJob != null) {
-                        resetNoJobTimes()
-                        runOnMainThread { goToForeground() }
+                            runningJob = jobManager.updateJobStatus(nextJobToRun, JobStatus.RUNNING)
+                            onJobStatusChanged(runningJob!!)
 
-                        currentJob = jobManager.updateJobStatus(nextJob, JobStatus.RUNNING)
-                        onJobStatusChanged(currentJob!!)
-
-                        workerThread = JobWorkerThread(
-                                appContext = applicationContext,
-                                job = currentJob!!,
-                                jobManager = jobManager,
-                                onCompleteListener = { job ->
-                                    onJobStatusChanged(job)
-                                    loop()
-                                },
-                                onErrorListener = { job, _ ->
-                                    onJobStatusChanged(job)
-                                    loop()
-                                }
-                        ).apply {
-                            start() // start worker thread
+                            workerThread = JobWorkerThread(
+                                    appContext = applicationContext,
+                                    job = runningJob!!,
+                                    jobManager = jobManager,
+                                    onCompleteListener = { job ->
+                                        onJobStatusChanged(job)
+                                        loop()
+                                    },
+                                    onErrorListener = { job, _ ->
+                                        onJobStatusChanged(job)
+                                        loop()
+                                    }
+                            ).apply {
+                                start() // start worker thread
+                            }
                         }
                     } else {
-                        // no job found
+                        isFree = false
+                    }
+
+                    if (prepareThread?.isAlive != true) {
+                        val nextJobToPrepare = jobManager.nextPendingJob()
+                        if (nextJobToPrepare != null) {
+                            isFree = false
+
+                            preparingJob = jobManager.updateJobStatus(nextJobToPrepare, JobStatus.PREPARING)
+                            onJobStatusChanged(preparingJob!!)
+
+                            prepareThread = JobPrepareThread(
+                                    appContext = applicationContext,
+                                    job = preparingJob!!,
+                                    jobManager = jobManager,
+                                    onCompleteListener = { job ->
+                                        onJobStatusChanged(job)
+                                        loop()
+                                    },
+                                    onErrorListener = { job, _ ->
+                                        onJobStatusChanged(job)
+                                        loop()
+                                    }
+                            ).apply {
+                                start() // start prepare thread
+                            }
+                        }
+                    } else {
+                        isFree = false
+                    }
+
+                    if (!isFree) {
+                        resetFreeTimes()
+                        if (!inForeground) {
+                            runOnMainThread { goToForeground() }
+                        }
+                    } else {
                         if (inForeground) {
                             runOnMainThread { stopForeground() }
                         }
 
                         freeTime += 1
                         if (freeTime >= JOB_HANDLER_MAX_FREE_TIME && !binding) {
+                            // clean up temp folder before stop
+                            val tempDir = makeWorkingPaths(this@ConverterService).jobTempRootDir
+                            tempDir.listFiles().forEach { it.deleteRecursiveIgnoreError() }
                             // request stop
                             mainHandler.sendEmptyMessage(STOP_SERVICE_MESSAGE)
                         } else {
@@ -379,11 +427,10 @@ class ConverterService : Service() {
                 CANCEL_JOB_MESSAGE -> {
                     msg.data?.getLong(EXTRA_JOB_ID, -1)?.let { id ->
                         if (id >= 0) {
-                            if (id == currentJob?.id) {
-                                // cancel running job
-                                workerThread?.interrupt()
-                            } else {
-                                jobManager.deleteJob(id)
+                            when (id) {
+                                runningJob?.id -> workerThread?.interrupt()
+                                preparingJob?.id -> prepareThread?.interrupt()
+                                else -> jobManager.deleteJob(id)
                             }
                             loop()
                         }
@@ -394,9 +441,10 @@ class ConverterService : Service() {
 
         fun forceShutdown() {
             workerThread?.interrupt()
+            prepareThread?.interrupt()
         }
 
-        fun resetNoJobTimes() {
+        fun resetFreeTimes() {
             freeTime = 0
         }
 

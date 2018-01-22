@@ -17,8 +17,8 @@ import io.reactivex.subjects.BehaviorSubject
 
 class DefaultJobManager(private val jobDb: JobDb) : JobManager {
     private val lock = Any()
+    private var loadedJobToMemory = false
 
-    private var loadJobToMemory = false
     private val mapJobList = mapOf(
             JobStatus.PENDING to mutableListOf<Job>(),
             JobStatus.PREPARING to mutableListOf(),
@@ -36,13 +36,13 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
     )
 
-    private val outputSizeSubject = BehaviorSubject.create<String>()
+    private val liveLogSubject = BehaviorSubject.create<String>()
 
-    override fun recordOutputSize(size: String) {
-        outputSizeSubject.onNext(size)
+    override fun recordLiveLog(size: String) {
+        liveLogSubject.onNext(size)
     }
 
-    override fun getOutputSize(): Observable<String> = outputSizeSubject
+    override fun getLiveLogObservable(): Observable<String> = liveLogSubject
 
     override fun addJob(job: Job): Job {
         loadJobToMemoryIfNeeded()
@@ -92,7 +92,18 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
         }
     }
 
-    override fun nextJobToRun(): Job? {
+    override fun nextReadyJob(): Job? {
+        loadJobToMemoryIfNeeded()
+        synchronized(lock) {
+            val readyJobs = mapJobList[JobStatus.READY]!!
+            if (!readyJobs.isEmpty()) {
+                return readyJobs[0]
+            }
+        }
+        return null
+    }
+
+    override fun nextPendingJob(): Job? {
         loadJobToMemoryIfNeeded()
         synchronized(lock) {
             val pendingJobs = mapJobList[JobStatus.PENDING]!!
@@ -147,10 +158,11 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
 
     private fun loadJobToMemoryIfNeeded() {
         synchronized(lock) {
-            if (!loadJobToMemory) {
+            if (!loadedJobToMemory) {
                 jobDb.getAllJob().forEach { mapJobList[it.status]!!.add(it) }
-                loadJobToMemory = true
-                notifyJobListChanged(JobStatus.RUNNING, JobStatus.PENDING, JobStatus.COMPLETED, JobStatus.FAILED)
+                loadedJobToMemory = true
+                notifyJobListChanged(JobStatus.RUNNING, JobStatus.PENDING, JobStatus.PREPARING, JobStatus.READY,
+                        JobStatus.COMPLETED, JobStatus.FAILED)
             }
         }
     }
