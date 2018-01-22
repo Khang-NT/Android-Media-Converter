@@ -20,14 +20,18 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
 
     private var loadJobToMemory = false
     private val mapJobList = mapOf(
-            JobStatus.RUNNING to mutableListOf<Job>(),
-            JobStatus.PENDING to mutableListOf(),
+            JobStatus.PENDING to mutableListOf<Job>(),
+            JobStatus.PREPARING to mutableListOf(),
+            JobStatus.READY to mutableListOf(),
+            JobStatus.RUNNING to mutableListOf(),
             JobStatus.COMPLETED to mutableListOf(),
             JobStatus.FAILED to mutableListOf()
     )
     private val mapSubject = mapOf(
-            JobStatus.RUNNING to BehaviorSubject.create<List<Job>>(),
             JobStatus.PENDING to BehaviorSubject.create<List<Job>>(),
+            JobStatus.PREPARING to BehaviorSubject.create<List<Job>>(),
+            JobStatus.READY to BehaviorSubject.create<List<Job>>(),
+            JobStatus.RUNNING to BehaviorSubject.create<List<Job>>(),
             JobStatus.COMPLETED to BehaviorSubject.create<List<Job>>(),
             JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
     )
