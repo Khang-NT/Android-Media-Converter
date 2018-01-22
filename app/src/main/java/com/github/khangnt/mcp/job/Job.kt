@@ -1,8 +1,7 @@
 package com.github.khangnt.mcp.job
 
 import com.github.khangnt.mcp.annotation.JobStatus
-import com.github.khangnt.mcp.annotation.JobStatus.PENDING
-import com.github.khangnt.mcp.annotation.JobStatus.RUNNING
+import com.github.khangnt.mcp.annotation.JobStatus.*
 
 /**
  * Created by Khang NT on 12/30/17.
@@ -43,6 +42,22 @@ val jobComparator: Comparator<Job> = Comparator { job1, job2 ->
 
     if (job2.status == RUNNING) {
         return@Comparator 1
+    }
+
+    if (job1.status == PREPARING) {
+        return@Comparator  -1
+    }
+
+    if (job2.status == PREPARING) {
+        return@Comparator  1
+    }
+
+    if (job1.status == READY) {
+        return@Comparator  -1
+    }
+
+    if (job2.status == READY) {
+        return@Comparator  1
     }
 
     if (job1.status == PENDING) {
