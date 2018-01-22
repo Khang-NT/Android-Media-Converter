@@ -3,70 +3,53 @@ package com.github.khangnt.mcp.worker
 import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.FFMPEG_FILE
+import com.github.khangnt.mcp.FFMPEG_SIZE_FILE
 import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
 import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
 import timber.log.Timber
+import java.io.BufferedOutputStream
 import java.io.File
-import java.io.IOException
+import java.io.FileNotFoundException
+import java.io.InputStreamReader
 import java.lang.StringBuilder
-import java.net.InetAddress
-import java.net.ServerSocket
-import java.util.*
 
 /**
  * Created by Khang NT on 1/1/18.
  * Email: khang.neon.1997@gmail.com
  */
 
-data class ServerSocketInput(
-        val sourceInput: SourceInputStream,
-        val serverSocket: ServerSocket = createServerSocket()
-) {
-    companion object {
-        fun createServerSocket(): ServerSocket {
-            return try {
-                ServerSocket(0, 0, InetAddress.getByName("0.0.0.0"))
-            } catch (error: Throwable) {
-                throw IOException("Can't create socket: ${error.message}", error)
-            }
-        }
-    }
-}
-
 data class CommandResolver(
         val command: Command,
         val execCommand: String,
-        val serverSocketInputs: List<ServerSocketInput>,
         val sourceOutput: SourceOutputStream,
         val tempFile: File,
         val tempFileSourceInput: SourceInputStream
 ) {
     companion object {
+        @Throws(FileNotFoundException::class)
         fun resolve(
                 context: Context,
+                jobTempDir: File,
+                ffmpegPath: File,
                 command: Command
         ): CommandResolver {
 
-            val ffmpegPathResolved = FFmpegPathResolver.resolvePath(context)
-            val tcpInputs = mutableListOf<ServerSocketInput>()
+            val ffmpegPathResolved = FFmpegPathResolver.resolvePath(context, ffmpegPath)
             val execCommandBuilder = StringBuilder(ffmpegPathResolved.toString())
 
-            command.inputs.forEach { input ->
+            command.inputs.forEachIndexed { index, input ->
                 execCommandBuilder.append(" -i")
                 val uri = Uri.parse(input)
                 when (uri.scheme.toLowerCase()) {
                     "file" -> execCommandBuilder.append(" '$uri'")
-                    "content" -> {
-                        val serverSocketInput = ServerSocketInput(ContentResolverSource(context, uri))
-                        execCommandBuilder.append(" '${getTcpUri(serverSocketInput.serverSocket.localPort)}'")
-                        tcpInputs.add(serverSocketInput)
-                    }
-                    "http", "https" -> {
-                        val serverSocketInput = ServerSocketInput(HttpSourceInput(context, uri.toString()))
-                        execCommandBuilder.append(" '${getTcpUri(serverSocketInput.serverSocket.localPort)}'")
-                        tcpInputs.add(serverSocketInput)
+                    "content", "http", "https" -> {
+                        val preparedInput = makeInputTempFile(jobTempDir, index)
+                        if (!preparedInput.exists()) {
+                            throw FileNotFoundException("Some app data were deleted or moved.")
+                        }
+                        execCommandBuilder.append(" '${Uri.fromFile(preparedInput)}'")
                     }
                     else -> {
                         throw IllegalArgumentException("Can't resolve input $input")
@@ -79,34 +62,13 @@ data class CommandResolver(
             val sourceOutput = ContentResolverSource(context, Uri.parse(command.output))
 
             // temp file to save ffmpeg output
-            val tempFile = try {
-                val file = File(context.getExternalFilesDir(null), FFMPEG_TEMP_OUTPUT_FILE)
-                if (file.parentFile.canWrite()) {
-                    file
-                } else {
-                    File(context.filesDir, FFMPEG_TEMP_OUTPUT_FILE)
-                }
-            } catch (all: Exception) {
-                File(context.filesDir, FFMPEG_TEMP_OUTPUT_FILE)
-            }
-
-            if (!tempFile.parentFile.exists()) {
-                val res = if (tempFile.parentFile.mkdirs()) "success" else "failed"
-                Timber.d("Create parent dir $res: $tempFile")
-            }
-
+            val tempFile = File(jobTempDir, FFMPEG_TEMP_OUTPUT_FILE)
             val tempOutputUri = Uri.fromFile(tempFile)
             val tempSourceInput = ContentResolverSource(context, tempOutputUri)
             execCommandBuilder.append(" -y -f ${command.outputFormat} '$tempOutputUri'")
 
             return CommandResolver(command, execCommandBuilder.toString(),
-                    Collections.unmodifiableList(tcpInputs), sourceOutput,
-                    tempFile, tempSourceInput)
-        }
-
-        private fun getTcpUri(port: Int): String {
-            return "tcp://0.0.0.0:${port}" +
-                    "?listen=0"
+                    sourceOutput, tempFile, tempSourceInput)
         }
     }
 
@@ -116,36 +78,35 @@ object FFmpegPathResolver {
     private val globalLock = Any()
 
     /**
-     * Ensure FFmpeg file has executable permission.
+     * Copy FFmpeg binary from "assets" if not exists
      */
     @Throws(FFmpegBinaryPrepareException::class)
-    fun resolvePath(context: Context): File {
-        val originalPath = File(context.applicationInfo.nativeLibraryDir, FFMPEG_FILE)
-        if (originalPath.canExecute() ||
-                catchAll(printLog = true) { originalPath.setExecutable(true) } == true) {
-            return originalPath
-        }
+    fun resolvePath(context: Context, ffmpegPath: File): File {
         synchronized(globalLock) {
-            val copyTo = File(context.filesDir, originalPath.name)
-            if (!copyTo.exists() || copyTo.length() != originalPath.length()) {
-                Timber.d("Start copying FFmpeg to: $copyTo")
-                CopierThread(
-                        ContentResolverSource(context, Uri.fromFile(originalPath)),
-                        ContentResolverSource(context, Uri.fromFile(copyTo)),
-                        onError = {
-                            throw FFmpegBinaryPrepareException("Copy FFmpeg binary failed: $it", it)
-                        },
-                        onSuccess = {
-                            Timber.d("Successfully copy FFmpeg binary to: $copyTo")
+            try {
+                val assetManager = context.assets
+                val ffmpegSize = InputStreamReader(assetManager.open(FFMPEG_SIZE_FILE))
+                        .use { it.readText().trim() }
+                        .toLongOrNull()
+                if (!ffmpegPath.exists() || ffmpegPath.length() != ffmpegSize) {
+                    Timber.d("Start copying FFmpeg to: $ffmpegPath")
+                    assetManager.open(FFMPEG_FILE).use { inputStream ->
+                        val copyTo = context.contentResolver.openOutputStream(Uri.fromFile(ffmpegPath))
+                        BufferedOutputStream(copyTo).use { bufferedOutputStream ->
+                            inputStream.copyTo(bufferedOutputStream)
                         }
-                ).run()
+                    }
+                    Timber.d("Successfully copy FFmpeg binary to: $ffmpegPath")
+                }
+            } catch (error: Throwable) {
+                throw FFmpegBinaryPrepareException("Copy ffmpeg failed", error)
             }
-            if (copyTo.canExecute() ||
-                    catchAll(printLog = true) { copyTo.setExecutable(true) } == true) {
-                Timber.d("Grant executable permission success on $copyTo")
-                return copyTo
+            if (ffmpegPath.canExecute() ||
+                    catchAll(printLog = true) { ffmpegPath.setExecutable(true) } == true) {
+                Timber.d("Grant executable permission success on $ffmpegPath")
+                return ffmpegPath
             } else {
-                throw FFmpegBinaryPrepareException("Can't grant executable permission on: $copyTo", null)
+                throw FFmpegBinaryPrepareException("Can't grant executable permission on: $ffmpegPath", null)
             }
         }
     }

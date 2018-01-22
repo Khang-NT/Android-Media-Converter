@@ -5,6 +5,7 @@ import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import java.io.InterruptedIOException
 import java.lang.ClassCastException
+import java.lang.Exception
 import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 
@@ -36,7 +37,8 @@ fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T {
 }
 
 private fun inWhiteList(error: Throwable): Boolean =
-        rootCauseIs(InterruptedException::class.java, error) ||
+        error.javaClass == Exception::javaClass ||  // dumb error
+                rootCauseIs(InterruptedException::class.java, error) ||
                 rootCauseIs(InterruptedIOException::class.java, error) ||
                 rootCauseIs(UnknownHostException::class.java, error) ||
                 rootCauseIs(SSLException::class.java, error) ||

@@ -10,13 +10,14 @@ import io.reactivex.Observable
  */
 
 interface JobManager {
-    fun recordOutputSize(size: String)
-    fun getOutputSize(): Observable<String>
+    fun recordLiveLog(size: String)
+    fun getLiveLogObservable(): Observable<String>
 
     fun addJob(job: Job): Job
     fun deleteJob(job: Job)
     fun deleteJob(jobId: Long)
-    fun nextJobToRun(): Job?
+    fun nextReadyJob(): Job?
+    fun nextPendingJob(): Job?
     fun updateJobStatus(job: Job, @JobStatus status: Int, statusDetail: String? = null): Job
 
     fun getJob(@JobStatus vararg jobStatus: Int): Flowable<MutableList<Job>>

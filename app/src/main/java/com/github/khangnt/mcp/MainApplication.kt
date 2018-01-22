@@ -2,6 +2,8 @@ package com.github.khangnt.mcp
 
 import android.app.Application
 import com.crashlytics.android.Crashlytics
+import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.database.NoDatabaseImpl
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
@@ -23,6 +25,11 @@ class MainApplication: Application() {
         LeakCanary.install(this)
 
         SingletonInstances.init(this)
+
+        FileDownloader.setupOnApplicationOnCreate(this)
+                .database { NoDatabaseImpl() }
+                .maxNetworkThreadCount(4)
+                .commit()
 
         Fabric.with(this, Crashlytics())
 
