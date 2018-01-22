@@ -47,4 +47,10 @@
         <copyright>Copyright 2013-2017 Philip Schiffer.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
+    <notice>
+        <name>FileDownloader</name>
+        <url>https://github.com/lingochamp/FileDownloader</url>
+        <copyright>Copyright (c) 2015 LingoChamp Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
 </notices>
