@@ -10,9 +10,7 @@ import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
-import java.io.Closeable
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -63,7 +61,7 @@ fun <T> Observable<T>.ignoreError(printLog: Boolean = false): Observable<T> =
             Observable.empty<T>()
         }
 
-fun Int.toConverterSpeed(): String =
+fun Int.formatSpeed(): String =
         when {
             this < KB -> "${this}B/s"
             this < MB -> "${this / KB}KB/s"
@@ -83,4 +81,22 @@ fun <T> List<T>.toImmutable(): List<T> {
 fun openUrl(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     context.startActivity(Intent.createChooser(intent, "Open $url"))
+}
+
+fun File.ensureDirExists(): File {
+    if (!exists() && !mkdirs()) {
+        throw FileNotFoundException("Can't mkdirs $this")
+    }
+    return this
+}
+
+fun File.deleteRecursiveIgnoreError() {
+    if (isDirectory) {
+        listFiles().forEach { it.deleteRecursiveIgnoreError() }
+    }
+    catchAll { this.delete() }
+}
+
+fun File.deleteIgnoreError() {
+    catchAll { delete() }
 }
