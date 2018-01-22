@@ -433,6 +433,12 @@ class ConverterService : Service() {
                                 preparingJob?.id -> prepareThread?.interrupt()
                                 else -> jobManager.deleteJob(id)
                             }
+                            catchAll {
+                                // clean up temp files
+                                makeWorkingPaths(this@ConverterService)
+                                        .getTempDirForJob(id)
+                                        .deleteRecursiveIgnoreError()
+                            }
                             loop()
                         }
                     }
