@@ -87,7 +87,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             var outputUri = Uri.parse(currentJob!!.command.output)
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
                 // try to convert it to file scheme
-                getPath(currentJob!!)?.let { outputUri = Uri.parse(it) }
+                getPath(currentJob!!)?.let { outputUri = Uri.fromFile(File(it)) }
             }
             val intent = Intent(Intent.ACTION_SEND)
                     .setType("text/plain")
@@ -102,7 +102,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             var outputUri = Uri.parse(currentJob!!.command.output)
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
                 // try to convert it to file scheme
-                getPath(currentJob!!)?.let { outputUri = Uri.parse(it) }
+                getPath(currentJob!!)?.let { outputUri = Uri.fromFile(File(it)) }
             }
 
             val mimeType = catchAll {
