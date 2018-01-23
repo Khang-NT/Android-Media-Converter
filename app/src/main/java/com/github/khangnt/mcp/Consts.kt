@@ -9,7 +9,13 @@ const val DEFAULT_CONNECTION_TIMEOUT = 30000
 const val DEFAULT_IO_TIMEOUT = 30000
 const val DEFAULT_IO_BUFFER_LENGTH = 4 * 1024
 
-const val FFMPEG_FILE = "libffmpeg.so"
+const val APP_FILE_FOLDER = "files"
+const val APP_TEMP_FOLDER = "temp"
+const val JOB_TEMP_FOLDER = "jobTemp"
+const val JOB_LOG_FOLDER = "jobLogs"
+
+const val FFMPEG_FILE = "ffmpeg"
+const val FFMPEG_SIZE_FILE = "ffmpeg_size.txt"
 const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_out.temp"
 
 const val ID_UNSET = -1L
@@ -19,3 +25,6 @@ const val CONVERTER_NOTIFICATION_CHANNEL = "ConverterChannel"
 
 const val KB = 1024
 const val MB = KB * 1024
+
+const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
+const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.github.khangnt.mcp"

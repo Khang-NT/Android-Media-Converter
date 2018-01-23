@@ -150,7 +150,7 @@ class MainFragment : BaseFragment(), NavigationView.OnNavigationItemSelectedList
         if (showingFragment !== fragment) {
             childFragmentManager.beginTransaction()
                     .replace(R.id.contentContainer, fragment, fragmentTag)
-                    .commit()
+                    .commitAllowingStateLoss()
         }
 
         currentFragment = fragmentTag

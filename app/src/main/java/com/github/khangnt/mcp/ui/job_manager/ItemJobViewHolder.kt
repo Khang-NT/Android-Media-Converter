@@ -53,6 +53,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             return when (jobStatus) {
                 JobStatus.RUNNING -> "RUNNING"
                 JobStatus.PENDING -> "PENDING"
+                JobStatus.PREPARING -> "PREPARING"
+                JobStatus.READY -> "READY"
                 JobStatus.FAILED -> "FAILED"
                 JobStatus.COMPLETED -> "SUCCESS"
                 else -> "$jobStatus"
@@ -85,7 +87,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             var outputUri = Uri.parse(currentJob!!.command.output)
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
                 // try to convert it to file scheme
-                getPath(currentJob!!)?.let { outputUri = Uri.parse(it) }
+                getPath(currentJob!!)?.let { outputUri = Uri.fromFile(File(it)) }
             }
             val intent = Intent(Intent.ACTION_SEND)
                     .setType("text/plain")
@@ -100,7 +102,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             var outputUri = Uri.parse(currentJob!!.command.output)
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
                 // try to convert it to file scheme
-                getPath(currentJob!!)?.let { outputUri = Uri.parse(it) }
+                getPath(currentJob!!)?.let { outputUri = Uri.fromFile(File(it)) }
             }
 
             val mimeType = catchAll {
@@ -197,8 +199,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                     .substring(0, minOf(3, command.outputFormat.length)).toUpperCase()
             ViewCompat.setBackgroundTintList(tvFileFmt, ColorStateList.valueOf(
                     when (status) {
-                        RUNNING -> ContextCompat.getColor(context, R.color.teal_500)
-                        PENDING -> ContextCompat.getColor(context, R.color.blue_grey_500)
+                        RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
+                        PENDING, READY -> ContextCompat.getColor(context, R.color.blue_grey_500)
                         COMPLETED -> ContextCompat.getColor(context, R.color.green_600)
                         FAILED -> ContextCompat.getColor(context, R.color.red_500)
                         else -> ContextCompat.getColor(context, R.color.red_500)

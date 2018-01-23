@@ -5,6 +5,7 @@ import com.github.khangnt.mcp.db.JobDb
 import com.github.khangnt.mcp.db.MainSqliteOpenHelper
 import com.github.khangnt.mcp.job.DefaultJobManager
 import com.github.khangnt.mcp.job.JobManager
+import com.github.khangnt.mcp.ui.prefs.SharedPrefs
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,6 +38,8 @@ class SingletonInstances private constructor(appContext: Context) {
 
         fun getJobManager(): JobManager = INSTANCE.jobManagerLazy
 
+        fun getSharedPrefs(): SharedPrefs = INSTANCE.sharedPrefsLazy
+
     }
 
     private val mainCacheLazy by lazy {
@@ -66,4 +69,5 @@ class SingletonInstances private constructor(appContext: Context) {
 
     private val jobManagerLazy by lazy { DefaultJobManager(jobDatabaseLazy) }
 
+    private val sharedPrefsLazy by lazy { SharedPrefs(appContext) }
 }

@@ -20,27 +20,31 @@ import org.json.JSONObject
 
 class JobDb(private val sqLiteOpenHelper: SQLiteOpenHelper) {
 
-    fun getAllJob(): List<Job> {
-        sqLiteOpenHelper.readableDatabase.use { db ->
-            db.query(JobTable.NAME, null, null, null, null,
-                    null, null).use { cursor ->
-                if (cursor.moveToFirst()) {
-                    val colId = cursor.getColumnIndex(C_ID)
-                    val colTitle = cursor.getColumnIndex(C_TITLE)
-                    val colStatus = cursor.getColumnIndex(C_STATUS)
-                    val colStatusDetail = cursor.getColumnIndex(C_STATUS_DETAIL)
-                    val colCommand = cursor.getColumnIndex(C_COMMAND)
+    private val lock = Any()
 
-                    val result = mutableListOf<Job>()
-                    do {
-                        result.add(Job(cursor.getLong(colId), cursor.getString(colTitle),
-                                cursor.getInt(colStatus), cursor.getString(colStatusDetail),
-                                Command.from(JSONObject(cursor.getString(colCommand)))))
-                    } while (cursor.moveToNext())
-                    return result
+    fun getAllJob(): List<Job> {
+        synchronized(lock) {
+            sqLiteOpenHelper.readableDatabase.use { db ->
+                db.query(JobTable.NAME, null, null, null, null,
+                        null, null).use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val colId = cursor.getColumnIndex(C_ID)
+                        val colTitle = cursor.getColumnIndex(C_TITLE)
+                        val colStatus = cursor.getColumnIndex(C_STATUS)
+                        val colStatusDetail = cursor.getColumnIndex(C_STATUS_DETAIL)
+                        val colCommand = cursor.getColumnIndex(C_COMMAND)
+
+                        val result = mutableListOf<Job>()
+                        do {
+                            result.add(Job(cursor.getLong(colId), cursor.getString(colTitle),
+                                    cursor.getInt(colStatus), cursor.getString(colStatusDetail),
+                                    Command.from(JSONObject(cursor.getString(colCommand)))))
+                        } while (cursor.moveToNext())
+                        return result
+                    }
                 }
+                return emptyList()
             }
-            return emptyList()
         }
     }
 
@@ -60,24 +64,30 @@ class JobDb(private val sqLiteOpenHelper: SQLiteOpenHelper) {
         if (job.id == ID_UNSET) {
             throw IllegalArgumentException("Job ID must be set")
         }
-        sqLiteOpenHelper.writableDatabase.use { db ->
-            db.updateWithOnConflict(JobTable.NAME, createContentValues(job),
-                    "$C_ID == ?", arrayOf(job.id.toString()),
-                    SQLiteDatabase.CONFLICT_REPLACE)
+        synchronized(lock) {
+            sqLiteOpenHelper.writableDatabase.use { db ->
+                db.updateWithOnConflict(JobTable.NAME, createContentValues(job),
+                        "$C_ID == ?", arrayOf(job.id.toString()),
+                        SQLiteDatabase.CONFLICT_REPLACE)
+            }
         }
     }
 
     fun insertJob(job: Job): Long {
-        sqLiteOpenHelper.writableDatabase.use { db ->
-            return db.insert(JobTable.NAME, null, createContentValues(job))
+        synchronized(lock) {
+            sqLiteOpenHelper.writableDatabase.use { db ->
+                return db.insert(JobTable.NAME, null, createContentValues(job))
+            }
         }
     }
 
     fun deleteJob(job: Job): Int = deleteJob(job.id)
 
     fun deleteJob(id: Long): Int {
-        sqLiteOpenHelper.writableDatabase.use { db ->
-            return db.delete(JobTable.NAME, "$C_ID == ?", arrayOf(id.toString()))
+        synchronized(lock) {
+            sqLiteOpenHelper.writableDatabase.use { db ->
+                return db.delete(JobTable.NAME, "$C_ID == ?", arrayOf(id.toString()))
+            }
         }
     }
 
