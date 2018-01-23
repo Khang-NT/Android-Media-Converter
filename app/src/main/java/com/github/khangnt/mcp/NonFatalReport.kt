@@ -3,6 +3,7 @@ package com.github.khangnt.mcp
 import android.content.Context
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
+import java.io.EOFException
 import java.io.InterruptedIOException
 import java.lang.ClassCastException
 import java.lang.Exception
@@ -44,7 +45,8 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(UnknownHostException::class.java, error) ||
                 rootCauseIs(SSLException::class.java, error) ||
                 rootCauseIs(HttpResponseCodeException::class.java, error) ||
-                rootCauseIs(SocketException::class.java, error)
+                rootCauseIs(SocketException::class.java, error) ||
+                rootCauseIs(EOFException::class.java, error)
 
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
