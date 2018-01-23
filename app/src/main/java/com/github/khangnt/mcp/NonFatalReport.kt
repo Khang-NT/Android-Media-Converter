@@ -3,6 +3,7 @@ package com.github.khangnt.mcp
 import android.content.Context
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
+import com.liulishuo.filedownloader.exception.FileDownloadHttpException
 import java.io.EOFException
 import java.io.InterruptedIOException
 import java.lang.ClassCastException
@@ -46,7 +47,8 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(SSLException::class.java, error) ||
                 rootCauseIs(HttpResponseCodeException::class.java, error) ||
                 rootCauseIs(SocketException::class.java, error) ||
-                rootCauseIs(EOFException::class.java, error)
+                rootCauseIs(EOFException::class.java, error) ||
+                rootCauseIs(FileDownloadHttpException::class.java, error)
 
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
@@ -62,9 +64,10 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
             rootCauseIs(SocketException::class.java, error) ||
             error.message?.contains("unexpected end of stream", ignoreCase = true) == true) {
         return context.getString(R.string.network_error)
-    } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
+    } else if (rootCauseIs(HttpResponseCodeException::class.java, error) ||
+            rootCauseIs(FileDownloadHttpException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
-        return "Http response: ${httpResponseCodeException.message}"
+        return "Link broken, response: ${httpResponseCodeException.message}"
     }
     return fallback
 }
