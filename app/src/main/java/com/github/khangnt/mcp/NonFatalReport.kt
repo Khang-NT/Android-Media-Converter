@@ -1,7 +1,6 @@
 package com.github.khangnt.mcp
 
 import android.content.Context
-import android.system.ErrnoException
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException
@@ -52,8 +51,7 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(EOFException::class.java, error) ||
                 rootCauseIs(FileDownloadHttpException::class.java, error) ||
                 rootCauseIs(ProtocolException::class.java, error) ||
-                (rootCauseIs(ErrnoException::class.java, error) &&
-                        (error.message?.contains("ENOSPC") == true)) // No space left on device
+                error.message?.contains("ENOSPC") == true // No space left on device
 
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
