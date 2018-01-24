@@ -67,8 +67,10 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
             error.message?.contains("unexpected end of stream", ignoreCase = true) == true ||
             rootCauseIs(ProtocolException::class.java, error)) {
         return context.getString(R.string.network_error)
-    } else if (rootCauseIs(HttpResponseCodeException::class.java, error) ||
-            rootCauseIs(FileDownloadHttpException::class.java, error)) {
+    } else if (rootCauseIs(FileDownloadHttpException::class.java, error)) {
+        val httpException = error.castTo(FileDownloadHttpException::class.java)
+        return "Link broken, response: ${httpException.code}"
+    } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
         return "Link broken, response: ${httpResponseCodeException.message}"
     }
