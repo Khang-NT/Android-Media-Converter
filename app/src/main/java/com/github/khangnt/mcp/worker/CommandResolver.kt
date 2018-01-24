@@ -59,7 +59,14 @@ data class CommandResolver(
 
             execCommandBuilder.append(" ").append(command.args)
 
-            val sourceOutput = ContentResolverSource(context, Uri.parse(command.output))
+            val finalOutputUri = Uri.parse(command.output)
+            if (finalOutputUri.scheme == "file") {
+                val outputFolder = File(finalOutputUri.path).parentFile
+                if (!outputFolder.exists() && !outputFolder.mkdirs()) {
+                    throw FileNotFoundException("Output folder not found: $outputFolder")
+                }
+            }
+            val sourceOutput = ContentResolverSource(context, finalOutputUri)
 
             // temp file to save ffmpeg output
             val tempFile = File(jobTempDir, FFMPEG_TEMP_OUTPUT_FILE)
