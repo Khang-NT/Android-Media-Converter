@@ -9,13 +9,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.github.khangnt.mcp.ID_UNSET
-import com.github.khangnt.mcp.PLAY_STORE_URL
+import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
-import com.github.khangnt.mcp.util.openUrl
+import com.github.khangnt.mcp.util.openPlayStore
 import com.github.khangnt.mcp.worker.ACTION_JOB_STATUS_CHANGED
 import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
@@ -41,7 +41,7 @@ class MainActivity : SingleFragmentActivity() {
                 .setTitle(R.string.rate_us_title)
                 .setMessage(R.string.rate_us_message)
                 .setPositiveButton(R.string.rate_us_love_it, { _, _ ->
-                    openUrl(this, PLAY_STORE_URL)
+                    openPlayStore(this, PLAY_STORE_PACKAGE)
                     getSharedPrefs().isRated = true
                 })
                 .setNeutralButton(R.string.rate_us_not_now, { _, _ ->

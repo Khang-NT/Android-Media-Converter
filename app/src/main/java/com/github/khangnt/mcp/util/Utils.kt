@@ -14,6 +14,8 @@ import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+
+
 /**
  * Created by Khang NT on 1/1/18.
  * Email: khang.neon.1997@gmail.com
@@ -78,9 +80,19 @@ fun <T> List<T>.toImmutable(): List<T> {
     return Collections.unmodifiableList(ArrayList(this))
 }
 
-fun openUrl(context: Context, url: String) {
+fun openUrl(context: Context, url: String, message: String = "Open $url") {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(Intent.createChooser(intent, "Open $url"))
+    context.startActivity(Intent.createChooser(intent, message))
+}
+
+fun openPlayStore(context: Context, packageName: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=$packageName")))
+    } catch (activityNotFound: Throwable) {
+        openUrl(context, "https://play.google.com/store/apps/details?id=$packageName",
+                "Open PlayStore")
+    }
 }
 
 fun File.ensureDirExists(): File {
