@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp
 
 import android.content.Context
+import android.system.ErrnoException
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException
@@ -50,7 +51,9 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(SocketException::class.java, error) ||
                 rootCauseIs(EOFException::class.java, error) ||
                 rootCauseIs(FileDownloadHttpException::class.java, error) ||
-                rootCauseIs(ProtocolException::class.java, error)
+                rootCauseIs(ProtocolException::class.java, error) ||
+                (rootCauseIs(ErrnoException::class.java, error) &&
+                        (error.message?.contains("ENOSPC") == true)) // No space left on device
 
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
@@ -73,6 +76,8 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
         return "Link broken, response: ${httpResponseCodeException.message}"
+    } else if (error.message?.contains("ENOSPC") == true) {
+        return "Your device's storage is full"
     }
     return fallback
 }
