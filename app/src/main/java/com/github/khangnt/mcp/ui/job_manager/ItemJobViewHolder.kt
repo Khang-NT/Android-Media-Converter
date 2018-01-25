@@ -71,6 +71,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
 
     private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
+    private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
     private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
     private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
     private val ivOpenFolder by lazy { itemView.findViewById<ImageView>(R.id.ivOpenFolder) }
@@ -82,6 +83,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     init {
         ivDeleteJob.setOnClickListener {
             cancelJob(context, currentJob!!, false)
+        }
+        ivLogs.setOnClickListener {
+            // open JobLogsActivity
         }
         ivShare.setOnClickListener {
             var outputUri = Uri.parse(currentJob!!.command.output)
