@@ -25,6 +25,8 @@ import java.io.OutputStream
  * Email: khang.neon.1997@gmail.com
  */
 
+private var logFile: File? = null
+
 class JobWorkerThread(
         private val appContext: Context,
         private var job: Job,
@@ -54,6 +56,13 @@ class JobWorkerThread(
 
         jobTempDir = try {
             workingPaths.getTempDirForJob(job.id)
+        } catch (error: Throwable) {
+            onError(error, "Error: ${error.message}")
+            return
+        }
+
+        logFile = try {
+            workingPaths.getLogFileOfJob(job.id)
         } catch (error: Throwable) {
             onError(error, "Error: ${error.message}")
             return
@@ -233,6 +242,7 @@ class JobWorkerThread(
                             jobManager.recordLiveLog(stringBuilder.toString())
                         }
                         Timber.d(line)
+                        logFile?.appendText(line)
                     }
                 }
             }
