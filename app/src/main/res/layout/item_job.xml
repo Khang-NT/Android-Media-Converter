@@ -106,6 +106,22 @@
             app:layout_constraintTop_toBottomOf="@id/tvJobLocation">
 
             <ImageView
+                android:id="@+id/ivLogs"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/ic_job_logs"
+                android:tint="@color/gray_600" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
                 android:id="@+id/ivShare"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
