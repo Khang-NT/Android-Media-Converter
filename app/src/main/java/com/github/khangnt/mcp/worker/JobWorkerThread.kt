@@ -242,7 +242,7 @@ class JobWorkerThread(
                             jobManager.recordLiveLog(stringBuilder.toString())
                         }
                         Timber.d(line)
-                        logFile?.appendText(line)
+                        logFile?.appendText(line + "\n")
                     }
                 }
             }
