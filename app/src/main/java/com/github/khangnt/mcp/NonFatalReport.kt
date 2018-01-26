@@ -9,6 +9,7 @@ import java.io.EOFException
 import java.io.InterruptedIOException
 import java.lang.ClassCastException
 import java.lang.Exception
+import java.net.HttpRetryException
 import java.net.ProtocolException
 import java.net.SocketException
 import java.net.UnknownHostException
@@ -51,6 +52,7 @@ private fun inWhiteList(error: Throwable): Boolean =
                 rootCauseIs(SocketException::class.java, error) ||
                 rootCauseIs(EOFException::class.java, error) ||
                 rootCauseIs(FileDownloadHttpException::class.java, error) ||
+                rootCauseIs(HttpRetryException::class.java, error) ||
                 rootCauseIs(ProtocolException::class.java, error) ||
                 error.message?.contains("ENOSPC") == true || // No space left on device
                 rootCauseIs(FileDownloadOutOfSpaceException::class.java, error)
@@ -68,7 +70,8 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
             rootCauseIs(SSLException::class.java, error) ||
             rootCauseIs(SocketException::class.java, error) ||
             error.message?.contains("unexpected end of stream", ignoreCase = true) == true ||
-            rootCauseIs(ProtocolException::class.java, error)) {
+            rootCauseIs(ProtocolException::class.java, error) ||
+            rootCauseIs(HttpRetryException::class.java, error)) {
         return context.getString(R.string.network_error)
     } else if (rootCauseIs(FileDownloadHttpException::class.java, error)) {
         val httpException = error.castTo(FileDownloadHttpException::class.java)
