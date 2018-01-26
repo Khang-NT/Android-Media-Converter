@@ -86,6 +86,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         }
         ivLogs.setOnClickListener {
             // open JobLogsActivity
+            JobLogsActivity.launch(it.context, currentJob!!.id)
         }
         ivShare.setOnClickListener {
             var outputUri = Uri.parse(currentJob!!.command.output)
