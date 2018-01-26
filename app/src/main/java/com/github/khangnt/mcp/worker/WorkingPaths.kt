@@ -13,11 +13,14 @@ import java.io.File
 data class WorkingPaths(
         val tempDir: File,
         val fileDir: File,
-        val jobTempRootDir: File = File(tempDir, JOB_TEMP_FOLDER).ensureDirExists(),
-        val jobLogRootDir: File = File(fileDir, JOB_LOG_FOLDER).ensureDirExists(),
         val ffmpegPath: File = File(fileDir, FFMPEG_FILE)
 ) {
+    private val jobTempRootDir: File by lazy { File(tempDir, JOB_TEMP_FOLDER).ensureDirExists() }
+    private val jobLogRootDir: File by lazy { File(fileDir, JOB_LOG_FOLDER).ensureDirExists() }
+
     fun getTempDirForJob(jobId: Long): File = File(jobTempRootDir, jobId.toString()).ensureDirExists()
+
+    fun getListJobTempDir(): Array<File> = jobTempRootDir.listFiles() ?: emptyArray()
 
     fun getLogFileOfJob(jobId: Long): File = File(jobLogRootDir, "$jobId.log")
 }
@@ -30,8 +33,7 @@ data class WorkingPaths(
 fun makeWorkingPaths(context: Context): WorkingPaths {
     val fileDir = context.getDir(APP_FILE_FOLDER, Context.MODE_PRIVATE)
     val tempDir: File = try {
-        val dir = context.getExternalFilesDir(APP_TEMP_FOLDER).ensureDirExists()
-        if (dir.canWrite()) dir else context.getDir(APP_TEMP_FOLDER, Context.MODE_PRIVATE)
+        context.getExternalFilesDir(APP_TEMP_FOLDER).ensureDirExists()
     } catch (ignore: Throwable) {
         // fallback to fileDir anyway
         context.getDir(APP_TEMP_FOLDER, Context.MODE_PRIVATE)
