@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -32,7 +33,7 @@ class MainActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!hasWriteStoragePermission(this)) {
-            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), 0)
+            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE), 0)
         }
     }
 
