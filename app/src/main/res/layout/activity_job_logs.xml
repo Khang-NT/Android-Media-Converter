@@ -7,9 +7,9 @@
     tools:context="com.github.khangnt.mcp.ui.job_manager.JobLogsActivity">
 
     <ScrollView
+        android:id="@+id/scrollLogs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,7 +19,8 @@
             <TextView
                 android:id="@+id/tvLogs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:textIsSelectable="true" />
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>
