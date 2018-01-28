@@ -49,7 +49,7 @@ class JobLogsActivity : AppCompatActivity() {
         setJobInfo(jobIdExtra, jobTitleExtra)
 
         swipeRefreshLayout.setOnRefreshListener(this::reload)
-        jobTitleClickArea.setOnClickListener { switchJob() }
+        tvJobTitle.setOnClickListener { switchJob() }
     }
 
     private fun setRefreshing(isRefreshing: Boolean) {

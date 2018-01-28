@@ -24,28 +24,27 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <LinearLayout
-                android:id="@+id/jobTitleClickArea"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small">
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                >
 
                 <TextView
                     android:id="@+id/tvJobTitle"
                     style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_expand_more_black_24dp"
+                    android:drawableRight="@drawable/ic_expand_more_black_24dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/margin_small"
+                    android:paddingRight="@dimen/margin_small"
                     tools:text="3 Convert abc to xyz"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_small"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:src="@drawable/ic_expand_more_black_24dp"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
