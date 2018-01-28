@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import io.reactivex.Observable
@@ -33,6 +32,7 @@ class JobLogsActivity : AppCompatActivity() {
     private var jobId: Long = -1
     private var jobTitle: String? = null
     private var disposable: Disposable? = null
+    private var jobList: Array<String> = arrayOf("1.log", "2.log", "3.log", "4.log")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,13 +100,14 @@ class JobLogsActivity : AppCompatActivity() {
     }
 
     private fun switchJob() {
+        val selected = arrayOf(jobId.toInt())
         AlertDialog.Builder(this)
-                .setSingleChoiceItems(arrayOf("Job 1: Hello", "Job 2: World"), 0, { _, which ->
-                    Toast.makeText(this, "Selected $which", Toast.LENGTH_SHORT).show()
+                .setSingleChoiceItems(jobList, (selected[0] - 1), { _, which ->
+                    selected[0] = which
                 })
                 .setTitle("Select job")
                 .setPositiveButton("OK", { _, _ ->
-                    // set Job info
+                    setJobInfo((selected[0] + 1).toLong(), jobList[selected[0]])
                 })
                 .setNegativeButton("Cancel", null)
                 .show()
