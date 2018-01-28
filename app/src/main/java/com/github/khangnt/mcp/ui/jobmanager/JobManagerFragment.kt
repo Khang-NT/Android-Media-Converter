@@ -13,6 +13,7 @@ import com.github.khangnt.mcp.job.jobComparator
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.IdGenerator
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -31,11 +32,12 @@ class JobManagerFragment : BaseFragment() {
 
     private val jobManager = SingletonInstances.getJobManager()
     private val adapter = JobAdapter(jobManager.getLiveLogObservable()).apply { setHasStableIds(true) }
-    private val runningHeaderModel = RunningHeaderModel("Running")
-    private val preparingHeaderModel = HeaderModel("Preparing")
-    private val readyHeaderModel = HeaderModel("Ready")
-    private val pendingHeaderModel = HeaderModel("Pending")
-    private val finishedHeaderModel = HeaderModel("Finished")
+    private val idGenerator = IdGenerator.scope("JobManagerFragment")
+    private val runningHeaderModel = RunningHeaderModel("Running", idGenerator)
+    private val preparingHeaderModel = HeaderModel("Preparing", idGenerator)
+    private val readyHeaderModel = HeaderModel("Ready", idGenerator)
+    private val pendingHeaderModel = HeaderModel("Pending", idGenerator)
+    private val finishedHeaderModel = HeaderModel("Finished", idGenerator)
 
     private var loadDataDisposable: Disposable? = null
 

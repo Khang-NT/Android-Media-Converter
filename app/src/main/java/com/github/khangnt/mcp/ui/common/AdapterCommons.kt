@@ -20,8 +20,18 @@ abstract class CustomViewHolder<in T : AdapterModel>(itemView: View) : RecyclerV
     abstract fun bind(model: T, pos: Int)
 }
 
-object IdGenerator {
-    private val atomicInt = AtomicInteger(100000 /* offset */)
+class IdGenerator private constructor(initValue: Int = 100_000) {
+    companion object {
+        private val sInstances = mutableMapOf<String, IdGenerator>()
+
+        fun scope(scopeName: String): IdGenerator {
+            synchronized(sInstances) {
+                return sInstances.getOrPut(scopeName, { IdGenerator() })
+            }
+        }
+    }
+
+    private val atomicInt = AtomicInteger(initValue)
     private val map = mutableMapOf<String, Int>()
 
     fun idFor(stringValue: String): Int {

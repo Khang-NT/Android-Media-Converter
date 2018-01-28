@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.jobmanager
 import android.annotation.SuppressLint
 import android.view.View
 import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.IdGenerator
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit
  * Email: khang.neon.1997@gmail.com
  */
 
-class RunningHeaderModel(header: String) : HeaderModel(header)
+class RunningHeaderModel(header: String, idGenerator: IdGenerator) : HeaderModel(header, idGenerator)
 
 @SuppressLint("SetTextI18n")
 class ItemHeaderRunningViewHolder(

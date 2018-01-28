@@ -9,8 +9,9 @@ import com.github.khangnt.mcp.R
  * Email: khang.neon.1997@gmail.com
  */
 
-open class HeaderModel(val header: String): AdapterModel, HasIdModel {
-    override val modelId: Long by lazy { IdGenerator.idFor(header).toLong() }
+
+open class HeaderModel(val header: String, idGenerator: IdGenerator): AdapterModel, HasIdModel {
+    override val modelId: Long by lazy { idGenerator.idFor(header).toLong() }
 }
 
 open class ItemHeaderViewHolder(itemView: View) : CustomViewHolder<HeaderModel>(itemView) {
