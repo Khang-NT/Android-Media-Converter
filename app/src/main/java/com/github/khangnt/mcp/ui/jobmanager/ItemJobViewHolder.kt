@@ -15,7 +15,9 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.AppCompatTextView
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -28,6 +30,7 @@ import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdModel
+import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.ConverterService
@@ -60,6 +63,11 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                 else -> "$jobStatus"
             }
         }
+    }
+
+    object Factory : ViewHolderFactory {
+        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
+                ItemJobViewHolder(inflater.inflate(R.layout.item_job, parent, false))
     }
 
     private val context = itemView.context

@@ -11,11 +11,10 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.job.jobComparator
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.AdapterModel
-import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.ui.common.IdGenerator
+import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_job_manager.*
@@ -31,20 +30,27 @@ import java.util.concurrent.TimeUnit
 class JobManagerFragment : BaseFragment() {
 
     private val jobManager = SingletonInstances.getJobManager()
-    private val adapter = JobAdapter(jobManager.getLiveLogObservable()).apply { setHasStableIds(true) }
+    private val compositeDisposable = CompositeDisposable()
     private val idGenerator = IdGenerator.scope("JobManagerFragment")
-    private val runningHeaderModel = RunningHeaderModel("Running", idGenerator)
+    private val runningHeaderModel = RunningHeaderModel("Running",
+            jobManager.getLiveLogObservable(), compositeDisposable, idGenerator)
     private val preparingHeaderModel = HeaderModel("Preparing", idGenerator)
     private val readyHeaderModel = HeaderModel("Ready", idGenerator)
     private val pendingHeaderModel = HeaderModel("Pending", idGenerator)
     private val finishedHeaderModel = HeaderModel("Finished", idGenerator)
 
+    private lateinit var adapter: MixAdapter
+
     private var loadDataDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // launch service
         context!!.startService(Intent(context!!, ConverterService::class.java))
+        adapter = MixAdapter.Builder(context!!)
+                .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
+                .register(RunningHeaderModel::class.java, ItemHeaderRunningViewHolder.Factory)
+                .register(JobModel::class.java, ItemJobViewHolder.Factory)
+                .build()
     }
 
     override fun onCreateView(

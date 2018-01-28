@@ -1,13 +1,15 @@
 package com.github.khangnt.mcp.ui.jobmanager
 
 import android.annotation.SuppressLint
+import android.view.LayoutInflater
 import android.view.View
-import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.ui.common.IdGenerator
-import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
+import android.view.ViewGroup
+import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.ui.common.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,19 +17,25 @@ import java.util.concurrent.TimeUnit
  * Email: khang.neon.1997@gmail.com
  */
 
-class RunningHeaderModel(header: String, idGenerator: IdGenerator) : HeaderModel(header, idGenerator)
+class RunningHeaderModel(
+        header: String,
+        val liveLogObservable: Observable<String>,
+        val compositeDisposable: CompositeDisposable,
+        idGenerator: IdGenerator
+) : HeaderModel(header, idGenerator)
 
 @SuppressLint("SetTextI18n")
-class ItemHeaderRunningViewHolder(
-        itemView: View,
-        outputSize: Observable<String>,
-        compositeDisposable: CompositeDisposable
-) : ItemHeaderViewHolder(itemView) {
+class ItemHeaderRunningViewHolder(itemView: View) : ItemHeaderViewHolder<RunningHeaderModel>(itemView) {
+    private var disposable: Disposable? = null
     private var speedSuffix = ""
     private var header = ""
 
-    init {
-        val disposable = outputSize.throttleLast(500, TimeUnit.MILLISECONDS)
+    override fun bind(model: RunningHeaderModel, pos: Int) {
+        header = model.header
+
+        disposable?.dispose()
+        disposable = model.liveLogObservable
+                .throttleLast(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     speedSuffix = it
@@ -36,11 +44,13 @@ class ItemHeaderRunningViewHolder(
                     speedSuffix = ""
                     tvHeader.text = header
                 })
-        compositeDisposable.add(disposable)
+        model.compositeDisposable.add(disposable!!)
+
+        tvHeader.text = "$header $speedSuffix"
     }
 
-    override fun bind(model: HeaderModel, pos: Int) {
-        header = model.header
-        tvHeader.text = "$header $speedSuffix"
+    object Factory : ViewHolderFactory {
+        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
+                ItemHeaderRunningViewHolder(inflater.inflate(R.layout.item_header, parent, false))
     }
 }
