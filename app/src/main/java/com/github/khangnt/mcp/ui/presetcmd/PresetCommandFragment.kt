@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.preset_cmd
+package com.github.khangnt.mcp.ui.presetcmd
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager

@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.job_manager
+package com.github.khangnt.mcp.ui.jobmanager
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException

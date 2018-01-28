@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.*
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.ui.job_manager.JobManagerFragment
-import com.github.khangnt.mcp.ui.preset_cmd.PresetCommandFragment
+import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
+import com.github.khangnt.mcp.ui.presetcmd.PresetCommandFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
