@@ -40,7 +40,7 @@ class JobLogsActivity : AppCompatActivity() {
         val workingPaths: WorkingPaths = makeWorkingPaths(applicationContext)
         logFile = workingPaths.getLogFileOfJob(jobId)
 
-        disposable = Observable.interval(5, TimeUnit.SECONDS)
+        disposable = Observable.interval(0, 5, TimeUnit.SECONDS)
                 .map { logFile!!.readText() }
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
