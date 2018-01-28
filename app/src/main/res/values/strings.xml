@@ -48,5 +48,6 @@
     <string name="rate_us_not_now">Not now</string>
     <string name="rate_us_never">Never</string>
     <string name="rate_us">Rate us</string>
+    <string name="reload">Reload</string>
 
 </resources>

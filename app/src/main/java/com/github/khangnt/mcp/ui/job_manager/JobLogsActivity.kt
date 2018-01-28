@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ScrollView
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.worker.WorkingPaths
@@ -15,6 +17,9 @@ import kotlinx.android.synthetic.main.activity_job_logs.*
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
+import com.github.khangnt.mcp.R.string.action_settings
+
+
 
 const val EXTRA_JOB_ID = "JobLogsActivity:jobId"
 
@@ -39,6 +44,24 @@ class JobLogsActivity : AppCompatActivity() {
         check(jobId > -1, { "Invalid job ID: $jobId" })
 
         switchJob(jobId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.activity_job_logs_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            R.id.action_reload -> {
+                reload()
+                return true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     override fun onDestroy() {
