@@ -71,6 +71,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
 
     private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
+    private val buttonLayout2 by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout2) }
     private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
     private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
     private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
@@ -225,7 +226,14 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             tvJobLocation.text = context.getString(R.string.job_output_location,
                     path ?: command.output)
 
-            buttonLayout.visibility = if (status == JobStatus.COMPLETED) {
+            buttonLayout2.visibility = if (status == JobStatus.COMPLETED) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            buttonLayout.visibility = if (status == JobStatus.COMPLETED
+                    || status == JobStatus.RUNNING
+                    || status == JobStatus.FAILED) {
                 View.VISIBLE
             } else {
                 View.GONE
