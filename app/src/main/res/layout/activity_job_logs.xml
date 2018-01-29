@@ -74,7 +74,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="monospace"
-                    android:textIsSelectable="true"/>
+                    android:padding="@dimen/margin_normal"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/text_small"
+                    tools:text="Hello world"/>
 
             </ScrollView>
         </android.support.v4.widget.SwipeRefreshLayout>
