@@ -31,6 +31,7 @@ import com.github.khangnt.mcp.ui.common.HasIdModel
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.ConverterService
+import com.github.khangnt.mcp.worker.makeWorkingPaths
 import java.io.File
 import java.net.URLConnection
 
@@ -256,6 +257,10 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             if (realPath !== null) {
                 MediaScannerConnection.scanFile(context, arrayOf(realPath), null, null)
             }
+        }
+        // delete log file if exits
+        catchAll {
+            makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
         }
     }
 }
