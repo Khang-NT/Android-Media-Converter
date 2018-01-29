@@ -397,9 +397,11 @@ class ConverterService : Service() {
 
                         freeTime += 1
                         if (freeTime >= JOB_HANDLER_MAX_FREE_TIME && !binding) {
-                            // clean up temp folder before stop
-                            val tempDir = makeWorkingPaths(this@ConverterService).jobTempRootDir
-                            tempDir.listFiles().forEach { it.deleteRecursiveIgnoreError() }
+                            catchAll {
+                                // clean up temp folder before stop
+                                makeWorkingPaths(this@ConverterService).getListJobTempDir()
+                                        .forEach { it.deleteRecursiveIgnoreError() }
+                            }
                             // request stop
                             mainHandler.sendEmptyMessage(STOP_SERVICE_MESSAGE)
                         } else {
@@ -434,10 +436,11 @@ class ConverterService : Service() {
                                 else -> jobManager.deleteJob(id)
                             }
                             catchAll {
-                                // clean up temp files
-                                makeWorkingPaths(this@ConverterService)
-                                        .getTempDirForJob(id)
-                                        .deleteRecursiveIgnoreError()
+                                // clean up temp and log files
+                                makeWorkingPaths(this@ConverterService).apply {
+                                    getTempDirForJob(id).deleteRecursiveIgnoreError()
+                                    getLogFileOfJob(id).delete()
+                                }
                             }
                             loop()
                         }

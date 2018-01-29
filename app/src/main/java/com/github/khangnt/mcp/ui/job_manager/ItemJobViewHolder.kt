@@ -31,6 +31,7 @@ import com.github.khangnt.mcp.ui.common.HasIdModel
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.ConverterService
+import com.github.khangnt.mcp.worker.makeWorkingPaths
 import java.io.File
 import java.net.URLConnection
 
@@ -71,6 +72,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
 
     private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
+    private val buttonLayout2 by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout2) }
+    private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
     private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
     private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
     private val ivOpenFolder by lazy { itemView.findViewById<ImageView>(R.id.ivOpenFolder) }
@@ -82,6 +85,10 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     init {
         ivDeleteJob.setOnClickListener {
             cancelJob(context, currentJob!!, false)
+        }
+        ivLogs.setOnClickListener {
+            // open JobLogsActivity
+            JobLogsActivity.launch(it.context, currentJob!!.id, currentJob!!.title)
         }
         ivShare.setOnClickListener {
             var outputUri = Uri.parse(currentJob!!.command.output)
@@ -220,7 +227,14 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             tvJobLocation.text = context.getString(R.string.job_output_location,
                     path ?: command.output)
 
-            buttonLayout.visibility = if (status == JobStatus.COMPLETED) {
+            buttonLayout2.visibility = if (status == JobStatus.COMPLETED) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            buttonLayout.visibility = if (status == JobStatus.COMPLETED
+                    || status == JobStatus.RUNNING
+                    || status == JobStatus.FAILED) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -243,6 +257,10 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             if (realPath !== null) {
                 MediaScannerConnection.scanFile(context, arrayOf(realPath), null, null)
             }
+        }
+        // delete log file if exits
+        catchAll {
+            makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
         }
     }
 }

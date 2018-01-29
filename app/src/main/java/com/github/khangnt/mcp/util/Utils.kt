@@ -104,7 +104,7 @@ fun File.ensureDirExists(): File {
 
 fun File.deleteRecursiveIgnoreError() {
     if (isDirectory) {
-        listFiles()?.forEach { it.deleteRecursiveIgnoreError() }
+        (listFiles() as? Array<File>)?.forEach { it.deleteRecursiveIgnoreError() }
     }
     catchAll { this.delete() }
 }
