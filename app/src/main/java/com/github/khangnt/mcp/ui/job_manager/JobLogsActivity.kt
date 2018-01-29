@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
@@ -51,6 +53,24 @@ class JobLogsActivity : AppCompatActivity() {
 
         swipeRefreshLayout.setOnRefreshListener(this::reload)
         tvJobTitle.setOnClickListener { switchJob() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.activity_job_logs_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            R.id.action_reload -> {
+                reload()
+                return true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     private fun setRefreshing(isRefreshing: Boolean) {
