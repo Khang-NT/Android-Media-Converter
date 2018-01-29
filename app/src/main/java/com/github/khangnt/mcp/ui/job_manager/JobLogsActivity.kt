@@ -110,6 +110,7 @@ class JobLogsActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { setRefreshing(false) }
                 .subscribe({ text ->
+                    tvLogs.clearFocus()
                     tvLogs.text = text
                     tvErrorMessage.visibility = View.GONE
                 }, { error ->
