@@ -44,8 +44,6 @@ class JobWorkerThread(
         }
     }
 
-    private val lock = Any()
-    private var hasError = false
     private var jobTempDir: File? = null
 
     override fun run() {
