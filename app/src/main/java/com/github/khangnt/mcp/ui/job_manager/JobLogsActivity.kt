@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_job_logs.*
@@ -36,6 +38,8 @@ class JobLogsActivity : AppCompatActivity() {
     private var jobId: Long = -1
     private var jobTitle: String? = null
     private var disposable: Disposable? = null
+    private val compositeDisposable = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,13 +66,13 @@ class JobLogsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        return when (item.itemId) {
             R.id.action_reload -> {
                 reload()
-                return true
+                true
             }
             else -> {
-                return super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
         }
     }
@@ -93,13 +97,13 @@ class JobLogsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable?.dispose()
+        compositeDisposable.dispose()
     }
 
     private fun reload() {
         setRefreshing(true)
 
-        disposable?.dispose()
+        disposable?.dispose() // cancel previous loading if it still not finish
         disposable = Observable
                 .fromCallable {
                     val workingPaths = makeWorkingPaths(this)
@@ -119,29 +123,36 @@ class JobLogsActivity : AppCompatActivity() {
                     tvErrorMessage.text = error.message
                     tvErrorMessage.visibility = View.VISIBLE
                 })
+        compositeDisposable.add(disposable!!)
     }
 
     private fun switchJob() {
-        val selected = arrayOf(0)
+        tvJobTitle.isEnabled = false // prevent use click when loading job list
 
-        SingletonInstances.getJobManager().getJob(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
+        val selected = arrayOf(0)
+        val disposable = SingletonInstances.getJobManager()
+                .getJob(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
                 .take(1)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { jobList ->
-                    val selectOptions = Array<String>(jobList.size, { index -> jobList[index].title})
-
-                    selected[0] = selectOptions.indexOf(tvJobTitle.text)
+                .doFinally { tvJobTitle.isEnabled = true }
+                .subscribe ({ jobList ->
+                    val selectOptions = Array(jobList.size, { index -> jobList[index].title})
+                    selected[0] = jobList.indexOfFirst { it.id == jobId }
 
                     AlertDialog.Builder(this)
                             .setSingleChoiceItems(selectOptions, selected[0], { _, which ->
                                 selected[0] = which
                             })
-                            .setTitle("Select job")
-                            .setPositiveButton("OK", { _, _ ->
+                            .setTitle(getString(R.string.switch_job_dialog_title))
+                            .setPositiveButton(R.string.action_ok, { _, _ ->
                                 setJobInfo(jobList[selected[0]].id, selectOptions[selected[0]])
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton(R.string.action_cancel, null)
                             .show()
-                }
+                }, { error ->
+                    Timber.d(error)
+                    Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                })
+        compositeDisposable.add(disposable)
     }
 }
