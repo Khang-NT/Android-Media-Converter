@@ -94,84 +94,75 @@
             app:layout_constraintTop_toBottomOf="@+id/tvJobStatus"
             tools:text="Location: /sdcard/Music/Hello world.mp3"/>
 
+        <ImageView
+            android:id="@+id/ivLogs"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/console"
+            android:tint="@color/gray_600"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation" />
+
         <LinearLayout
             android:id="@+id/buttonLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_normal"
-            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="@dimen/margin_normal"
             android:gravity="end"
             android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvJobLocation">
 
             <ImageView
-                android:id="@+id/ivLogs"
+                android:id="@+id/ivShare"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:layout_marginRight="@dimen/margin_normal"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
-                android:src="@drawable/console"
+                android:src="@drawable/ic_share"
                 android:tint="@color/gray_600" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            <ImageView
+                android:id="@+id/ivOpen"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/ic_open_black_24dp"
+                android:tint="@color/gray_600" />
 
-            <LinearLayout
-                android:id="@+id/buttonLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivOpenFolder"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/ic_folder_black_24dp"
+                android:tint="@color/gray_600" />
 
-                <ImageView
-                    android:id="@+id/ivShare"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:layout_marginRight="@dimen/margin_normal"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_share"
-                    android:tint="@color/gray_600" />
-
-                <ImageView
-                    android:id="@+id/ivOpen"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:layout_marginRight="@dimen/margin_normal"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_open_black_24dp"
-                    android:tint="@color/gray_600" />
-
-                <ImageView
-                    android:id="@+id/ivOpenFolder"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:layout_marginRight="@dimen/margin_normal"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_folder_black_24dp"
-                    android:tint="@color/gray_600" />
-
-                <ImageView
-                    android:id="@+id/ivDeleteFile"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_delete_black_24dp"
-                    android:tint="@color/gray_600" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/ivDeleteFile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:tint="@color/gray_600" />
 
         </LinearLayout>
 
