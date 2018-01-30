@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
+import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_job_logs.*
@@ -25,7 +24,7 @@ import timber.log.Timber
 private const val EXTRA_JOB_ID = "JobLogsActivity:jobId"
 private const val EXTRA_JOB_TITLE = "JobLogsActivity:jobTitle"
 
-class JobLogsActivity : AppCompatActivity() {
+class JobLogsActivity : BaseActivity() {
 
     companion object {
         fun launch(context: Context, jobId: Long, jobTitle: String) {
@@ -38,8 +37,6 @@ class JobLogsActivity : AppCompatActivity() {
     private var jobId: Long = -1
     private var jobTitle: String? = null
     private var disposable: Disposable? = null
-    private val compositeDisposable = CompositeDisposable()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,11 +92,6 @@ class JobLogsActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
     private fun reload() {
         setRefreshing(true)
 
@@ -123,14 +115,14 @@ class JobLogsActivity : AppCompatActivity() {
                     tvErrorMessage.text = error.message
                     tvErrorMessage.visibility = View.VISIBLE
                 })
-        compositeDisposable.add(disposable!!)
+                .disposeOnDestroyed()
     }
 
     private fun switchJob() {
         tvJobTitle.isEnabled = false // prevent use click when loading job list
 
         val selected = arrayOf(0)
-        val disposable = SingletonInstances.getJobManager()
+        SingletonInstances.getJobManager()
                 .getJob(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
                 .take(1)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,6 +145,6 @@ class JobLogsActivity : AppCompatActivity() {
                     Timber.d(error)
                     toast(error.message)
                 })
-        compositeDisposable.add(disposable)
+                .disposeOnPaused()
     }
 }
