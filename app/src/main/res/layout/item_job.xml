@@ -105,7 +105,8 @@
             android:src="@drawable/console"
             android:tint="@color/gray_600"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobLocation" />
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation"
+            android:layout_marginLeft="8dp" />
 
         <LinearLayout
             android:id="@+id/buttonLayout"
@@ -116,7 +117,8 @@
             android:gravity="end"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobLocation">
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation"
+            android:layout_marginRight="8dp">
 
             <ImageView
                 android:id="@+id/ivShare"
