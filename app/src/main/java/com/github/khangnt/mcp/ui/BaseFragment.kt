@@ -1,7 +1,6 @@
 package com.github.khangnt.mcp.ui
 
 import android.app.Activity
-import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -13,7 +12,7 @@ import timber.log.Timber
  * https://github.com/marverenic/Jockey/blob/master/app/src/main/java/com/marverenic/music/ui/BaseFragment.java
  */
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : RxFragment() {
 
     /**
      * If this fragment is attached to a [BaseActivity], then this callback will be triggered
