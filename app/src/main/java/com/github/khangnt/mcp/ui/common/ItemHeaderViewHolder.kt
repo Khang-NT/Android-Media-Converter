@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.khangnt.mcp.R
+import kotlinx.android.synthetic.main.item_header.view.*
 
 /**
  * Created by Khang NT on 1/5/18.
@@ -12,12 +13,12 @@ import com.github.khangnt.mcp.R
  */
 
 
-open class HeaderModel(val header: String, idGenerator: IdGenerator): AdapterModel, HasIdModel {
+open class HeaderModel(val header: String, idGenerator: IdGenerator) : AdapterModel, HasIdModel {
     override val modelId: Long by lazy { idGenerator.idFor(header).toLong() }
 }
 
 open class ItemHeaderViewHolder<in T : HeaderModel>(itemView: View) : CustomViewHolder<T>(itemView) {
-    val tvHeader by lazy { itemView.findViewById<TextView>(R.id.tvHeader)!! }
+    val tvHeader: TextView = itemView.tvHeader
 
     override fun bind(model: T, pos: Int) {
         tvHeader.text = model.header
@@ -25,6 +26,6 @@ open class ItemHeaderViewHolder<in T : HeaderModel>(itemView: View) : CustomView
 
     object Factory : ViewHolderFactory {
         override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
-            ItemHeaderViewHolder<HeaderModel>(inflater.inflate(R.layout.item_header, parent, false))
+                ItemHeaderViewHolder<HeaderModel>(inflater.inflate(R.layout.item_header, parent, false))
     }
 }

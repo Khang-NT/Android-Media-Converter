@@ -13,15 +13,11 @@ import android.os.StrictMode
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AppCompatTextView
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.JobStatus
@@ -35,6 +31,7 @@ import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.ConverterService
 import com.github.khangnt.mcp.worker.makeWorkingPaths
+import kotlinx.android.synthetic.main.item_job.view.*
 import java.io.File
 import java.net.URLConnection
 
@@ -73,19 +70,18 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
 
     private val context = itemView.context
 
-    private val tvFileFmt by lazy { itemView.findViewById<AppCompatTextView>(R.id.tvOutputFormat) }
-    private val tvJobTitle by lazy { itemView.findViewById<TextView>(R.id.tvJobTitle) }
-    private val tvJobStatus by lazy { itemView.findViewById<TextView>(R.id.tvJobStatus) }
-    private val tvJobLocation by lazy { itemView.findViewById<TextView>(R.id.tvJobLocation) }
-    private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
-
-    private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
-    private val buttonLayout2 by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout2) }
-    private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
-    private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
-    private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
-    private val ivOpenFolder by lazy { itemView.findViewById<ImageView>(R.id.ivOpenFolder) }
-    private val ivDeleteFile by lazy { itemView.findViewById<ImageView>(R.id.ivDeleteFile) }
+    private val tvOutputFormat = itemView.tvOutputFormat
+    private val tvJobTitle = itemView.tvJobTitle
+    private val tvJobStatus = itemView.tvJobStatus
+    private val tvJobLocation = itemView.tvJobLocation
+    private val ivDeleteJob = itemView.ivCancelJob
+    private val buttonLayout = itemView.buttonLayout
+    private val buttonLayout2 = itemView.buttonLayout2
+    private val ivLogs = itemView.ivLogs
+    private val ivShare = itemView.ivShare
+    private val ivOpen = itemView.ivOpen
+    private val ivOpenFolder = itemView.ivOpenFolder
+    private val ivDeleteFile = itemView.ivDeleteFile
 
     private var currentJob: Job? = null
     private var vmPolicyBackup: StrictMode.VmPolicy? = null
@@ -210,9 +206,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     override fun bind(model: JobModel, pos: Int) {
         currentJob = model.job
         model.job.apply {
-            tvFileFmt.text = command.outputFormat
+            tvOutputFormat.text = command.outputFormat
                     .substring(0, minOf(3, command.outputFormat.length)).toUpperCase()
-            ViewCompat.setBackgroundTintList(tvFileFmt, ColorStateList.valueOf(
+            ViewCompat.setBackgroundTintList(tvOutputFormat, ColorStateList.valueOf(
                     when (status) {
                         RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
                         PENDING, READY -> ContextCompat.getColor(context, R.color.blue_grey_500)
