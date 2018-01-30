@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.view
 
 import android.content.Context
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
@@ -45,7 +46,12 @@ class RecyclerViewGroup @JvmOverloads constructor(
     }
 
     fun loading() {
-        loadingView?.visibility = VISIBLE
+        if ((recyclerView?.adapter?.itemCount ?: 0) > 0) {
+            // recycler view not empty
+            loadingView?.visibility = GONE
+        } else {
+            loadingView?.visibility = VISIBLE
+        }
         emptyView?.visibility = GONE
         errorView?.visibility = GONE
     }
@@ -59,10 +65,22 @@ class RecyclerViewGroup @JvmOverloads constructor(
     fun error(reason: String? = null) {
         loadingView?.visibility = GONE
         emptyView?.visibility = GONE
-        errorView?.visibility = VISIBLE
-        errorReason?.let {
-            it.visibility = if (reason != null) VISIBLE else GONE
-            it.text = reason
+
+        if ((recyclerView?.adapter?.itemCount ?: 0) > 0) {
+            // recycler view not empty, show snack bar instead
+            Snackbar.make(this, reason ?: "Error", Snackbar.LENGTH_LONG)
+                    .apply {
+                        onRetry?.let { onRetry -> setAction(R.string.retry, { onRetry() }) }
+                    }
+                    .show()
+
+            errorView?.visibility = View.GONE
+        } else {
+            errorView?.visibility = VISIBLE
+            errorReason?.let {
+                it.visibility = if (reason != null) VISIBLE else GONE
+                it.text = reason
+            }
         }
     }
 

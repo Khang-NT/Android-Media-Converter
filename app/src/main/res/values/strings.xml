@@ -52,5 +52,11 @@
     <string name="rate_us">Rate us</string>
     <string name="reload">Reload</string>
     <string name="switch_job_dialog_title">Select job</string>
+    <string name="create_new_folder">New folder</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="hint_type_folder_name">Folder name</string>
+    <string name="folder_exists">Folder exists</string>
+    <string name="create_folder_failed">Create folder failed, please check folder name.</string>
+    <string name="create_folder_success">Create folder \'%s\' success</string>
 
 </resources>

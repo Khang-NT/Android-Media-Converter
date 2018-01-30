@@ -51,6 +51,7 @@ class JobManagerFragment : BaseFragment() {
                 .register(RunningHeaderModel::class.java, ItemHeaderRunningViewHolder.Factory)
                 .register(JobModel::class.java, ItemJobViewHolder.Factory)
                 .build()
+        adapter.setHasStableIds(true)
     }
 
     override fun onCreateView(
@@ -65,7 +66,7 @@ class JobManagerFragment : BaseFragment() {
 
         recyclerViewGroup.recyclerView!!.adapter = adapter
         recyclerViewGroup.recyclerView!!.layoutManager = LinearLayoutManager(context)
-        recyclerViewGroup.onRetry = { loadData() }
+        recyclerViewGroup.onRetry = this::loadData
         loadData()
     }
 

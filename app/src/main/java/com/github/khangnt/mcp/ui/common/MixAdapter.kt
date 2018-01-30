@@ -45,6 +45,10 @@ class MixAdapter(
                 ?: throw IllegalStateException("Unknown item view type for $dataClass")
     }
 
+    override fun getItemId(position: Int): Long {
+        return (getData(position) as? HasIdModel)?.modelId ?: super.getItemId(position)
+    }
+
     fun getData(pos: Int): AdapterModel = itemDataList[pos]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder<*> {
