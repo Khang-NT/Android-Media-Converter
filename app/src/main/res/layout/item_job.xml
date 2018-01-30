@@ -32,7 +32,7 @@
                 android:background="@drawable/file_ext"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:backgroundTint="#ff00"
                 tools:text="MP3"/>
