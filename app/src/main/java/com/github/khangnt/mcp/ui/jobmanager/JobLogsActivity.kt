@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
+import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -151,7 +151,7 @@ class JobLogsActivity : AppCompatActivity() {
                             .show()
                 }, { error ->
                     Timber.d(error)
-                    Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                    toast(error.message)
                 })
         compositeDisposable.add(disposable)
     }

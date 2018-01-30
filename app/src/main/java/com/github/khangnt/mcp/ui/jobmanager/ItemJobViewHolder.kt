@@ -18,7 +18,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.annotation.JobStatus.*
@@ -29,6 +28,7 @@ import com.github.khangnt.mcp.ui.common.HasIdModel
 import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.ConverterService
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import kotlinx.android.synthetic.main.item_job.view.*
@@ -133,7 +133,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         ivOpenFolder.setOnClickListener {
             val path = getPath(currentJob!!)
             if (path === null) {
-                Toast.makeText(context, R.string.unknown_file_path, Toast.LENGTH_SHORT).show()
+                context.toast(R.string.unknown_file_path)
             } else {
                 val folder = File(path).parentFile
                 // this intent should work with ES Explorer

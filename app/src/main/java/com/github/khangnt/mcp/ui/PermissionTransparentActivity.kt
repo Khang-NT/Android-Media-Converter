@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
+import com.github.khangnt.mcp.util.toast
 
 /**
  * Created by Khang NT on 1/7/18.
@@ -48,11 +49,7 @@ class PermissionTransparentActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.any { it != PERMISSION_GRANTED }) {
-            Toast.makeText(
-                    this,
-                    permissionDeniedMess ?: getString(R.string.permission_not_granted),
-                    Toast.LENGTH_LONG
-            ).show()
+            toast(permissionDeniedMess ?: getString(R.string.permission_not_granted), Toast.LENGTH_LONG)
         } else {
             catchAll { pendingIntent?.send() }
         }
