@@ -51,6 +51,8 @@ class MixAdapter(
 
     fun getData(pos: Int): AdapterModel = itemDataList[pos]
 
+    fun indexOf(model: AdapterModel): Int = itemDataList.indexOf(model)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder<*> {
         return viewHolderFactories[viewType]?.invoke(layoutInflater, parent)
                 ?: throw IllegalArgumentException("Unknown view type $viewType")

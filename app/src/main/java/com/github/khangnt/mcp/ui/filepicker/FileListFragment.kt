@@ -29,9 +29,10 @@ import kotlin.Comparator
 
 class FileListFragment : BaseFragment() {
     companion object {
-        fun newInstance(path: File, onSelectListener: (File) -> Unit): FileListFragment {
+        fun newInstance(path: File, fileSelectable: Boolean, onSelectListener: (File) -> Unit): FileListFragment {
             return FileListFragment().apply {
                 this.path = path
+                this.fileSelectable = fileSelectable
                 this.onSelectListener = onSelectListener
             }
         }
@@ -39,6 +40,9 @@ class FileListFragment : BaseFragment() {
 
     private lateinit var path: File
     private lateinit var onSelectListener: (File) -> Unit
+    private var fileSelectable: Boolean = false
+
+    private var selected: FileListModel? = null
 
     private val idGenerator = IdGenerator.scope("FileListFragment")
     private val createFolderAdapterModel = FileListModel(File("Dummy"), TYPE_CREATE_FOLDER,
@@ -46,15 +50,34 @@ class FileListFragment : BaseFragment() {
 
     private var adapter: MixAdapter? = null
 
-    private val onClickListener = { model: FileListModel ->
+    private val onClickListener = { model: FileListModel, pos: Int ->
         when (model.type) {
-            TYPE_FILE, TYPE_FOLDER -> onSelectListener(model.path)
+            TYPE_FOLDER -> onSelectListener(model.path)
+            TYPE_FILE -> {
+                if (fileSelectable) {
+                    val oldPos = selected?.let { adapter?.indexOf(it) } ?: -1
+                    selected = model
+
+                    if (oldPos >= 0) adapter?.notifyItemChanged(oldPos)
+                    adapter?.notifyItemChanged(pos)
+                }
+                onSelectListener(model.path)
+            }
             TYPE_CREATE_FOLDER -> showCreateFolderDialog()
         }
     }
 
+    private val selectedIdRetriever: () -> Long? = { selected?.modelId }
+
     init {
         retainInstance = true
+    }
+
+    fun getFileSelected(): File? = selected?.path
+
+    fun clearSelected() {
+        selected = null
+        adapter?.notifyDataSetChanged()
     }
 
     override fun onCreateView(
@@ -74,7 +97,7 @@ class FileListFragment : BaseFragment() {
                     .register(FileListModel::class.java, { inflater, parent ->
                         FileListViewHolder(
                                 inflater.inflate(R.layout.item_file_list, parent, false),
-                                onClickListener
+                                onClickListener, selectedIdRetriever
                         )
                     })
                     .build()
