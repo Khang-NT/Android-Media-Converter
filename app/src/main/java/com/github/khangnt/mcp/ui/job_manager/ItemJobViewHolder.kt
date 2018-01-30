@@ -201,8 +201,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     override fun bind(model: JobModel, pos: Int) {
         currentJob = model.job
         model.job.apply {
-            tvFileFmt.text = command.outputFormat
-                    .substring(0, minOf(3, command.outputFormat.length)).toUpperCase()
+            tvFileFmt.text = getOutputFormatAlias(command.outputFormat)
             ViewCompat.setBackgroundTintList(tvFileFmt, ColorStateList.valueOf(
                     when (status) {
                         RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
@@ -260,6 +259,15 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         // delete log file if exits
         catchAll {
             makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
+        }
+    }
+
+    private fun getOutputFormatAlias(outputFormat: String): String {
+        val outputFmtUpperCase = outputFormat.toUpperCase()
+        return when(outputFmtUpperCase) {
+            "MATROSKA" ->  "MKV"
+            "WEBVTT" -> "WVTT"
+            else -> outputFmtUpperCase.take(4)
         }
     }
 }
