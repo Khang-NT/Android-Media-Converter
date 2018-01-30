@@ -34,11 +34,11 @@ open class RxFragment: Fragment() {
         if (disposableOnPaused.isDisposed) disposableOnPaused = CompositeDisposable()
     }
 
-    protected fun Disposable.disposeOnPaused() = disposableOnPaused.add(this)
+    protected fun Disposable.disposeOnPaused() = apply { disposableOnPaused.add(this) }
 
-    protected fun Disposable.disposeOnDestroyed() = disposableOnDestroyed.add(this)
+    protected fun Disposable.disposeOnDestroyed() = apply { disposableOnDestroyed.add(this) }
 
-    protected fun Disposable.disposeOnViewDestroyed() = disposableOnViewDestroyed.add(this)
+    protected fun Disposable.disposeOnViewDestroyed() = apply { disposableOnViewDestroyed.add(this) }
 
     override fun onPause() {
         super.onPause()
