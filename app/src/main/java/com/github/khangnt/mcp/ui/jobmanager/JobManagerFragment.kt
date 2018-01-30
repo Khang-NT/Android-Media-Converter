@@ -61,10 +61,11 @@ class JobManagerFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setActivitySupportActionBar(toolbar)
+
         recyclerViewGroup.recyclerView!!.adapter = adapter
         recyclerViewGroup.recyclerView!!.layoutManager = LinearLayoutManager(context)
         recyclerViewGroup.onRetry = { loadData() }
-
         loadData()
     }
 

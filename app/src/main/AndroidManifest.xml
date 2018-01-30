@@ -43,8 +43,13 @@
             android:theme="@style/AppTheme.NoActionBar.Translucent"/>
 
         <activity
-            android:name=".ui.job_manager.JobLogsActivity"
+            android:name=".ui.jobmanager.JobLogsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".ui.AboutActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>

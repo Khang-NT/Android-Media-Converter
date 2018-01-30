@@ -1,7 +1,6 @@
 package com.github.khangnt.mcp.ui
 
 import android.app.Activity
-import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
@@ -15,20 +14,6 @@ import timber.log.Timber
  */
 
 abstract class BaseFragment : Fragment() {
-    private var activityIntent: Intent? = null
-
-    fun getActivityIntent(): Intent? = activityIntent
-
-    fun setActivityIntent(intent: Intent) {
-        activityIntent = intent
-    }
-
-    /**
-     * If this fragment is attached to a [SingleFragmentActivity], then this callback will be triggered
-     * when [SingleFragmentActivity.onNewIntent].
-     */
-    open fun onNewActivityIntent(intent: Intent) {
-    }
 
     /**
      * If this fragment is attached to a [BaseActivity], then this callback will be triggered

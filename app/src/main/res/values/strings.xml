@@ -21,6 +21,7 @@
 
     <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
     <string name="job_list_load_error_message">Load Job failed</string>
+    <string name="file_list_load_error_message">Load file list failed</string>
     <string name="retry">Retry</string>
     <string name="preset_command_empty_message">This page still on development and will available soon. You can create new Job via YMusic app.</string>
 

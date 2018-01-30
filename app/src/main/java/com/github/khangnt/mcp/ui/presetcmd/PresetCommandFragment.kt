@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
-import kotlinx.android.synthetic.main.fragment_job_manager.*
+import kotlinx.android.synthetic.main.fragment_preset_command.*
 
 /**
  * Created by Khang NT on 1/6/18.
@@ -24,6 +24,7 @@ class PresetCommandFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setActivitySupportActionBar(toolbar)
         recyclerViewGroup.recyclerView?.layoutManager = LinearLayoutManager(view.context)
         recyclerViewGroup.recyclerView?.adapter = emptyAdapter
         recyclerViewGroup.empty()
