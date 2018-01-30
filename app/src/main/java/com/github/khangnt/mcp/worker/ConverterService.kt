@@ -436,10 +436,11 @@ class ConverterService : Service() {
                                 else -> jobManager.deleteJob(id)
                             }
                             catchAll {
-                                // clean up temp files
-                                makeWorkingPaths(this@ConverterService)
-                                        .getTempDirForJob(id)
-                                        .deleteRecursiveIgnoreError()
+                                // clean up temp and log files
+                                makeWorkingPaths(this@ConverterService).apply {
+                                    getTempDirForJob(id).deleteRecursiveIgnoreError()
+                                    getLogFileOfJob(id).delete()
+                                }
                             }
                             loop()
                         }

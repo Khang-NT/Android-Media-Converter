@@ -15,15 +15,14 @@ import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.closeQuietly
 import com.github.khangnt.mcp.util.deleteRecursiveIgnoreError
 import timber.log.Timber
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.OutputStream
+import java.io.*
 
 /**
  * Created by Khang NT on 1/3/18.
  * Email: khang.neon.1997@gmail.com
  */
+
+private var logFile: File? = null
 
 class JobWorkerThread(
         private val appContext: Context,
@@ -56,6 +55,8 @@ class JobWorkerThread(
             onError(error, "Error: ${error.message}")
             return
         }
+
+        logFile = catchAll(printLog = true) { workingPaths.getLogFileOfJob(job.id) }
 
         val commandResolver = try {
             CommandResolver.resolve(appContext, jobTempDir!!, workingPaths.ffmpegPath, job.command)
@@ -190,6 +191,9 @@ class JobWorkerThread(
         }
 
         override fun run() {
+            val logFileOutputStream: OutputStreamWriter? = catchAll {
+                logFile?.let { OutputStreamWriter(FileOutputStream(it)) }
+            }
             var converting = false
             catchAll {
                 InputStreamReader(input).use { inputReader ->
@@ -231,9 +235,14 @@ class JobWorkerThread(
                             jobManager.recordLiveLog(stringBuilder.toString())
                         }
                         Timber.d(line)
+                        catchAll(printLog = true) {
+                            logFileOutputStream?.appendln(line)
+                            logFileOutputStream?.flush()
+                        }
                     }
                 }
             }
+            logFileOutputStream.closeQuietly()
             jobManager.recordLiveLog("")
         }
 

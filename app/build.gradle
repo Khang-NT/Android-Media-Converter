@@ -189,22 +189,21 @@ publishConfig {
 
 afterEvaluate {
     tasks.create("testReleaseUnitTest").dependsOn(
-            testArmReleaseUnitTest,
-            testArm7ReleaseUnitTest,
-            testArm8ReleaseUnitTest,
-            testX86ReleaseUnitTest,
-            testX86_64ReleaseUnitTest,
-            testMipsReleaseUnitTest,
-            testMips64ReleaseUnitTest
-
+            "testArmReleaseUnitTest",
+            "testArm7ReleaseUnitTest",
+            "testArm8ReleaseUnitTest",
+            "testX86ReleaseUnitTest",
+            "testX86_64ReleaseUnitTest",
+            "testMipsReleaseUnitTest",
+            "testMips64ReleaseUnitTest"
     )
     tasks.create("lintRelease").dependsOn(
-            lintArmRelease,
-            lintArm7Release,
-            lintArm8Release,
-            lintX86Release,
-            lintX86_64Release,
-            lintMipsRelease,
-            lintMips64Release
+            "lintArmRelease",
+            "lintArm7Release",
+            "lintArm8Release",
+            "lintX86Release",
+            "lintX86_64Release",
+            "lintMipsRelease",
+            "lintMips64Release"
     )
 }

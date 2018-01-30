@@ -35,6 +35,7 @@
     <string name="open_folder_chooser">Open folder: %s</string>
     <string name="unknown_file_path">Unknown file path</string>
 
+    <string name="action_ok">OK</string>
     <string name="action_yes">Yes</string>
     <string name="action_cancel">Cancel</string>
 
@@ -48,5 +49,7 @@
     <string name="rate_us_not_now">Not now</string>
     <string name="rate_us_never">Never</string>
     <string name="rate_us">Rate us</string>
+    <string name="reload">Reload</string>
+    <string name="switch_job_dialog_title">Select job</string>
 
 </resources>
