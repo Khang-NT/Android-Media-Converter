@@ -98,7 +98,7 @@
             android:id="@+id/ivLogs"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_normal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="4dp"
