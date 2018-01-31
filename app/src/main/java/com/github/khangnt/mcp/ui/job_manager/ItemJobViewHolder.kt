@@ -72,7 +72,6 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
 
     private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
-    private val buttonLayout2 by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout2) }
     private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
     private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
     private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
@@ -202,8 +201,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     override fun bind(model: JobModel, pos: Int) {
         currentJob = model.job
         model.job.apply {
-            tvFileFmt.text = command.outputFormat
-                    .substring(0, minOf(3, command.outputFormat.length)).toUpperCase()
+            tvFileFmt.text = getOutputFormatAlias(command.outputFormat)
             ViewCompat.setBackgroundTintList(tvFileFmt, ColorStateList.valueOf(
                     when (status) {
                         RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
@@ -227,12 +225,12 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             tvJobLocation.text = context.getString(R.string.job_output_location,
                     path ?: command.output)
 
-            buttonLayout2.visibility = if (status == JobStatus.COMPLETED) {
+            buttonLayout.visibility = if (status == JobStatus.COMPLETED) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
-            buttonLayout.visibility = if (status == JobStatus.COMPLETED
+            ivLogs.visibility = if (status == JobStatus.COMPLETED
                     || status == JobStatus.RUNNING
                     || status == JobStatus.FAILED) {
                 View.VISIBLE
@@ -261,6 +259,15 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         // delete log file if exits
         catchAll {
             makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
+        }
+    }
+
+    private fun getOutputFormatAlias(outputFormat: String): String {
+        val outputFmtUpperCase = outputFormat.toUpperCase()
+        return when(outputFmtUpperCase) {
+            "MATROSKA" ->  "MKV"
+            "WEBVTT" -> "WVTT"
+            else -> outputFmtUpperCase.take(4)
         }
     }
 }
