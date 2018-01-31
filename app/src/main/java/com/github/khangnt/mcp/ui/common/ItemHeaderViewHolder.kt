@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.item_header.view.*
  */
 
 
-open class HeaderModel(val header: String, idGenerator: IdGenerator) : AdapterModel, HasIdModel {
-    override val modelId: Long by lazy { idGenerator.idFor(header).toLong() }
+open class HeaderModel(val header: String) : AdapterModel, HasIdString {
+    override val idString: String = header
 }
 
 open class ItemHeaderViewHolder<in T : HeaderModel>(itemView: View) : CustomViewHolder<T>(itemView) {

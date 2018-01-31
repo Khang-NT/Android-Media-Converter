@@ -16,12 +16,6 @@ open class RxFragment: Fragment() {
     private var disposableOnDestroyed: CompositeDisposable = CompositeDisposable()
     private var disposableOnViewDestroyed: CompositeDisposable = CompositeDisposable()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // renew composite disposable in case Fragment instance is reused
-        if (disposableOnDestroyed.isDisposed) disposableOnDestroyed = CompositeDisposable()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // renew disposable when fragment return from back stack

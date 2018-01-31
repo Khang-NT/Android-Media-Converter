@@ -24,7 +24,7 @@ import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
-import com.github.khangnt.mcp.ui.common.HasIdModel
+import com.github.khangnt.mcp.ui.common.HasIdLong
 import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
@@ -41,8 +41,8 @@ import java.net.URLConnection
  * Email: khang.neon.1997@gmail.com
  */
 
-data class JobModel(val job: Job) : AdapterModel, HasIdModel {
-    override val modelId: Long = job.id
+data class JobModel(val job: Job) : AdapterModel, HasIdLong {
+    override val idLong: Long = job.id
 }
 
 private val cacheOutputPath = SparseArray<String>()

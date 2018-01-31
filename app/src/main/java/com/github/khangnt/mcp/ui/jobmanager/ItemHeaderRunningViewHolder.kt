@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.ui.common.*
+import com.github.khangnt.mcp.ui.common.CustomViewHolder
+import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
+import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,9 +23,8 @@ import java.util.concurrent.TimeUnit
 class RunningHeaderModel(
         header: String,
         val liveLogObservable: Observable<String>,
-        val compositeDisposable: CompositeDisposable,
-        idGenerator: IdGenerator
-) : HeaderModel(header, idGenerator)
+        val compositeDisposable: CompositeDisposable
+) : HeaderModel(header)
 
 @SuppressLint("SetTextI18n")
 class ItemHeaderRunningViewHolder(itemView: View) : ItemHeaderViewHolder<RunningHeaderModel>(itemView) {

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 typealias ViewHolderFactory = (inflater: LayoutInflater, parent: ViewGroup) -> CustomViewHolder<*>
@@ -19,6 +20,7 @@ typealias ViewHolderFactory = (inflater: LayoutInflater, parent: ViewGroup) -> C
  */
 
 class MixAdapter(
+        private val idGenerator: IdGenerator,
         private val layoutInflater: LayoutInflater,
         private val itemTypes: Map<Class<out AdapterModel>, Int>,
         private val viewHolderFactories: Map<Int, ViewHolderFactory>
@@ -37,6 +39,8 @@ class MixAdapter(
         }
     }
 
+    fun getDataSnapshot(): ArrayList<AdapterModel> = ArrayList(itemDataList)
+
     override fun getItemCount(): Int = itemDataList.size
 
     override fun getItemViewType(position: Int): Int {
@@ -46,7 +50,10 @@ class MixAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return (getData(position) as? HasIdModel)?.modelId ?: super.getItemId(position)
+        val data = getData(position)
+        return (data as? HasIdLong)?.idLong
+                ?: (data as? HasIdString)?.run { idGenerator.idFor(idString).toLong() }
+                ?: super.getItemId(position)
     }
 
     fun getData(pos: Int): AdapterModel = itemDataList[pos]
@@ -64,7 +71,12 @@ class MixAdapter(
         (holder as CustomViewHolder<AdapterModel>).bind(data, position)
     }
 
-    class Builder(context: Context) {
+    class Builder(
+            context: Context,
+            idGeneratorScope: String = IdGenerator.SCOPE_GLOBAL,
+            idGeneratorInit: Int = IdGenerator.DEFAULT_INIT_VALUE
+    ) {
+        private val idGenerator = IdGenerator.scope(idGeneratorScope, idGeneratorInit)
         private val layoutInflater = LayoutInflater.from(context)
         private var itemTypeCounter = 0
         private val itemTypes = mutableMapOf<Class<out AdapterModel>, Int>()
@@ -77,7 +89,7 @@ class MixAdapter(
             return this
         }
 
-        fun build(): MixAdapter = MixAdapter(layoutInflater,
+        fun build(): MixAdapter = MixAdapter(idGenerator, layoutInflater,
                 Collections.unmodifiableMap(itemTypes.toMutableMap()),
                 Collections.unmodifiableMap(viewHolderFactories.toMutableMap()))
     }

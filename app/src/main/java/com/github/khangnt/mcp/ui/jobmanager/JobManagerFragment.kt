@@ -11,7 +11,10 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.job.jobComparator
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.*
+import com.github.khangnt.mcp.ui.common.AdapterModel
+import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
+import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -31,13 +34,12 @@ class JobManagerFragment : BaseFragment() {
 
     private val jobManager = SingletonInstances.getJobManager()
     private val compositeDisposable = CompositeDisposable()
-    private val idGenerator = IdGenerator.scope("JobManagerFragment")
     private val runningHeaderModel = RunningHeaderModel("Running",
-            jobManager.getLiveLogObservable(), compositeDisposable, idGenerator)
-    private val preparingHeaderModel = HeaderModel("Preparing", idGenerator)
-    private val readyHeaderModel = HeaderModel("Ready", idGenerator)
-    private val pendingHeaderModel = HeaderModel("Pending", idGenerator)
-    private val finishedHeaderModel = HeaderModel("Finished", idGenerator)
+            jobManager.getLiveLogObservable(), compositeDisposable)
+    private val preparingHeaderModel = HeaderModel("Preparing")
+    private val readyHeaderModel = HeaderModel("Ready")
+    private val pendingHeaderModel = HeaderModel("Pending")
+    private val finishedHeaderModel = HeaderModel("Finished")
 
     private lateinit var adapter: MixAdapter
 
@@ -46,7 +48,7 @@ class JobManagerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context!!.startService(Intent(context!!, ConverterService::class.java))
-        adapter = MixAdapter.Builder(context!!)
+        adapter = MixAdapter.Builder(context!!, idGeneratorScope = "JobManagerFragment")
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
                 .register(RunningHeaderModel::class.java, ItemHeaderRunningViewHolder.Factory)
                 .register(JobModel::class.java, ItemJobViewHolder.Factory)
