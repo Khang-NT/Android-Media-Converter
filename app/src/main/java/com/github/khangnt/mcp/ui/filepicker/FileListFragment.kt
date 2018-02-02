@@ -2,7 +2,6 @@ package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,9 +89,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(context!!)
-        recyclerViewGroup.getRecyclerView().adapter = adapter
-        recyclerViewGroupState.bind(recyclerViewGroup)
+        recyclerViewGroupState.bind(recyclerViewGroup, adapter)
     }
 
     private fun reloadData() {

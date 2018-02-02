@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.view
 
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -27,9 +28,15 @@ class RecyclerViewGroupState {
     private var errorReason: String? = null
     private var recyclerViewGroupWeakRef: WeakReference<RecyclerViewGroup>? = null
 
-    fun bind(recyclerViewGroup: RecyclerViewGroup) {
+    fun bind(
+            recyclerViewGroup: RecyclerViewGroup,
+            adapter: RecyclerView.Adapter<*>?,
+            layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(recyclerViewGroup.context)
+    ) {
         recyclerViewGroupWeakRef = WeakReference(recyclerViewGroup)
         recyclerViewGroup.setRetryFunc(retryFunc)
+        recyclerViewGroup.getRecyclerView().adapter = adapter
+        recyclerViewGroup.getRecyclerView().layoutManager = layoutManager
         updateState()
     }
 

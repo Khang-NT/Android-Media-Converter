@@ -2,7 +2,6 @@ package com.github.khangnt.mcp.ui.jobmanager
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,10 +64,7 @@ class JobManagerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
-
-        recyclerViewGroup.getRecyclerView().adapter = adapter
-        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(context)
-        recyclerViewGroupState.bind(recyclerViewGroup)
+        recyclerViewGroupState.bind(recyclerViewGroup, adapter)
     }
 
     override fun onResume() {
