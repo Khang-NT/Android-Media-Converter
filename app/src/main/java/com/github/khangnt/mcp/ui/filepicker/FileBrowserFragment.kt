@@ -2,17 +2,14 @@ package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
 import android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.MixAdapter
-import kotlinx.android.synthetic.main.fragment_file_browser.*
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Khang NT on 1/31/18.
@@ -48,14 +45,13 @@ class FileBrowserFragment : BaseFragment() {
     val removeOldest by lazy { arguments!!.getBoolean(KEY_REMOVE_OLDEST) }
     val startUpDir by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
 
-    var onSelectedFilesChanged: ((fragment: FileBrowserFragment, file: List<File>) -> Unit)? = null
+    var onSelectedFilesChanged: ((fragment: FileBrowserFragment, files: List<File>) -> Unit)? = null
     var onDirChanged: ((fragment: FileBrowserFragment, file: File) -> Unit)? = null
 
     private val selectedFiles = mutableListOf<File>()
     private val selectedFilesReadOnly = Collections.unmodifiableList(selectedFiles)
 
     private var currentDir: File? = null
-    private lateinit var pathIndicatorAdapter: MixAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,13 +61,6 @@ class FileBrowserFragment : BaseFragment() {
                     ?: emptyList<String>()
             selectedFiles.addAll(list.map { File(it) })
         }
-
-        pathIndicatorAdapter = MixAdapter.Builder(context!!, "FileBrowserFragment")
-                .register(PathIndicatorModel::class.java, { inflater, parent ->
-                    val itemView = inflater.inflate(R.layout.item_path_indicator, parent, false)
-                    return@register PathIndicatorViewHolder(itemView, onPathIndicatorClick)
-                })
-                .build()
 
         // re-attach callbacks
         childFragmentManager.fragments.forEach { fragment ->
@@ -90,20 +79,13 @@ class FileBrowserFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pathIndicatorRecyclerView.layoutManager = LinearLayoutManager(context!!, HORIZONTAL, false)
-        pathIndicatorRecyclerView.adapter = pathIndicatorAdapter
+        if (savedInstanceState !== null) {
+            currentDir = File(savedInstanceState.getString(KEY_CURRENT_DIR))
+        }
 
         if (currentDir === null) {
-            val dir = savedInstanceState?.getString(KEY_CURRENT_DIR)?.let { File(it) } ?: startUpDir
-            goto(dir)
-        } else {
-            updatePathIndicator()
+            goto(startUpDir)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        pathIndicatorRecyclerView.adapter = null
     }
 
     fun goto(dir: File) {
@@ -119,7 +101,6 @@ class FileBrowserFragment : BaseFragment() {
             }
 
             onDirChanged?.invoke(this, dir)
-            updatePathIndicator()
         }
     }
 
@@ -135,15 +116,18 @@ class FileBrowserFragment : BaseFragment() {
             false
         } else if (selectedFiles.remove(clickItem)) {
             // discard select
+            onSelectedFilesChanged()
             true
         } else if (selectedFiles.size < maxFileCanSelect) {
             // remember this file is selected
             selectedFiles.add(clickItem)
+            onSelectedFilesChanged()
             true
         } else if (removeOldest && selectedFiles.isNotEmpty()) {
             // exceed max file can select -> remove oldest file
             selectedFiles.removeAt(0)
             selectedFiles.add(clickItem)
+            onSelectedFilesChanged()
             true
         } else {
             // does nothing
@@ -151,22 +135,11 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
+    fun getSelectedFiles(): List<File> = selectedFilesReadOnly
+
+    fun getCurrentDir(): File? = currentDir
+
     private val checkedFilesRetriever: CheckedFilesRetriever = { selectedFilesReadOnly }
-
-    private val onPathIndicatorClick = { model: PathIndicatorModel ->
-        goto(model.path)
-    }
-
-    private fun updatePathIndicator() {
-        val list = mutableListOf<PathIndicatorModel>()
-        var path = currentDir
-        while (path != null) {
-            list.add(PathIndicatorModel(path))
-            path = path.parentFile
-        }
-        pathIndicatorAdapter.setData(list.reversed())
-        pathIndicatorRecyclerView.smoothScrollToPosition(pathIndicatorAdapter.itemCount)
-    }
 
     private fun showFragment(oldDir: File?, dir: File, fileListFragment: FileListFragment) {
         childFragmentManager.beginTransaction()
@@ -175,15 +148,27 @@ class FileBrowserFragment : BaseFragment() {
                 .commitAllowingStateLoss()
     }
 
+    private fun onSelectedFilesChanged() {
+        onSelectedFilesChanged?.invoke(this, selectedFilesReadOnly)
+    }
+
     override fun onBackPressed(): Boolean {
         val count = childFragmentManager.backStackEntryCount
         if (count > 0) {
             currentDir = File(childFragmentManager.getBackStackEntryAt(count - 1).name)
             childFragmentManager.popBackStackImmediate()
-            updatePathIndicator()
+            onDirChanged?.invoke(this, currentDir!!)
             return true
         }
         return super.onBackPressed()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_CURRENT_DIR, currentDir?.absolutePath)
+        outState.putStringArrayList(KEY_SELECTED_FILE_LIST,
+                ArrayList(selectedFiles.map { it.absolutePath }))
+    }
+
 
 }
