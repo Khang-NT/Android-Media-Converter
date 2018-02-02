@@ -15,10 +15,10 @@ import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.view.RecyclerViewGroupState
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import timber.log.Timber
@@ -42,11 +42,11 @@ class JobManagerFragment : BaseFragment() {
     private val finishedHeaderModel = HeaderModel("Finished")
 
     private lateinit var adapter: MixAdapter
-
-    private var loadDataDisposable: Disposable? = null
+    private lateinit var recyclerViewGroupState: RecyclerViewGroupState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         context!!.startService(Intent(context!!, ConverterService::class.java))
         adapter = MixAdapter.Builder(context!!, idGeneratorScope = "JobManagerFragment")
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
@@ -54,6 +54,7 @@ class JobManagerFragment : BaseFragment() {
                 .register(JobModel::class.java, ItemJobViewHolder.Factory)
                 .build()
         adapter.setHasStableIds(true)
+        recyclerViewGroupState = RecyclerViewGroupState().setRetryFunc(this::loadData)
     }
 
     override fun onCreateView(
@@ -66,15 +67,19 @@ class JobManagerFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
 
-        recyclerViewGroup.recyclerView!!.adapter = adapter
-        recyclerViewGroup.recyclerView!!.layoutManager = LinearLayoutManager(context)
-        recyclerViewGroup.onRetry = this::loadData
+        recyclerViewGroup.getRecyclerView().adapter = adapter
+        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(context)
+        recyclerViewGroupState.bind(recyclerViewGroup)
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadData()
     }
 
     private fun loadData() {
-        recyclerViewGroup.loading()
-        loadDataDisposable = jobManager.getJob(RUNNING, PREPARING, READY, PENDING, COMPLETED, FAILED)
+        recyclerViewGroupState.loading()
+        jobManager.getJob(RUNNING, PREPARING, READY, PENDING, COMPLETED, FAILED)
                 .throttleLast(400, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext { Collections.sort(it, jobComparator) }
@@ -105,22 +110,13 @@ class JobManagerFragment : BaseFragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     adapter.setData(list)
-                    if (list.isEmpty()) {
-                        recyclerViewGroup.empty()
-                    } else {
-                        recyclerViewGroup.successWithData()
-                    }
+                    recyclerViewGroupState.checkData(list)
                 }, { error ->
                     Timber.e(error, "Load job list failed")
                     adapter.setData(emptyList())
-                    recyclerViewGroup.error(error.message)
+                    recyclerViewGroupState.error(error.message)
                 })
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        recyclerViewGroup.recyclerView?.adapter = null
-        loadDataDisposable?.dispose() // stop load data
+                .disposeOnPaused()
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
+import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
 import kotlinx.android.synthetic.main.fragment_preset_command.*
+import kotlinx.android.synthetic.main.view_recycler_view_group.view.*
 
 /**
  * Created by Khang NT on 1/6/18.
@@ -25,15 +28,16 @@ class PresetCommandFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
-        recyclerViewGroup.recyclerView?.layoutManager = LinearLayoutManager(view.context)
-        recyclerViewGroup.recyclerView?.adapter = emptyAdapter
+
+        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(view.context)
+        recyclerViewGroup.getRecyclerView().adapter = emptyAdapter
         recyclerViewGroup.empty()
+
+        recyclerViewGroup.emptyStateMessage.setOnClickListener {
+            startActivity(Intent(it.context, FilePickerActivity::class.java))
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        recyclerViewGroup.recyclerView?.adapter = null
-    }
 }
 
 private val emptyAdapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

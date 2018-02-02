@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.view.View.*
 import android.widget.TextView
 import android.widget.Toast
 
@@ -62,4 +64,17 @@ fun Fragment.toast(@StringRes messageRes: Int, duration: Int = Toast.LENGTH_SHOR
 
 fun Fragment.toast(message: String?, duration: Int = Toast.LENGTH_SHORT) {
     showToast(context!!, message, duration)
+}
+
+
+fun View.visible() {
+    visibility = VISIBLE
+}
+
+fun View.invisible() {
+    visibility = INVISIBLE
+}
+
+fun View.gone() {
+    visibility = GONE
 }
