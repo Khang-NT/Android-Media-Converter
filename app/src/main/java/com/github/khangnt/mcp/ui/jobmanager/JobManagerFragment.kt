@@ -53,7 +53,6 @@ class JobManagerFragment : BaseFragment() {
                 .register(RunningHeaderModel::class.java, ItemHeaderRunningViewHolder.Factory)
                 .register(JobModel::class.java, ItemJobViewHolder.Factory)
                 .build()
-        adapter.setHasStableIds(true)
         recyclerViewGroupState = RecyclerViewGroupState().setRetryFunc(this::loadData)
     }
 

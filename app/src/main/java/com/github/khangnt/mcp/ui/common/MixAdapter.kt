@@ -28,6 +28,11 @@ class MixAdapter(
 
     private val itemDataList = mutableListOf<AdapterModel>()
 
+    init {
+        // has stable ids as default
+        setHasStableIds(true)
+    }
+
     fun setData(items: List<AdapterModel>, diffResult: DiffUtil.DiffResult? = null) {
         check(Looper.myLooper() == Looper.getMainLooper(), { "Must call on main thread" })
         itemDataList.clear()

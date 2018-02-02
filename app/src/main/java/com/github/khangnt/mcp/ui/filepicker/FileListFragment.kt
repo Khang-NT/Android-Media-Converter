@@ -65,7 +65,6 @@ class FileListFragment : BaseFragment() {
                     )
                 })
                 .build()
-        adapter.setHasStableIds(true)
         recyclerViewGroupState = RecyclerViewGroupState().setRetryFunc(this::reloadData)
         reloadData()
     }

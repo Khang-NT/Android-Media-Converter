@@ -71,7 +71,6 @@ class FileBrowserFragment : BaseFragment() {
                     return@register PathIndicatorViewHolder(itemView, onPathIndicatorClick)
                 })
                 .build()
-        pathIndicatorAdapter.setHasStableIds(true)
 
         // re-attach callbacks
         childFragmentManager.fragments.forEach { fragment ->
