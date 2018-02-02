@@ -9,76 +9,79 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.IdGenerator
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.util.onTextSizeChanged
 import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.view.RecyclerViewGroupState
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import timber.log.Timber
 import java.io.File
-import java.util.*
-import kotlin.Comparator
 
-/**
- * Created by Khang NT on 1/28/18.
- * Email: khang.neon.1997@gmail.com
- */
+typealias OnItemClickListener = (
+        fragment: FileListFragment,
+        item: File
+) -> Boolean
+
+typealias CheckedFilesRetriever = () -> List<File>
+
+private const val KEY_PATH = "FileListFragment:path"
 
 class FileListFragment : BaseFragment() {
     companion object {
-        fun newInstance(path: File, fileSelectable: Boolean, onSelectListener: (File) -> Unit): FileListFragment {
+        fun newInstance(path: File): FileListFragment {
             return FileListFragment().apply {
-                this.path = path
-                this.fileSelectable = fileSelectable
-                this.onSelectListener = onSelectListener
+                arguments = Bundle().apply {
+                    putString(KEY_PATH, path.absolutePath)
+                }
             }
         }
     }
 
-    private lateinit var path: File
-    private lateinit var onSelectListener: (File) -> Unit
-    private var fileSelectable: Boolean = false
+    private val path: File by lazy { File(arguments!!.getString(KEY_PATH)) }
+    private val createFolderItem = FileListModel(File("+folder"), TYPE_CREATE_FOLDER)
 
-    private var selected: FileListModel? = null
+    private lateinit var adapter: MixAdapter
+    private lateinit var recyclerViewGroupState: RecyclerViewGroupState
 
-    private val idGenerator = IdGenerator.scope("FileListFragment")
-    private val createFolderAdapterModel = FileListModel(File("Dummy"), TYPE_CREATE_FOLDER,
-            idGenerator.idFor("Dummy").toLong())
+    lateinit var onItemClickListener: OnItemClickListener
+    lateinit var checkedFilesRetriever: CheckedFilesRetriever
 
-    private var adapter: MixAdapter? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
 
-    private val onClickListener = { model: FileListModel, pos: Int ->
+        if (!(::onItemClickListener.isInitialized && ::checkedFilesRetriever.isInitialized)) {
+            throw IllegalStateException("Must initialize onItemClickListener & checkedFilesRetriever")
+        }
+
+        adapter = MixAdapter.Builder(context!!, "FileListFragment")
+                .register(FileListModel::class.java, { inflater, parent ->
+                    FileListViewHolder(
+                            inflater.inflate(R.layout.item_file_list, parent, false),
+                            onClickListener, checkStateFunc
+                    )
+                })
+                .build()
+        adapter.setHasStableIds(true)
+        recyclerViewGroupState = RecyclerViewGroupState().setRetryFunc(this::reloadData)
+        reloadData()
+    }
+
+    private val onClickListener = { model: FileListModel, _: Int ->
         when (model.type) {
-            TYPE_FOLDER -> onSelectListener(model.path)
-            TYPE_FILE -> {
-                if (fileSelectable) {
-                    val oldPos = selected?.let { adapter?.indexOf(it) } ?: -1
-                    selected = model
-
-                    if (oldPos >= 0) adapter?.notifyItemChanged(oldPos)
-                    adapter?.notifyItemChanged(pos)
+            TYPE_FOLDER, TYPE_FILE -> {
+                if (onItemClickListener(this, model.path)) {
+                    adapter.notifyDataSetChanged()
                 }
-                onSelectListener(model.path)
             }
             TYPE_CREATE_FOLDER -> showCreateFolderDialog()
         }
     }
 
-    private val selectedIdRetriever: () -> Long? = { selected?.modelId }
-
-    init {
-        retainInstance = true
-    }
-
-    fun getFileSelected(): File? = selected?.path
-
-    fun clearSelected() {
-        selected = null
-        adapter?.notifyDataSetChanged()
-    }
+    private val checkStateFunc: (FileListModel) -> Boolean = { checkedFilesRetriever().contains(it.path) }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -88,76 +91,38 @@ class FileListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        recyclerViewGroup.onRetry = this::reload
-        recyclerViewGroup.recyclerView?.layoutManager = LinearLayoutManager(context!!)
-
-        if (adapter == null) {
-            adapter = MixAdapter.Builder(context!!)
-                    .register(FileListModel::class.java, { inflater, parent ->
-                        FileListViewHolder(
-                                inflater.inflate(R.layout.item_file_list, parent, false),
-                                onClickListener, selectedIdRetriever
-                        )
-                    })
-                    .build()
-            adapter!!.setHasStableIds(true)
-        }
-        recyclerViewGroup.recyclerView?.adapter = adapter
-
-        if (adapter?.itemCount == 0) {
-            reload()
-        } else {
-            recyclerViewGroup.successWithData()
-        }
+        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(context!!)
+        recyclerViewGroup.getRecyclerView().adapter = adapter
+        recyclerViewGroupState.bind(recyclerViewGroup)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        recyclerViewGroup.recyclerView?.adapter = null
-    }
-
-    private fun reload() {
-        adapter?.let { adapter ->
-            recyclerViewGroup.loading()
-            Observable
-                    .defer {
-                        val listFile: Array<File> = path.listFiles() ?: emptyArray()
-                        return@defer Observable.fromArray(*listFile)
+    private fun reloadData() {
+        recyclerViewGroupState.loading()
+        Observable
+                .defer {
+                    val listFile: Array<File> = path.listFiles() ?: emptyArray()
+                    return@defer Observable.fromArray(*listFile)
+                }
+                .map { FileListModel(it, if (it.isDirectory) TYPE_FOLDER else TYPE_FILE) }
+                .toSortedList(fileListComparator)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ listModel ->
+                    if (path.canWrite()) {
+                        listModel.add(0, createFolderItem)
                     }
-                    .map { file ->
-                        FileListModel(file, if (file.isDirectory) TYPE_FOLDER else TYPE_FILE,
-                                idGenerator.idFor(file.absolutePath).toLong())
-                    }
-                    .toList()
-                    .map { list ->
-                        Collections.sort(list, fileListComparator)
-                        return@map list
-                    }
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ listModel ->
-                        if (path.canWrite()) {
-                            listModel.add(0, createFolderAdapterModel)
-                        }
-                        adapter.setData(listModel)
-                        if (listModel.isEmpty()) {
-                            recyclerViewGroup.empty()
-                        } else {
-                            recyclerViewGroup.successWithData()
-                        }
-                    }, { error ->
-                        Timber.d(error)
-                        recyclerViewGroup.error(error.message)
-                    })
-                    .disposeOnViewDestroyed()
-        }
+                    adapter.setData(listModel)
+                    recyclerViewGroupState.checkData(listModel)
+                }, { error ->
+                    Timber.d(error)
+                    recyclerViewGroupState.error(error.message)
+                })
+                .disposeOnDestroyed(tag = "reloadData")
     }
 
     private fun showCreateFolderDialog() {
         val editText = EditText(context!!)
-        val paddingVertical = resources.getDimensionPixelSize(R.dimen.margin_normal)
-        val paddingHorizontal = resources.getDimensionPixelSize(R.dimen.margin_huge)
+        val padding = resources.getDimensionPixelSize(R.dimen.margin_normal)
         editText.hint = getString(R.string.hint_type_folder_name)
 
         AlertDialog.Builder(context!!)
@@ -171,7 +136,7 @@ class FileListFragment : BaseFragment() {
                     okButton.isEnabled = false
                     editText.onTextSizeChanged { length -> okButton.isEnabled = length in 1..49 }
                     (editText.layoutParams as? ViewGroup.MarginLayoutParams)
-                            ?.setMargins(paddingVertical, paddingVertical, paddingVertical, paddingVertical)
+                            ?.setMargins(padding, padding, padding, padding)
 
                     okButton.setOnClickListener {
                         val folderName = editText.text.toString()
@@ -183,7 +148,7 @@ class FileListFragment : BaseFragment() {
                                 toast(R.string.create_folder_failed)
                             } else {
                                 toast(getString(R.string.create_folder_success, folderName))
-                                reload()
+                                reloadData()
                                 dismiss()
                             }
                         } catch (error: Throwable) {

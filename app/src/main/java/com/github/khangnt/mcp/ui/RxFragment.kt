@@ -16,6 +16,8 @@ open class RxFragment: Fragment() {
     private var disposableOnDestroyed: CompositeDisposable = CompositeDisposable()
     private var disposableOnViewDestroyed: CompositeDisposable = CompositeDisposable()
 
+    private var disposableMap = mutableMapOf<String, Disposable>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // renew disposable when fragment return from back stack
@@ -28,11 +30,22 @@ open class RxFragment: Fragment() {
         if (disposableOnPaused.isDisposed) disposableOnPaused = CompositeDisposable()
     }
 
-    protected fun Disposable.disposeOnPaused() = apply { disposableOnPaused.add(this) }
+    protected fun Disposable.disposeOnPaused(tag: String? = null) = apply {
+        tag?.let { disposableMap.put(it, this) }?.dispose()
+        disposableOnPaused.add(this)
+    }
 
-    protected fun Disposable.disposeOnDestroyed() = apply { disposableOnDestroyed.add(this) }
+    protected fun Disposable.disposeOnDestroyed(tag: String? = null) = apply {
+        tag?.let { disposableMap.put(it, this) }?.dispose()
+        disposableOnDestroyed.add(this)
+    }
 
-    protected fun Disposable.disposeOnViewDestroyed() = apply { disposableOnViewDestroyed.add(this) }
+    protected fun Disposable.disposeOnViewDestroyed(tag: String? = null) = apply {
+        tag?.let { disposableMap.put(it, this) }?.dispose()
+        disposableOnViewDestroyed.add(this)
+    }
+
+    protected fun disposeTag(tag: String) = disposableMap[tag]?.dispose()
 
     override fun onPause() {
         super.onPause()

@@ -116,7 +116,7 @@ class JobManagerFragment : BaseFragment() {
                     adapter.setData(emptyList())
                     recyclerViewGroupState.error(error.message)
                 })
-                .disposeOnPaused()
+                .disposeOnPaused(tag = "loadData")
     }
 
 }
