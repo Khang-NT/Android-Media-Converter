@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
+import android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.view.LayoutInflater
@@ -111,7 +112,7 @@ class FileBrowserFragment : BaseFragment() {
             currentDir = dir
             val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
             if (existsFragment != null) {
-                childFragmentManager.popBackStack(dir.absolutePath, 0)
+                childFragmentManager.popBackStack(dir.absolutePath, POP_BACK_STACK_INCLUSIVE)
             } else {
                 val fragment = createFileListFragmentFor(dir)
                 showFragment(oldDir, dir, fragment)
@@ -164,6 +165,7 @@ class FileBrowserFragment : BaseFragment() {
             path = path.parentFile
         }
         pathIndicatorAdapter.setData(list.reversed())
+        pathIndicatorRecyclerView.smoothScrollToPosition(pathIndicatorAdapter.itemCount)
     }
 
     private fun showFragment(oldDir: File?, dir: File, fileListFragment: FileListFragment) {
