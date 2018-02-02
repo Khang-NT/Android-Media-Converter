@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.filepicker
 
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.widget.EditText
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.util.appPermissions
+import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.onTextSizeChanged
 import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.view.RecyclerViewGroupState
@@ -37,6 +40,8 @@ class FileListFragment : BaseFragment() {
                 }
             }
         }
+
+        private const val RC_REQUEST_PERMISSION = 10
     }
 
     private val path: File by lazy { File(arguments!!.getString(KEY_PATH)) }
@@ -94,6 +99,10 @@ class FileListFragment : BaseFragment() {
 
     private fun reloadData() {
         recyclerViewGroupState.loading()
+        if (!hasWriteStoragePermission(context!!)) {
+            requestPermissions(appPermissions, RC_REQUEST_PERMISSION)
+            return
+        }
         Observable
                 .defer {
                     val listFile: Array<File> = path.listFiles() ?: emptyArray()
@@ -114,6 +123,15 @@ class FileListFragment : BaseFragment() {
                     recyclerViewGroupState.error(error.message)
                 })
                 .disposeOnDestroyed(tag = "reloadData")
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.any { it != PERMISSION_GRANTED  }) {
+            recyclerViewGroupState.error(getString(R.string.user_denied_permission))
+        } else {
+            reloadData()
+        }
     }
 
     private fun showCreateFolderDialog() {
