@@ -56,7 +56,7 @@ class FileListFragment : BaseFragment() {
             throw IllegalStateException("Must initialize onItemClickListener & checkedFilesRetriever")
         }
 
-        adapter = MixAdapter.Builder(context!!, "FileListFragment")
+        adapter = MixAdapter.Builder("FileListFragment")
                 .register(FileListModel::class.java, { inflater, parent ->
                     FileListViewHolder(
                             inflater.inflate(R.layout.item_file_list, parent, false),

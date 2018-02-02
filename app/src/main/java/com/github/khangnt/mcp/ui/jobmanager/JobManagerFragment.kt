@@ -47,7 +47,7 @@ class JobManagerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
         context!!.startService(Intent(context!!, ConverterService::class.java))
-        adapter = MixAdapter.Builder(context!!, idGeneratorScope = "JobManagerFragment")
+        adapter = MixAdapter.Builder(idGeneratorScope = "JobManagerFragment")
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
                 .register(RunningHeaderModel::class.java, ItemHeaderRunningViewHolder.Factory)
                 .register(JobModel::class.java, ItemJobViewHolder.Factory)

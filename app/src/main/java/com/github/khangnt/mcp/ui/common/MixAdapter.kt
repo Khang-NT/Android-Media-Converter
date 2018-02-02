@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui.common
 
-import android.content.Context
 import android.os.Looper
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
@@ -21,7 +20,6 @@ typealias ViewHolderFactory = (inflater: LayoutInflater, parent: ViewGroup) -> C
 
 class MixAdapter(
         private val idGenerator: IdGenerator,
-        private val layoutInflater: LayoutInflater,
         private val itemTypes: Map<Class<out AdapterModel>, Int>,
         private val viewHolderFactories: Map<Int, ViewHolderFactory>
 ) : RecyclerView.Adapter<CustomViewHolder<*>>() {
@@ -66,7 +64,7 @@ class MixAdapter(
     fun indexOf(model: AdapterModel): Int = itemDataList.indexOf(model)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder<*> {
-        return viewHolderFactories[viewType]?.invoke(layoutInflater, parent)
+        return viewHolderFactories[viewType]?.invoke(LayoutInflater.from(parent.context), parent)
                 ?: throw IllegalArgumentException("Unknown view type $viewType")
     }
 
@@ -77,12 +75,10 @@ class MixAdapter(
     }
 
     class Builder(
-            context: Context,
             idGeneratorScope: String = IdGenerator.SCOPE_GLOBAL,
             idGeneratorInit: Int = IdGenerator.DEFAULT_INIT_VALUE
     ) {
         private val idGenerator = IdGenerator.scope(idGeneratorScope, idGeneratorInit)
-        private val layoutInflater = LayoutInflater.from(context)
         private var itemTypeCounter = 0
         private val itemTypes = mutableMapOf<Class<out AdapterModel>, Int>()
         private val viewHolderFactories = mutableMapOf<Int, ViewHolderFactory>()
@@ -94,7 +90,7 @@ class MixAdapter(
             return this
         }
 
-        fun build(): MixAdapter = MixAdapter(idGenerator, layoutInflater,
+        fun build(): MixAdapter = MixAdapter(idGenerator,
                 Collections.unmodifiableMap(itemTypes.toMutableMap()),
                 Collections.unmodifiableMap(viewHolderFactories.toMutableMap()))
     }
