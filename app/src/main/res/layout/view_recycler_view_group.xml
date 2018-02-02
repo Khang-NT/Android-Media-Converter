@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:padding="@dimen/margin_huge"
         android:visibility="gone"
         tools:text="This list is empty"
@@ -42,12 +43,14 @@
             android:id="@+id/errorStateMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             tools:text="Load data failed."/>
 
         <TextView
             android:id="@+id/errorStateReason"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             tools:text="Network error"/>
 
         <Button

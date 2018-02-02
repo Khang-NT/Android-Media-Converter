@@ -1,7 +1,5 @@
 package com.github.khangnt.mcp.ui
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -23,6 +21,7 @@ import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
 import com.github.khangnt.mcp.ui.presetcmd.PresetCommandFragment
+import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
 import com.github.khangnt.mcp.worker.ACTION_JOB_STATUS_CHANGED
@@ -49,7 +48,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
 
         if (!hasWriteStoragePermission(this)) {
             // request permission without checking result
-            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE), 0)
+            requestPermissions(appPermissions, 0)
         }
     }
 

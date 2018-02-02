@@ -59,5 +59,11 @@
     <string name="folder_exists">Folder exists</string>
     <string name="create_folder_failed">Create folder failed, please check folder name.</string>
     <string name="create_folder_success">Create folder \'%s\' success</string>
+    <string name="select">Select</string>
+    <string name="pick_file">Pick file</string>
+    <string name="pick_folder">Pick folder</string>
+    <string name="user_denied_permission">Permissions were not granted. Please click retry and grant permission to access this folder.</string>
+    <string name="go_to_sd_card">Go to SD card</string>
+    <string name="go_to_phone_storage">Go to phone\'s storage</string>
 
 </resources>

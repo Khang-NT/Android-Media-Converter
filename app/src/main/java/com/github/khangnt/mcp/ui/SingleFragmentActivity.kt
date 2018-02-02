@@ -22,9 +22,17 @@ abstract class SingleFragmentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         onCreateLayout(savedInstanceState)
 
-        if (supportFragmentManager.findFragmentByTag(CONTENT_FRAGMENT_TAG) == null) {
-            replaceFragment(onCreateFragment(savedInstanceState))
+        var fragment = getContentFragment()
+        if (fragment === null) {
+            fragment = onCreateFragment(savedInstanceState)
+            replaceFragment(fragment)
         }
+
+        onFragmentCreated(fragment, savedInstanceState)
+    }
+
+    protected open fun onFragmentCreated(fragment: Fragment, savedInstanceState: Bundle?) {
+        // No op
     }
 
     protected open fun replaceFragment(newFragment: Fragment) {
@@ -37,7 +45,7 @@ abstract class SingleFragmentActivity : BaseActivity() {
      * @return The fragment created in [onCreateFragment], if it is still attached
      * to this activity.
      */
-    protected open fun getContentFragment(): Fragment {
+    protected open fun getContentFragment(): Fragment? {
         return supportFragmentManager.findFragmentByTag(CONTENT_FRAGMENT_TAG)
     }
 
