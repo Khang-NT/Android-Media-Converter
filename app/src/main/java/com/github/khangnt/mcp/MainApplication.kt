@@ -2,6 +2,7 @@ package com.github.khangnt.mcp
 
 import android.app.Application
 import com.crashlytics.android.Crashlytics
+import com.github.khangnt.mcp.util.IMMLeaks
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.database.NoDatabaseImpl
 import com.squareup.leakcanary.LeakCanary
@@ -23,6 +24,7 @@ class MainApplication: Application() {
             return
         }
         LeakCanary.install(this)
+        IMMLeaks.fixFocusedViewLeak(this)
 
         SingletonInstances.init(this)
 
