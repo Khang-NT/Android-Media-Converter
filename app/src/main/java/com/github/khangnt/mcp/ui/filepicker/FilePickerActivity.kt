@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.filepicker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
@@ -136,7 +137,8 @@ class FilePickerActivity : SingleFragmentActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_file_picker, menu)
-        menu.findItem(R.id.item_goto_sd_card).isVisible = sdCardPath.isNotEmpty()
+        val isKitkat = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
+        menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat && sdCardPath.isNotEmpty()
         return true
     }
 
