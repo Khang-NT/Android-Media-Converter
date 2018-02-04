@@ -1,17 +1,20 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.khangnt.mcp.PresetCommand
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.TYPE_AUDIO
+import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
+import com.github.khangnt.mcp.ui.common.AdapterModel
+import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
+import com.github.khangnt.mcp.ui.common.MixAdapter
 import kotlinx.android.synthetic.main.fragment_preset_command.*
-import kotlinx.android.synthetic.main.view_recycler_view_group.view.*
 
 /**
  * Created by Khang NT on 1/6/18.
@@ -19,6 +22,33 @@ import kotlinx.android.synthetic.main.view_recycler_view_group.view.*
  */
 
 class PresetCommandFragment: BaseFragment() {
+
+    private val audioEncodingHeader = HeaderModel("Audio encoding")
+    private val videoEncodingHeader = HeaderModel("Video encoding")
+
+    private lateinit var adapter: MixAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = MixAdapter.Builder()
+                .register(PresetCommandModel::class.java, ItemPresetCommandViewHolder.FACTORY)
+                .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
+                .build()
+
+        val data: MutableList<AdapterModel> = mutableListOf<AdapterModel>()
+        val audioPresetCmds = PresetCommand.values().filter { it.type == TYPE_AUDIO }
+        val videoPresetCmds = PresetCommand.values().filter { it.type == TYPE_VIDEO }
+        if (audioPresetCmds.isNotEmpty()) {
+            data.add(audioEncodingHeader)
+            data.addAll(audioPresetCmds.map { PresetCommandModel(it) })
+        }
+        if (videoPresetCmds.isNotEmpty()) {
+            data.add(videoEncodingHeader)
+            data.addAll(videoPresetCmds.map { PresetCommandModel(it) })
+        }
+        adapter.setData(data)
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -30,24 +60,8 @@ class PresetCommandFragment: BaseFragment() {
         setActivitySupportActionBar(toolbar)
 
         recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(view.context)
-        recyclerViewGroup.getRecyclerView().adapter = emptyAdapter
-        recyclerViewGroup.empty()
-
-        recyclerViewGroup.emptyStateMessage.setOnClickListener {
-            startActivity(Intent(it.context, FilePickerActivity::class.java))
-        }
+        recyclerViewGroup.getRecyclerView().adapter = adapter
+        recyclerViewGroup.successHasData()
     }
 
-}
-
-private val emptyAdapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        TODO("not implemented")
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        TODO("not implemented")
-    }
-
-    override fun getItemCount(): Int = 0
 }

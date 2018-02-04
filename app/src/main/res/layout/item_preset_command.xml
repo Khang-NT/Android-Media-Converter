@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_tiny"
+    android:background="?selectableItemBackground"
+    android:padding="@dimen/margin_small">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvDescription"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintTop_toTopOf="@+id/tvTitle">
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:src="#7272"/>
+
+        <TextView
+            android:id="@+id/tvShortName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_huge"
+            android:textStyle="bold"
+            tools:text="MP3"/>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxLines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_huge"
+        app:layout_constraintLeft_toRightOf="@+id/cvIcon"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="Convert MP3"/>
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:ellipsize="end"
+        android:lines="2"
+        android:maxLines="2"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="@dimen/text_big"
+        app:layout_constraintLeft_toRightOf="@+id/cvIcon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="@string/preset_command_convert_mp3_des"/>
+
+</android.support.constraint.ConstraintLayout>

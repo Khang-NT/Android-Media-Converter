@@ -22,7 +22,6 @@
     <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
     <string name="job_list_load_error_message">Load Job failed</string>
     <string name="file_list_load_error_message">Load file list failed</string>
-    <string name="preset_command_empty_message">This page still on development and will available soon. You can create new Job via YMusic app.</string>
     <string name="preset_command_load_error_message">Load preset commands failed</string>
     <string name="retry">Retry</string>
 
@@ -81,5 +80,8 @@
     <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
     <string name="action_override">Override</string>
     <string name="action_rename">Rename</string>
+
+    <string name="preset_command_convert_mp3_title">Convert MP3</string>
+    <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily.</string>
 
 </resources>

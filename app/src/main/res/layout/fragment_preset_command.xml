@@ -45,10 +45,8 @@
         android:id="@+id/recyclerViewGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:emptyStateMessage="@string/preset_command_empty_message"
         app:errorStateMessage="@string/preset_command_load_error_message"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:rvPaddingHorizontal="@dimen/margin_normal"/>
-
+        app:rvPaddingHorizontal="@dimen/margin_small"/>
 
 </android.support.design.widget.CoordinatorLayout>
