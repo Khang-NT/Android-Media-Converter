@@ -69,4 +69,17 @@
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
 
+    <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
+    <string name="error_input_text_empty">Input can\'t empty</string>
+    <string name="error_file_not_exists">This path doesn\'t exists</string>
+    <string name="error_not_a_file">This is not a file</string>
+    <string name="error_invalid_url">Invalid URL</string>
+    <string name="error_output_folder_empty">Please select output folder</string>
+    <string name="error_file_name_empty">Please set file name</string>
+
+    <string name="dialog_error_file_exists">File name exists</string>
+    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
+    <string name="action_override">Override</string>
+    <string name="action_rename">Rename</string>
+
 </resources>

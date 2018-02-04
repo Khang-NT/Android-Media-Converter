@@ -184,10 +184,14 @@ class ConvertMp3Fragment : BaseFragment() {
             if (existingFile != null) {
                 // ask user override this file or change file name
                 AlertDialog.Builder(context!!)
-                        .setTitle("File name exists")
-                        .setMessage("The file name \"$fileName\" already exists, do you want to override it?")
-                        .setPositiveButton("Override", {_, _ -> checkSettingsAndStartConversion(existingFile)})
-                        .setNegativeButton("Rename", {_, _ -> edOutputName.openKeyboard()})
+                        .setTitle(R.string.dialog_error_file_exists)
+                        .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
+                        .setPositiveButton(R.string.action_override, { _, _ ->
+                            checkSettingsAndStartConversion(existingFile)
+                        })
+                        .setNegativeButton(R.string.action_rename, { _, _ ->
+                            edOutputName.openKeyboard()
+                        })
                         .show()
                 return
             }
@@ -201,7 +205,7 @@ class ConvertMp3Fragment : BaseFragment() {
                     val documentTree = DocumentFile.fromTreeUri(context!!, outputFolderUri!!)
                     documentTree.createFile(null, fileName).uri
                 } catch (error: Throwable) {
-                    toast("Can't create output file: ${error.message}")
+                    toast(getString(R.string.error_can_not_create_output_file, error.message))
                     return
                 }
             }
@@ -224,21 +228,21 @@ class ConvertMp3Fragment : BaseFragment() {
     private fun getInput0Error(): String? {
         val uriString = edInput0.text.toString()
         if (uriString.isEmpty()) {
-            return "Input can't empty"
+            return getString(R.string.error_input_text_empty)
         }
         val uri = uriString.parseInputUri()
-        when(uri.scheme?.toLowerCase()) {
+        when (uri.scheme?.toLowerCase()) {
             "file" -> {
                 val file = File(uri.path)
                 if (!file.exists()) {
-                    return "This path doesn't exists"
+                    return getString(R.string.error_file_not_exists)
                 } else if (!file.isFile) {
-                    return "This is not a file"
+                    return getString(R.string.error_not_a_file)
                 }
             }
             else -> {
                 if (!uri.isHierarchical || uri.scheme.isNullOrEmpty() || uri.host.isNullOrEmpty()) {
-                    return "Invalid URL"
+                    return getString(R.string.error_invalid_url)
                 }
             }
         }
@@ -247,14 +251,14 @@ class ConvertMp3Fragment : BaseFragment() {
 
     private fun getOutputFolderError(): String? {
         if (outputFolderUri === null) {
-            return "Please select output folder"
+            return getString(R.string.error_output_folder_empty)
         }
         return null
     }
 
     private fun getOutputFileNameError(): String? {
         if (edOutputName.text.isEmpty()) {
-            return "Please set file name"
+            return getString(R.string.error_file_name_empty)
         }
         return null
     }
