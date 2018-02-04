@@ -8,6 +8,7 @@ import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
 import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.escapeSingleQuote
 import timber.log.Timber
 import java.io.BufferedOutputStream
 import java.io.File
@@ -43,13 +44,13 @@ data class CommandResolver(
                 execCommandBuilder.append(" -i")
                 val uri = Uri.parse(input)
                 when (uri.scheme.toLowerCase()) {
-                    "file" -> execCommandBuilder.append(" '$uri'")
+                    "file" -> execCommandBuilder.append(" '${formatFileUri(uri)}'")
                     "content", "http", "https" -> {
                         val preparedInput = makeInputTempFile(jobTempDir, index)
                         if (!preparedInput.exists()) {
                             throw FileNotFoundException("Some app data were deleted or moved.")
                         }
-                        execCommandBuilder.append(" '${Uri.fromFile(preparedInput)}'")
+                        execCommandBuilder.append(" '${formatFileUri(Uri.fromFile(preparedInput))}'")
                     }
                     else -> {
                         throw IllegalArgumentException("Can't resolve input $input")
@@ -72,10 +73,14 @@ data class CommandResolver(
             val tempFile = File(jobTempDir, FFMPEG_TEMP_OUTPUT_FILE)
             val tempOutputUri = Uri.fromFile(tempFile)
             val tempSourceInput = ContentResolverSource(context, tempOutputUri)
-            execCommandBuilder.append(" -y -f ${command.outputFormat} '$tempOutputUri'")
+            execCommandBuilder.append(" -y -f ${command.outputFormat} '${formatFileUri(tempOutputUri)}'")
 
             return CommandResolver(command, execCommandBuilder.toString(),
                     sourceOutput, tempFile, tempSourceInput)
+        }
+
+        private fun formatFileUri(uri: Uri): String {
+            return "file://${uri.path.escapeSingleQuote()}"
         }
     }
 
