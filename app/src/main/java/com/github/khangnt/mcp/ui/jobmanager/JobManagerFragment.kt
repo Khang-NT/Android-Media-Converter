@@ -17,7 +17,6 @@ import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.view.RecyclerViewGroupState
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import timber.log.Timber
@@ -30,11 +29,9 @@ import java.util.concurrent.TimeUnit
  */
 
 class JobManagerFragment : BaseFragment() {
-
     private val jobManager = SingletonInstances.getJobManager()
-    private val compositeDisposable = CompositeDisposable()
     private val runningHeaderModel = RunningHeaderModel("Running",
-            jobManager.getLiveLogObservable(), compositeDisposable)
+            jobManager.getLiveLogObservable(), { disposeOnPaused() })
     private val preparingHeaderModel = HeaderModel("Preparing")
     private val readyHeaderModel = HeaderModel("Ready")
     private val pendingHeaderModel = HeaderModel("Pending")

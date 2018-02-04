@@ -11,7 +11,6 @@ import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit
 class RunningHeaderModel(
         header: String,
         val liveLogObservable: Observable<String>,
-        val compositeDisposable: CompositeDisposable
+        val bindToLifecycle: Disposable.() -> Disposable
 ) : HeaderModel(header)
 
 @SuppressLint("SetTextI18n")
@@ -46,7 +45,8 @@ class ItemHeaderRunningViewHolder(itemView: View) : ItemHeaderViewHolder<Running
                     speedSuffix = ""
                     tvHeader.text = header
                 })
-        model.compositeDisposable.add(disposable!!)
+                .let(model.bindToLifecycle::invoke)
+
 
         tvHeader.text = "$header $speedSuffix"
     }
