@@ -40,19 +40,27 @@ class FilePickerActivity : SingleFragmentActivity() {
     companion object {
         fun pickFolderIntent(
                 context: Context,
+                startUpDir: File = Environment.getExternalStorageDirectory(),
                 ensureReadable: Boolean = true,
                 ensureWritable: Boolean = false
         ): Intent {
             return Intent(context, FilePickerActivity::class.java)
                     .putExtra(EXTRA_PICK_TYPE, TYPE_PICK_FOLDER)
+                    .putExtra(EXTRA_START_UP_DIRECTORY, startUpDir.absolutePath)
                     .putExtra(EXTRA_ENSURE_FOLDER_READABLE, ensureReadable)
                     .putExtra(EXTRA_ENSURE_FOLDER_WRITABLE, ensureWritable)
         }
 
-        fun pickFileIntent(context: Context, maxFileCanPick: Int): Intent {
+        fun pickFileIntent(
+                context: Context,
+                startUpDir: File? = null,
+                maxFileCanPick: Int = 1
+        ): Intent {
             check(maxFileCanPick > 0, { "maxFileCanPick must greater than 0" })
+            val startUpDirNonNull = (startUpDir ?: Environment.getExternalStorageDirectory())
             return Intent(context, FilePickerActivity::class.java)
                     .putExtra(EXTRA_PICK_TYPE, TYPE_PICK_FILE)
+                    .putExtra(EXTRA_START_UP_DIRECTORY, startUpDirNonNull.absolutePath)
                     .putExtra(EXTRA_MAX_FILE_CAN_PICK, maxFileCanPick)
         }
     }
@@ -61,14 +69,20 @@ class FilePickerActivity : SingleFragmentActivity() {
     private val maxFileCanPick by lazy { intent.getIntExtra(EXTRA_MAX_FILE_CAN_PICK, 0) }
     private val ensureReadable by lazy { intent.getBooleanExtra(EXTRA_ENSURE_FOLDER_READABLE, true) }
     private val ensureWritable by lazy { intent.getBooleanExtra(EXTRA_ENSURE_FOLDER_READABLE, false) }
+    private val startUpDir: File by lazy {
+        val dir = intent.getStringExtra(EXTRA_START_UP_DIRECTORY)?.let(::File)
+        if (dir?.exists() == true) {
+            if (dir.isDirectory) dir else dir.parentFile
+        } else {
+            Environment.getExternalStorageDirectory()
+        }
+    }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
-        return FileBrowserFragment.newInstance(Environment.getExternalStorageDirectory(),
-                if (isPickFile) maxFileCanPick else 0)
+        return FileBrowserFragment.newInstance(startUpDir, if (isPickFile) maxFileCanPick else 0)
     }
 
     override fun onCreateLayout(savedInstanceState: Bundle?) {
-        super.onCreateLayout(savedInstanceState)
         setContentView(R.layout.activity_file_picker)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

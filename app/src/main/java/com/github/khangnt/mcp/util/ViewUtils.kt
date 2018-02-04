@@ -3,14 +3,15 @@ package com.github.khangnt.mcp.util
 import android.content.Context
 import android.os.Build
 import android.support.annotation.StringRes
+import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.*
-import android.widget.TextView
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 
 
 /**
@@ -77,4 +78,46 @@ fun View.invisible() {
 
 fun View.gone() {
     visibility = GONE
+}
+
+fun SeekBar.onSeekBarChanged(callback: (progress: Int) -> Unit) {
+    setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            callback(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+    })
+}
+
+fun Spinner.onItemSelected(callback: (position: Int) -> Unit) {
+    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            callback(position)
+        }
+    }
+}
+
+var TextInputLayout.errorMessage: String?
+    get() = if (isErrorEnabled) error?.toString() else null
+    set(value) {
+        if (value.isNullOrEmpty()) {
+            isErrorEnabled = false
+            error = null
+        } else {
+            isErrorEnabled = true
+            error = value
+        }
+    }
+
+fun EditText.openKeyboard(delay: Long = 200) {
+    postDelayed({
+        this.requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }, delay)
 }

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_small">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/ibPickFile">
+
+            <EditText
+                android:id="@+id/edInput0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_text_uri_hint"
+                android:inputType="textUri"
+                android:maxLines="1"
+                android:scrollHorizontally="true"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/ibPickFile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="@dimen/margin_small"
+            android:src="@drawable/file_find_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/til0"
+            app:layout_constraintRight_toRightOf="parent"
+            app:tint="?android:textColorSecondary"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilOutputFolder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til0">
+
+            <EditText
+                android:id="@+id/edOutputPath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/output_folder_hint"
+                android:inputType="none"
+                android:lines="1"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilOutputFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tilOutputFolder">
+
+            <EditText
+                android:id="@+id/edOutputName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/output_file_name_hint"
+                android:maxLines="1"
+                android:scrollHorizontally="true"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mp3EncoderHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="MP3 Encoder:"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/tilOutputFileName"/>
+
+        <Spinner
+            android:id="@+id/spinnerEncoder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/mp3Encoders"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mp3EncoderHeader"
+            app:layout_constraintLeft_toRightOf="@+id/mp3EncoderHeader"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/qualityHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="Quality:"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/mp3EncoderHeader"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvQualityValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_tiny"
+            android:layout_marginStart="@dimen/margin_tiny"
+            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
+            app:layout_constraintLeft_toRightOf="@id/qualityHeader"
+            tools:text="128 - 172 kbps"/>
+
+        <SeekBar
+            android:id="@+id/sbQuality"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:max="9"
+            android:progress="9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"/>
+
+
+        <Button
+            android:id="@+id/btnStartConversion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:paddingLeft="@dimen/margin_huge"
+            android:paddingRight="@dimen/margin_huge"
+            android:text="Start conversion"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sbQuality"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>

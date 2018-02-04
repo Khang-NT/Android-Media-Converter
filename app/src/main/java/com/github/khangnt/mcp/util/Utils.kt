@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.provider.DocumentFile
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.KB
 import com.github.khangnt.mcp.MB
@@ -123,4 +124,17 @@ fun String.parseInputUri(): Uri {
 
 fun String.escapeSingleQuote(): String {
     return replace("'", "'\\''")
+}
+
+/**
+ * Check if [filename] exists in [folderUri].
+ * return Uri of the file existing, otherwise return null
+ */
+fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
+    return if (folderUri.scheme == "file") {
+        return File(folderUri.path, fileName).let { if (it.exists()) Uri.fromFile(it) else null }
+    } else catchAll {
+        val documentTree = DocumentFile.fromTreeUri(this, folderUri)
+        documentTree.findFile(fileName).uri
+    }
 }

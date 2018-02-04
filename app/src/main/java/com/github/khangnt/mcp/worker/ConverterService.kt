@@ -22,6 +22,7 @@ import com.github.khangnt.mcp.ui.PermissionTransparentActivity
 import com.github.khangnt.mcp.util.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -103,6 +104,26 @@ class ConverterService : Service() {
             deleteJobIntent.action = ACTION_CANCEL_JOB
             deleteJobIntent.putExtra(EXTRA_JOB_ID, jobId)
             context.startService(deleteJobIntent)
+        }
+
+        fun newJob(
+                context: Context,
+                title: String,
+                inputs: List<String>,
+                args: String,
+                outputUri: String,
+                outputFormat: String,
+                environmentVars: Map<String, String> = emptyMap()
+        ) {
+            val newJobIntent = Intent(context, ConverterService::class.java)
+                    .setAction(ACTION_ADD_JOB)
+                    .putExtra(EXTRA_JOB_TITLE, title)
+                    .putStringArrayListExtra(EXTRA_JOB_CMD_INPUT_URIS, ArrayList(inputs))
+                    .putExtra(EXTRA_JOB_CMD_ARGS, args)
+                    .putExtra(EXTRA_JOB_CMD_OUTPUT_URI, outputUri)
+                    .putExtra(EXTRA_JOB_CMD_OUTPUT_FMT, outputFormat)
+                    .putExtra(EXTRA_JOB_CMD_ENV_VARS_JSON, JSONObject(environmentVars).toString())
+            context.startService(newJobIntent)
         }
     }
 

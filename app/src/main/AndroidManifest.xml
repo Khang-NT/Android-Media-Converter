@@ -53,6 +53,9 @@
         <activity android:name=".ui.filepicker.FilePickerActivity"
                   android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity android:name=".ui.presetcmd.ConvertActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

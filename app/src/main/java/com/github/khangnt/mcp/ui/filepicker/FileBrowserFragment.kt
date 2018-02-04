@@ -89,7 +89,9 @@ class FileBrowserFragment : BaseFragment() {
     }
 
     fun goto(dir: File) {
-        if (currentDir != dir) {
+        if (dir.isFile) {
+            goto(dir.parentFile)
+        } else if (currentDir != dir) {
             val oldDir = currentDir
             currentDir = dir
             val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
