@@ -146,7 +146,7 @@ public class IMMLeaks {
     public static void fixFocusedViewLeak(Application application) {
 
         // Don't know about other versions yet.
-        if (SDK_INT < KITKAT || SDK_INT > 22) {
+        if (SDK_INT < KITKAT || SDK_INT > 25) {
             return;
         }
 
