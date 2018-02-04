@@ -76,7 +76,6 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val tvJobLocation = itemView.tvJobLocation
     private val ivDeleteJob = itemView.ivCancelJob
     private val buttonLayout = itemView.buttonLayout
-    private val buttonLayout2 = itemView.buttonLayout2
     private val ivLogs = itemView.ivLogs
     private val ivShare = itemView.ivShare
     private val ivOpen = itemView.ivOpen
@@ -206,8 +205,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     override fun bind(model: JobModel, pos: Int) {
         currentJob = model.job
         model.job.apply {
-            tvOutputFormat.text = command.outputFormat
-                    .substring(0, minOf(3, command.outputFormat.length)).toUpperCase()
+            tvOutputFormat.text = getOutputFormatAlias(command.outputFormat)
             ViewCompat.setBackgroundTintList(tvOutputFormat, ColorStateList.valueOf(
                     when (status) {
                         RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
@@ -231,12 +229,12 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             tvJobLocation.text = context.getString(R.string.job_output_location,
                     path ?: command.output)
 
-            buttonLayout2.visibility = if (status == JobStatus.COMPLETED) {
+            buttonLayout.visibility = if (status == JobStatus.COMPLETED) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
-            buttonLayout.visibility = if (status == JobStatus.COMPLETED
+            ivLogs.visibility = if (status == JobStatus.COMPLETED
                     || status == JobStatus.RUNNING
                     || status == JobStatus.FAILED) {
                 View.VISIBLE
@@ -265,6 +263,15 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         // delete log file if exits
         catchAll {
             makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
+        }
+    }
+
+    private fun getOutputFormatAlias(outputFormat: String): String {
+        val outputFmtUpperCase = outputFormat.toUpperCase()
+        return when(outputFmtUpperCase) {
+            "MATROSKA" ->  "MKV"
+            "WEBVTT" -> "WVTT"
+            else -> outputFmtUpperCase.take(4)
         }
     }
 }
