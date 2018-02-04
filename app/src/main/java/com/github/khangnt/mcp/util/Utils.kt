@@ -15,7 +15,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-
 /**
  * Created by Khang NT on 1/1/18.
  * Email: khang.neon.1997@gmail.com
@@ -111,4 +110,17 @@ fun File.deleteRecursiveIgnoreError() {
 
 fun File.deleteIgnoreError() {
     catchAll { delete() }
+}
+
+fun String.parseInputUri(): Uri {
+    if (startsWith("http", ignoreCase = true)
+            || startsWith("content", ignoreCase = true)) {
+        return Uri.parse(this)
+    } else {
+        return Uri.fromFile(File(this))
+    }
+}
+
+fun String.escapeSingleQuote(): String {
+    return replace("'", "'\\''")
 }

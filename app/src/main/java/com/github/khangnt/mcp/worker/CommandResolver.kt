@@ -43,7 +43,7 @@ data class CommandResolver(
             command.inputs.forEachIndexed { index, input ->
                 execCommandBuilder.append(" -i")
                 val uri = Uri.parse(input)
-                when (uri.scheme.toLowerCase()) {
+                when (uri.scheme?.toLowerCase()) {
                     "file" -> execCommandBuilder.append(" '${formatFileUri(uri)}'")
                     "content", "http", "https" -> {
                         val preparedInput = makeInputTempFile(jobTempDir, index)

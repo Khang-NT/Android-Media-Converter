@@ -413,7 +413,7 @@ class ConverterService : Service() {
                 ADD_JOB_MESSAGE -> {
                     msg.data?.toJob()?.let { job ->
                         with(Uri.parse(job.command.output)) {
-                            if (scheme.startsWith("content")) {
+                            if (scheme?.startsWith("content") == true) {
                                 catchAll {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                                         contentResolver.takePersistableUriPermission(this,
