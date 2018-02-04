@@ -2,12 +2,15 @@ package com.github.khangnt.mcp.ui.presetcmd
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
+import com.github.khangnt.mcp.PresetCommand
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
-import com.github.khangnt.mcp.ui.presetcmd.mp3.ConvertMp3Fragment
 import kotlinx.android.synthetic.main.activity_convert.*
 
 /**
@@ -15,21 +18,24 @@ import kotlinx.android.synthetic.main.activity_convert.*
  * Email: khang.neon.1997@gmail.com
  */
 
-private const val EXTRA_TITLE = "ConvertActivity:title"
-private const val EXTRA_CONVERT_ID = "ConvertActivity:convert_id"
+private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
-class ConvertActivity: SingleFragmentActivity() {
+class ConvertActivity : SingleFragmentActivity() {
 
     companion object {
-        fun launch(context: Context, title: String, convertId: Int) {
+        fun launch(context: Context, presetCommandId: Int) {
             context.startActivity(Intent(context, ConvertActivity::class.java)
-                    .putExtra(EXTRA_TITLE, title)
-                    .putExtra(EXTRA_CONVERT_ID, convertId))
+                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommandId))
         }
     }
 
+    private val presetCommand: PresetCommand by lazy {
+        val id = intent.getIntExtra(EXTRA_PRESET_COMMAND_ID, -1)
+        PresetCommand.values()[id]
+    }
+
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
-        return ConvertMp3Fragment()
+        return presetCommand.convertFragmentFactory.invoke()
     }
 
     override fun onCreateLayout(savedInstanceState: Bundle?) {
@@ -38,8 +44,22 @@ class ConvertActivity: SingleFragmentActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        title = intent.getStringExtra(EXTRA_TITLE)
+        title = getString(presetCommand.titleRes)
         collapsingToolbar.title = title
+
+        collapsingToolbar.contentScrim = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+                presetCommand.colors)
+        collapsingToolbar.statusBarScrim = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+                presetCommand.colors)
+
+        val scrollRange by lazy { appBarLayout.totalScrollRange }
+        appBarLayout.addOnOffsetChangedListener { _, offset ->
+            if (scrollRange + offset == 0){
+                toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
+            } else if (offset == 0) {
+                toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
+            }
+        }
     }
 
     override fun getFragmentContainerId(): Int {
@@ -59,7 +79,7 @@ class ConvertActivity: SingleFragmentActivity() {
         AlertDialog.Builder(this)
                 .setTitle("Do you want to exit?")
                 .setMessage("Your settings won't be saved")
-                .setPositiveButton(R.string.action_yes, {_, _ -> finish()})
+                .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
                 .setNegativeButton(R.string.action_cancel, null)
                 .show()
     }

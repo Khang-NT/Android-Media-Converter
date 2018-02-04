@@ -2,7 +2,6 @@ package com.github.khangnt.mcp.ui.presetcmd.mp3
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -10,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.provider.DocumentFile
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
