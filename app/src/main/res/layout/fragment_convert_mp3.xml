@@ -28,6 +28,7 @@
                 android:hint="@string/edit_text_uri_hint"
                 android:inputType="textUri"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:scrollHorizontally="true"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -79,8 +80,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/output_file_name_hint"
+                android:inputType="text"
                 android:maxLines="1"
-                android:scrollHorizontally="true"/>
+                android:scrollHorizontally="true"
+                android:singleLine="true"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatTextView
