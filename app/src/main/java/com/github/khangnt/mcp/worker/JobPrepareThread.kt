@@ -62,6 +62,7 @@ class JobPrepareThread(
                 ContentResolver.SCHEME_CONTENT -> {
                     // content:// can't be recognized by any ffmpeg protocol
                     val inputCopyTo = makeInputTempFile(jobTempDir!!, index)
+                    Timber.d("Copy input $index to $inputCopyTo")
                     job = jobManager.updateJobStatus(job, JobStatus.PREPARING, "Copying input $index")
                     try {
                         contentResolver.openInputStream(inputUri).use { inputStream ->
@@ -77,6 +78,7 @@ class JobPrepareThread(
                 }
                 "http", "https" -> { // ffmpeg not compiled to support http/https protocol
                     val inputDownloadTo = makeInputTempFile(jobTempDir!!, index).absolutePath
+                    Timber.d("Download input $index to $inputDownloadTo")
                     job = jobManager.updateJobStatus(job, JobStatus.PREPARING, "Downloading input $index")
                     val downloadTask = FileDownloader.getImpl().create(input)
                             .setForceReDownload(true)
@@ -125,6 +127,7 @@ class JobPrepareThread(
         }
 
         // prepared -> ready to convert
+        Timber.d("Prepared ${job.id} - ${job.title}")
         job = jobManager.updateJobStatus(job, JobStatus.READY)
         onCompleteListener(job)
     }
