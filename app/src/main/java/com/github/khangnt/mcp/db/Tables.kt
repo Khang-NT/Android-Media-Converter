@@ -17,7 +17,7 @@ interface JobTable {
         fun getCreateTableScript(): String =
                 """
                 CREATE TABLE IF NOT EXISTS $NAME (
-                    $C_ID INTEGER PRIMARY KEY,
+                    $C_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     $C_TITLE TEXT NOT NULL,
                     $C_STATUS INTEGER NOT NULL,
                     $C_STATUS_DETAIL TEXT,
