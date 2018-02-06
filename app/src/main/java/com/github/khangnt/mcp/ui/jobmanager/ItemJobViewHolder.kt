@@ -255,7 +255,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             }
 
             // delete media store entry
-            val realPath = catchAll { UriUtils.getPathFromUri(context, outputUri) }
+            val realPath = getPath(job)
             if (realPath !== null) {
                 MediaScannerConnection.scanFile(context, arrayOf(realPath), null, null)
             }
@@ -264,6 +264,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         catchAll {
             makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
         }
+        cacheOutputPath.delete(job.id.toInt())
     }
 
     private fun getOutputFormatAlias(outputFormat: String): String {
