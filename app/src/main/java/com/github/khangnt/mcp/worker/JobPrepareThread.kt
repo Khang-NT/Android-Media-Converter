@@ -39,7 +39,7 @@ class JobPrepareThread(
         private val onCompleteListener: (Job) -> Unit,
         private val onErrorListener: (Job, Throwable?) -> Unit,
         private val workingPaths: WorkingPaths = makeWorkingPaths(appContext)
-): Thread() {
+) : Thread() {
     private var jobTempDir: File? = null
 
     override fun run() {
@@ -58,7 +58,7 @@ class JobPrepareThread(
         val inputs = job.command.inputs
         inputs.forEachIndexed { index, input ->
             val inputUri = Uri.parse(input)
-            when (inputUri.scheme.toLowerCase()) {
+            when (inputUri.scheme?.toLowerCase()) {
                 ContentResolver.SCHEME_CONTENT -> {
                     // content:// can't be recognized by any ffmpeg protocol
                     val inputCopyTo = makeInputTempFile(jobTempDir!!, index)
@@ -83,7 +83,7 @@ class JobPrepareThread(
                             .setPath(inputDownloadTo)
                             .setCallbackProgressMinInterval(DOWNLOAD_TASK_UPDATE_INTERVAL)
                             .setSyncCallback(true)
-                            .setListener(object: FileDownloadSampleListener() {
+                            .setListener(object : FileDownloadSampleListener() {
                                 override fun progress(task: BaseDownloadTask, soFarBytes: Int, totalBytes: Int) {
                                     val speed = task.speed
                                     val percent = if (totalBytes > 0) (soFarBytes * 100 / totalBytes) else -1
@@ -104,7 +104,8 @@ class JobPrepareThread(
                         }
                         if (FileDownloadStatus.isOver(downloadTask.status.toInt())) {
                             if (downloadTask.status == FileDownloadStatus.error) {
-                                val error = downloadTask.errorCause ?: Exception("Download input $index failed")
+                                val error = downloadTask.errorCause
+                                        ?: Exception("Download input $index failed")
                                 onError(error, "Download input $index failed: ${error.message}")
                                 return
                             } else {
@@ -113,6 +114,12 @@ class JobPrepareThread(
                             }
                         }
                     }
+                }
+                "file" -> Unit // needn't prepare
+                else -> {
+                    val message = "Unsupported input scheme ${inputUri.scheme}"
+                    onError(Exception(message), message)
+                    return
                 }
             }
         }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.khangnt.mcp.view.RecyclerViewGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recyclerViewGroup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:emptyStateMessage="@string/permission_denied"
+    app:errorStateMessage="@string/file_list_load_error_message"
+    app:rvPaddingHorizontal="@dimen/margin_small"/>

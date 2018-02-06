@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.job_manager
+package com.github.khangnt.mcp.ui.jobmanager
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -13,25 +13,25 @@ import android.os.StrictMode
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AppCompatTextView
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
-import com.github.khangnt.mcp.ui.common.HasIdModel
+import com.github.khangnt.mcp.ui.common.HasIdLong
+import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.ConverterService
 import com.github.khangnt.mcp.worker.makeWorkingPaths
+import kotlinx.android.synthetic.main.item_job.view.*
 import java.io.File
 import java.net.URLConnection
 
@@ -41,8 +41,8 @@ import java.net.URLConnection
  * Email: khang.neon.1997@gmail.com
  */
 
-data class JobModel(val job: Job) : AdapterModel, HasIdModel {
-    override val modelId: Long = job.id
+data class JobModel(val job: Job) : AdapterModel, HasIdLong {
+    override val idLong: Long = job.id
 }
 
 private val cacheOutputPath = SparseArray<String>()
@@ -63,20 +63,24 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         }
     }
 
+    object Factory : ViewHolderFactory {
+        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
+                ItemJobViewHolder(inflater.inflate(R.layout.item_job, parent, false))
+    }
+
     private val context = itemView.context
 
-    private val tvFileFmt by lazy { itemView.findViewById<AppCompatTextView>(R.id.tvOutputFormat) }
-    private val tvJobTitle by lazy { itemView.findViewById<TextView>(R.id.tvJobTitle) }
-    private val tvJobStatus by lazy { itemView.findViewById<TextView>(R.id.tvJobStatus) }
-    private val tvJobLocation by lazy { itemView.findViewById<TextView>(R.id.tvJobLocation) }
-    private val ivDeleteJob by lazy { itemView.findViewById<ImageView>(R.id.ivCancelJob) }
-
-    private val buttonLayout by lazy { itemView.findViewById<LinearLayout>(R.id.buttonLayout) }
-    private val ivLogs by lazy { itemView.findViewById<ImageView>(R.id.ivLogs) }
-    private val ivShare by lazy { itemView.findViewById<ImageView>(R.id.ivShare) }
-    private val ivOpen by lazy { itemView.findViewById<ImageView>(R.id.ivOpen) }
-    private val ivOpenFolder by lazy { itemView.findViewById<ImageView>(R.id.ivOpenFolder) }
-    private val ivDeleteFile by lazy { itemView.findViewById<ImageView>(R.id.ivDeleteFile) }
+    private val tvOutputFormat = itemView.tvOutputFormat
+    private val tvJobTitle = itemView.tvJobTitle
+    private val tvJobStatus = itemView.tvJobStatus
+    private val tvJobLocation = itemView.tvJobLocation
+    private val ivDeleteJob = itemView.ivCancelJob
+    private val buttonLayout = itemView.buttonLayout
+    private val ivLogs = itemView.ivLogs
+    private val ivShare = itemView.ivShare
+    private val ivOpen = itemView.ivOpen
+    private val ivOpenFolder = itemView.ivOpenFolder
+    private val ivDeleteFile = itemView.ivDeleteFile
 
     private var currentJob: Job? = null
     private var vmPolicyBackup: StrictMode.VmPolicy? = null
@@ -128,7 +132,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         ivOpenFolder.setOnClickListener {
             val path = getPath(currentJob!!)
             if (path === null) {
-                Toast.makeText(context, R.string.unknown_file_path, Toast.LENGTH_SHORT).show()
+                context.toast(R.string.unknown_file_path)
             } else {
                 val folder = File(path).parentFile
                 // this intent should work with ES Explorer
@@ -201,8 +205,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     override fun bind(model: JobModel, pos: Int) {
         currentJob = model.job
         model.job.apply {
-            tvFileFmt.text = getOutputFormatAlias(command.outputFormat)
-            ViewCompat.setBackgroundTintList(tvFileFmt, ColorStateList.valueOf(
+            tvOutputFormat.text = getOutputFormatAlias(command.outputFormat)
+            ViewCompat.setBackgroundTintList(tvOutputFormat, ColorStateList.valueOf(
                     when (status) {
                         RUNNING, PREPARING -> ContextCompat.getColor(context, R.color.teal_500)
                         PENDING, READY -> ContextCompat.getColor(context, R.color.blue_grey_500)
@@ -251,7 +255,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             }
 
             // delete media store entry
-            val realPath = catchAll { UriUtils.getPathFromUri(context, outputUri) }
+            val realPath = getPath(job)
             if (realPath !== null) {
                 MediaScannerConnection.scanFile(context, arrayOf(realPath), null, null)
             }
@@ -260,6 +264,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         catchAll {
             makeWorkingPaths(context).getLogFileOfJob(job.id).delete()
         }
+        cacheOutputPath.delete(job.id.toInt())
     }
 
     private fun getOutputFormatAlias(outputFormat: String): String {

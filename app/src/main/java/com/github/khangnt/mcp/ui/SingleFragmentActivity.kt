@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
@@ -23,25 +22,30 @@ abstract class SingleFragmentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         onCreateLayout(savedInstanceState)
 
-        if (supportFragmentManager.findFragmentByTag(CONTENT_FRAGMENT_TAG) == null) {
-            val fragment = onCreateFragment(savedInstanceState)
-            (fragment as? BaseFragment)?.setActivityIntent(intent)
-            supportFragmentManager.beginTransaction()
-                    .add(getFragmentContainerId(), fragment, CONTENT_FRAGMENT_TAG)
-                    .commit()
+        var fragment = getContentFragment()
+        if (fragment === null) {
+            fragment = onCreateFragment(savedInstanceState)
+            replaceFragment(fragment)
         }
+
+        onFragmentCreated(fragment, savedInstanceState)
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        (getContentFragment() as? BaseFragment)?.onNewActivityIntent(intent)
+    protected open fun onFragmentCreated(fragment: Fragment, savedInstanceState: Bundle?) {
+        // No op
+    }
+
+    protected open fun replaceFragment(newFragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+                .replace(getFragmentContainerId(), newFragment, CONTENT_FRAGMENT_TAG)
+                .commitAllowingStateLoss()
     }
 
     /**
      * @return The fragment created in [onCreateFragment], if it is still attached
      * to this activity.
      */
-    protected fun getContentFragment(): Fragment {
+    protected open fun getContentFragment(): Fragment? {
         return supportFragmentManager.findFragmentByTag(CONTENT_FRAGMENT_TAG)
     }
 
@@ -50,7 +54,7 @@ abstract class SingleFragmentActivity : BaseActivity() {
      * the fragment consumes the entire window.
      * @see [getFragmentContainerId]
      */
-    protected fun onCreateLayout(savedInstanceState: Bundle?) {
+    protected open fun onCreateLayout(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_single_fragment)
     }
 
@@ -58,7 +62,7 @@ abstract class SingleFragmentActivity : BaseActivity() {
      * @return The layout ID that the fragment for this activity should be attached to.
      */
     @IdRes
-    protected fun getFragmentContainerId(): Int {
+    protected open fun getFragmentContainerId(): Int {
         return R.id.fragment_container
     }
 }

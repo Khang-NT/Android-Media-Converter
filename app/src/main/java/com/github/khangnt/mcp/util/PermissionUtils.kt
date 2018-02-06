@@ -11,7 +11,8 @@ import android.os.Build
  * Email: khang.neon.1997@gmail.com
  */
 
+val appPermissions = arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE)
+
 fun hasWriteStoragePermission(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                (context.checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED &&
-                        context.checkSelfPermission(READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED)
+                appPermissions.none { context.checkSelfPermission(it) != PERMISSION_GRANTED }
