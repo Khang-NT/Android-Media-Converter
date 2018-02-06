@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.ui.jobmanager
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
+import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.view.RecyclerViewGroupState
 import com.github.khangnt.mcp.worker.ConverterService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -61,7 +64,20 @@ class JobManagerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
-        recyclerViewGroupState.bind(recyclerViewGroup, adapter)
+        ItemOffsetDecoration(context!!)
+                .setHorizontalSpace(R.dimen.margin_normal)
+                .setVerticalSpace(R.dimen.margin_small)
+                .attachTo(recyclerViewGroup.getRecyclerView())
+        val itemJobMinWidth = resources.getDimensionPixelOffset(R.dimen.item_job_min_width)
+        val columnSpace = resources.getDimensionPixelOffset(R.dimen.margin_normal)
+        val spanCount = getSpanCount(itemJobMinWidth, columnSpace)
+        val lm = GridLayoutManager(view.context, spanCount)
+        lm.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getData(position) is HeaderModel) spanCount else 1
+            }
+        }
+        recyclerViewGroupState.bind(recyclerViewGroup, adapter, lm)
     }
 
     override fun onResume() {

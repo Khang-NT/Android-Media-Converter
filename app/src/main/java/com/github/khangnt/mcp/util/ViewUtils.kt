@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.support.annotation.StringRes
 import android.support.design.widget.TextInputLayout
@@ -120,4 +121,13 @@ fun EditText.openKeyboard(delay: Long = 200) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
     }, delay)
+}
+
+fun getSpanCount(minWidth: Int, columnSpace: Int = 0): Int {
+    val availableWidth = Resources.getSystem().displayMetrics.widthPixels - columnSpace
+    var spanCount = 1
+    while (availableWidth - ((minWidth + columnSpace) * (spanCount + 1)) >= 0) {
+        spanCount++
+    }
+    return spanCount
 }
