@@ -24,7 +24,7 @@ class ItemOffsetDecoration(
         horizontalSpace = context.resources.getDimensionPixelOffset(offsetDimenRes)
     }
 
-    fun attachTo(parent: RecyclerView) = apply {
+    fun applyTo(parent: RecyclerView) = apply {
         val vPadding = verticalSpace / 2
         val hPadding = horizontalSpace / 2
         parent.setPadding(hPadding, vPadding, hPadding, vPadding)

@@ -46,7 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:errorStateMessage="@string/preset_command_load_error_message"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:rvPaddingHorizontal="@dimen/margin_small"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

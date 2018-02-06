@@ -67,7 +67,7 @@ class JobManagerFragment : BaseFragment() {
         ItemOffsetDecoration(context!!)
                 .setHorizontalSpace(R.dimen.margin_normal)
                 .setVerticalSpace(R.dimen.margin_small)
-                .attachTo(recyclerViewGroup.getRecyclerView())
+                .applyTo(recyclerViewGroup.getRecyclerView())
         val itemJobMinWidth = resources.getDimensionPixelOffset(R.dimen.item_job_min_width)
         val columnSpace = resources.getDimensionPixelOffset(R.dimen.margin_normal)
         val spanCount = getSpanCount(itemJobMinWidth, columnSpace)
