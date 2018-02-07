@@ -46,6 +46,7 @@ data class JobModel(val job: Job) : AdapterModel, HasIdLong {
 }
 
 private val cacheOutputPath = SparseArray<String>()
+private val vmPolicyBackup: StrictMode.VmPolicy = StrictMode.getVmPolicy()
 
 class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
 
@@ -83,7 +84,6 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     private val ivDeleteFile = itemView.ivDeleteFile
 
     private var currentJob: Job? = null
-    private var vmPolicyBackup: StrictMode.VmPolicy? = null
 
     init {
         ivDeleteJob.setOnClickListener {
@@ -181,13 +181,12 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     }
 
     private fun disableStrictMode() {
-        vmPolicyBackup = StrictMode.getVmPolicy()
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
     }
 
     private fun restoreStrictMode() {
-        vmPolicyBackup?.let(StrictMode::setVmPolicy)
+        StrictMode.setVmPolicy(vmPolicyBackup)
     }
 
     private fun getPath(job: Job): String? {
