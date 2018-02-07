@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.ui
 
-import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -9,6 +10,7 @@ import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
+import com.github.khangnt.mcp.util.toast
 
 /**
  * Created by Khang NT on 1/7/18.
@@ -41,20 +43,15 @@ class PermissionTransparentActivity : BaseActivity() {
             return
         }
 
-        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), RC)
+        requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE), RC)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // skip check RC
-        if (grantResults.contains(PERMISSION_GRANTED)) {
-            catchAll { pendingIntent?.send() }
+        if (grantResults.any { it != PERMISSION_GRANTED }) {
+            toast(permissionDeniedMess ?: getString(R.string.permission_not_granted), Toast.LENGTH_LONG)
         } else {
-            Toast.makeText(
-                    this,
-                    permissionDeniedMess ?: getString(R.string.permission_not_granted),
-                    Toast.LENGTH_LONG
-            ).show()
+            catchAll { pendingIntent?.send() }
         }
 
         finish()

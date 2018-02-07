@@ -4,7 +4,20 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_tiny">4dp</dimen>
 
+    <dimen name="margin_huge_half">12dp</dimen>
+    <dimen name="margin_normal_half">8dp</dimen>
+    <dimen name="margin_small_half">4dp</dimen>
+    <dimen name="margin_tiny_half">2dp</dimen>
+
+    <dimen name="text_huge">18sp</dimen>
+    <dimen name="text_big">16sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_small">13sp</dimen>
+
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="progress_bar_size">60dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="item_job_min_width">300dp</dimen>
+    <dimen name="item_preset_cmd_min_width">300dp</dimen>
 </resources>

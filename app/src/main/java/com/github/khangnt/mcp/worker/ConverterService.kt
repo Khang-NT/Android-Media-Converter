@@ -22,6 +22,7 @@ import com.github.khangnt.mcp.ui.PermissionTransparentActivity
 import com.github.khangnt.mcp.util.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -103,6 +104,26 @@ class ConverterService : Service() {
             deleteJobIntent.action = ACTION_CANCEL_JOB
             deleteJobIntent.putExtra(EXTRA_JOB_ID, jobId)
             context.startService(deleteJobIntent)
+        }
+
+        fun newJob(
+                context: Context,
+                title: String,
+                inputs: List<String>,
+                args: String,
+                outputUri: String,
+                outputFormat: String,
+                environmentVars: Map<String, String> = emptyMap()
+        ) {
+            val newJobIntent = Intent(context, ConverterService::class.java)
+                    .setAction(ACTION_ADD_JOB)
+                    .putExtra(EXTRA_JOB_TITLE, title)
+                    .putStringArrayListExtra(EXTRA_JOB_CMD_INPUT_URIS, ArrayList(inputs))
+                    .putExtra(EXTRA_JOB_CMD_ARGS, args)
+                    .putExtra(EXTRA_JOB_CMD_OUTPUT_URI, outputUri)
+                    .putExtra(EXTRA_JOB_CMD_OUTPUT_FMT, outputFormat)
+                    .putExtra(EXTRA_JOB_CMD_ENV_VARS_JSON, JSONObject(environmentVars).toString())
+            context.startService(newJobIntent)
         }
     }
 
@@ -397,9 +418,11 @@ class ConverterService : Service() {
 
                         freeTime += 1
                         if (freeTime >= JOB_HANDLER_MAX_FREE_TIME && !binding) {
-                            // clean up temp folder before stop
-                            val tempDir = makeWorkingPaths(this@ConverterService).jobTempRootDir
-                            tempDir.listFiles().forEach { it.deleteRecursiveIgnoreError() }
+                            catchAll {
+                                // clean up temp folder before stop
+                                makeWorkingPaths(this@ConverterService).getListJobTempDir()
+                                        .forEach { it.deleteRecursiveIgnoreError() }
+                            }
                             // request stop
                             mainHandler.sendEmptyMessage(STOP_SERVICE_MESSAGE)
                         } else {
@@ -411,7 +434,7 @@ class ConverterService : Service() {
                 ADD_JOB_MESSAGE -> {
                     msg.data?.toJob()?.let { job ->
                         with(Uri.parse(job.command.output)) {
-                            if (scheme.startsWith("content")) {
+                            if (scheme?.startsWith("content") == true) {
                                 catchAll {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                                         contentResolver.takePersistableUriPermission(this,
@@ -434,10 +457,11 @@ class ConverterService : Service() {
                                 else -> jobManager.deleteJob(id)
                             }
                             catchAll {
-                                // clean up temp files
-                                makeWorkingPaths(this@ConverterService)
-                                        .getTempDirForJob(id)
-                                        .deleteRecursiveIgnoreError()
+                                // clean up temp and log files
+                                makeWorkingPaths(this@ConverterService).apply {
+                                    getTempDirForJob(id).deleteRecursiveIgnoreError()
+                                    getLogFileOfJob(id).delete()
+                                }
                             }
                             loop()
                         }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mp3Encoders">
+        <item>Libmp3lame (High quality)</item>
+        <item>Libshine (High speed)</item>
+    </string-array>
+</resources>

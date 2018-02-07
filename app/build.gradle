@@ -27,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "0.6.9"
+        versionName "0.7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -64,7 +64,7 @@ android {
         }
     }
 
-    final _versionCode = 17
+    final _versionCode = 20
 
     flavorDimensions 'cpuArch'
     productFlavors {
@@ -189,22 +189,21 @@ publishConfig {
 
 afterEvaluate {
     tasks.create("testReleaseUnitTest").dependsOn(
-            testArmReleaseUnitTest,
-            testArm7ReleaseUnitTest,
-            testArm8ReleaseUnitTest,
-            testX86ReleaseUnitTest,
-            testX86_64ReleaseUnitTest,
-            testMipsReleaseUnitTest,
-            testMips64ReleaseUnitTest
-
+            "testArmReleaseUnitTest",
+            "testArm7ReleaseUnitTest",
+            "testArm8ReleaseUnitTest",
+            "testX86ReleaseUnitTest",
+            "testX86_64ReleaseUnitTest",
+            "testMipsReleaseUnitTest",
+            "testMips64ReleaseUnitTest"
     )
     tasks.create("lintRelease").dependsOn(
-            lintArmRelease,
-            lintArm7Release,
-            lintArm8Release,
-            lintX86Release,
-            lintX86_64Release,
-            lintMipsRelease,
-            lintMips64Release
+            "lintArmRelease",
+            "lintArm7Release",
+            "lintArm8Release",
+            "lintX86Release",
+            "lintX86_64Release",
+            "lintMipsRelease",
+            "lintMips64Release"
     )
 }

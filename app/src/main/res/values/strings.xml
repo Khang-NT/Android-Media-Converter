@@ -21,8 +21,9 @@
 
     <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
     <string name="job_list_load_error_message">Load Job failed</string>
+    <string name="file_list_load_error_message">Load file list failed</string>
+    <string name="preset_command_load_error_message">Load preset commands failed</string>
     <string name="retry">Retry</string>
-    <string name="preset_command_empty_message">This page still on development and will available soon. You can create new Job via YMusic app.</string>
 
     <string name="fork_on_github">Fork on Github</string>
     <string name="licenses">Licenses</string>
@@ -35,6 +36,7 @@
     <string name="open_folder_chooser">Open folder: %s</string>
     <string name="unknown_file_path">Unknown file path</string>
 
+    <string name="action_ok">OK</string>
     <string name="action_yes">Yes</string>
     <string name="action_cancel">Cancel</string>
 
@@ -48,5 +50,38 @@
     <string name="rate_us_not_now">Not now</string>
     <string name="rate_us_never">Never</string>
     <string name="rate_us">Rate us</string>
+    <string name="reload">Reload</string>
+    <string name="switch_job_dialog_title">Select job</string>
+    <string name="create_new_folder">New folder</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="hint_type_folder_name">Folder name</string>
+    <string name="folder_exists">Folder exists</string>
+    <string name="create_folder_failed">Create folder failed, please check folder name.</string>
+    <string name="create_folder_success">Create folder \'%s\' success</string>
+    <string name="select">Select</string>
+    <string name="pick_file">Pick file</string>
+    <string name="pick_folder">Pick folder</string>
+    <string name="user_denied_permission">Permissions were not granted. Please click retry and grant permission to access this folder.</string>
+    <string name="go_to_sd_card">Go to SD card</string>
+    <string name="go_to_phone_storage">Go to phone\'s storage</string>
+    <string name="edit_text_uri_hint">Enter file path or an URL</string>
+    <string name="output_folder_hint">Output folder (click to edit)</string>
+    <string name="output_file_name_hint">Output file name</string>
+
+    <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
+    <string name="error_input_text_empty">Input can\'t empty</string>
+    <string name="error_file_not_exists">This path doesn\'t exists</string>
+    <string name="error_not_a_file">This is not a file</string>
+    <string name="error_invalid_url">Invalid URL</string>
+    <string name="error_output_folder_empty">Please select output folder</string>
+    <string name="error_file_name_empty">Please set file name</string>
+
+    <string name="dialog_error_file_exists">File name exists</string>
+    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
+    <string name="action_override">Override</string>
+    <string name="action_rename">Rename</string>
+
+    <string name="preset_command_convert_mp3_title">Convert MP3</string>
+    <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily.</string>
 
 </resources>

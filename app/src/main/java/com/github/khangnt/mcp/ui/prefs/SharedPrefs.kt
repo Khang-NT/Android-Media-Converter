@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.support.annotation.StringRes
-
 import com.github.khangnt.mcp.R
-
-import java.util.Collections
 
 class SharedPrefs(private val mContext: Context) {
     private val mPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
@@ -23,6 +20,10 @@ class SharedPrefs(private val mContext: Context) {
     var delayRateDialogUntil: Long
         get() = getLong(R.string.pref_key_rate_dialog_delay, 0)
         set(delayUntil) = putLong(R.string.pref_key_rate_dialog_delay, delayUntil)
+
+    var lastOutputFolderUri: String?
+        get() = getString(R.string.pref_key_last_output_folder, null)
+        set(value) = putString(R.string.pref_key_last_output_folder, value)
 
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
@@ -40,7 +41,7 @@ class SharedPrefs(private val mContext: Context) {
         return mPrefs.getLong(mContext.getString(keyRes), defaultValue)
     }
 
-    private fun getString(@StringRes keyRes: Int, defaultValue: String): String? {
+    private fun getString(@StringRes keyRes: Int, defaultValue: String?): String? {
         return mPrefs.getString(mContext.getString(keyRes), defaultValue)
     }
 
@@ -66,7 +67,7 @@ class SharedPrefs(private val mContext: Context) {
                 .apply()
     }
 
-    private fun putString(@StringRes keyRes: Int, value: String) {
+    private fun putString(@StringRes keyRes: Int, value: String?) {
         mPrefs.edit()
                 .putString(mContext.getString(keyRes), value)
                 .apply()

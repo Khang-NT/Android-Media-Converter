@@ -8,6 +8,7 @@ import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
 import com.github.khangnt.mcp.job.Command
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.escapeSingleQuote
 import timber.log.Timber
 import java.io.BufferedOutputStream
 import java.io.File
@@ -42,14 +43,14 @@ data class CommandResolver(
             command.inputs.forEachIndexed { index, input ->
                 execCommandBuilder.append(" -i")
                 val uri = Uri.parse(input)
-                when (uri.scheme.toLowerCase()) {
-                    "file" -> execCommandBuilder.append(" '$uri'")
+                when (uri.scheme?.toLowerCase()) {
+                    "file" -> execCommandBuilder.append(" '${formatFileUri(uri)}'")
                     "content", "http", "https" -> {
                         val preparedInput = makeInputTempFile(jobTempDir, index)
                         if (!preparedInput.exists()) {
-                            throw FileNotFoundException("Some app data were deleted or moved.")
+                            throw FileNotFoundException("Some app data were deleted or moved.\n$preparedInput")
                         }
-                        execCommandBuilder.append(" '${Uri.fromFile(preparedInput)}'")
+                        execCommandBuilder.append(" '${formatFileUri(Uri.fromFile(preparedInput))}'")
                     }
                     else -> {
                         throw IllegalArgumentException("Can't resolve input $input")
@@ -59,16 +60,27 @@ data class CommandResolver(
 
             execCommandBuilder.append(" ").append(command.args)
 
-            val sourceOutput = ContentResolverSource(context, Uri.parse(command.output))
+            val finalOutputUri = Uri.parse(command.output)
+            if (finalOutputUri.scheme == "file") {
+                val outputFolder = File(finalOutputUri.path).parentFile
+                if (!outputFolder.exists() && !outputFolder.mkdirs()) {
+                    throw FileNotFoundException("Output folder not found: $outputFolder")
+                }
+            }
+            val sourceOutput = ContentResolverSource(context, finalOutputUri)
 
             // temp file to save ffmpeg output
             val tempFile = File(jobTempDir, FFMPEG_TEMP_OUTPUT_FILE)
             val tempOutputUri = Uri.fromFile(tempFile)
             val tempSourceInput = ContentResolverSource(context, tempOutputUri)
-            execCommandBuilder.append(" -y -f ${command.outputFormat} '$tempOutputUri'")
+            execCommandBuilder.append(" -y -f ${command.outputFormat} '${formatFileUri(tempOutputUri)}'")
 
             return CommandResolver(command, execCommandBuilder.toString(),
                     sourceOutput, tempFile, tempSourceInput)
+        }
+
+        private fun formatFileUri(uri: Uri): String {
+            return "file://${uri.path.escapeSingleQuote()}"
         }
     }
 

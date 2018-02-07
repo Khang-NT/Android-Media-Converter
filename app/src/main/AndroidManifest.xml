@@ -4,6 +4,7 @@
           package="com.github.khangnt.mcp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
@@ -40,6 +41,21 @@
         <activity
             android:name=".ui.PermissionTransparentActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent"/>
+
+        <activity
+            android:name=".ui.jobmanager.JobLogsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".ui.AboutActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.filepicker.FilePickerActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".ui.presetcmd.ConvertActivity"
+                  android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
+
     </application>
 
 </manifest>

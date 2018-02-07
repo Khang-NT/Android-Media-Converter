@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.provider.DocumentFile
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.KB
 import com.github.khangnt.mcp.MB
@@ -13,6 +14,7 @@ import timber.log.Timber
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -78,9 +80,19 @@ fun <T> List<T>.toImmutable(): List<T> {
     return Collections.unmodifiableList(ArrayList(this))
 }
 
-fun openUrl(context: Context, url: String) {
+fun openUrl(context: Context, url: String, message: String = "Open $url") {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(Intent.createChooser(intent, "Open $url"))
+    context.startActivity(Intent.createChooser(intent, message))
+}
+
+fun openPlayStore(context: Context, packageName: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=$packageName")))
+    } catch (activityNotFound: Throwable) {
+        openUrl(context, "https://play.google.com/store/apps/details?id=$packageName",
+                "Open PlayStore")
+    }
 }
 
 fun File.ensureDirExists(): File {
@@ -92,11 +104,37 @@ fun File.ensureDirExists(): File {
 
 fun File.deleteRecursiveIgnoreError() {
     if (isDirectory) {
-        listFiles()?.forEach { it.deleteRecursiveIgnoreError() }
+        (listFiles() as? Array<File>)?.forEach { it.deleteRecursiveIgnoreError() }
     }
     catchAll { this.delete() }
 }
 
 fun File.deleteIgnoreError() {
     catchAll { delete() }
+}
+
+fun String.parseInputUri(): Uri {
+    if (startsWith("http", ignoreCase = true)
+            || startsWith("content", ignoreCase = true)) {
+        return Uri.parse(this)
+    } else {
+        return Uri.fromFile(File(this))
+    }
+}
+
+fun String.escapeSingleQuote(): String {
+    return replace("'", "'\\''")
+}
+
+/**
+ * Check if [filename] exists in [folderUri].
+ * return Uri of the file existing, otherwise return null
+ */
+fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
+    return if (folderUri.scheme == "file") {
+        return File(folderUri.path, fileName).let { if (it.exists()) Uri.fromFile(it) else null }
+    } else catchAll {
+        val documentTree = DocumentFile.fromTreeUri(this, folderUri)
+        documentTree.findFile(fileName).uri
+    }
 }

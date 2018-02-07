@@ -1,8 +1,18 @@
 package com.github.khangnt.mcp.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
+import android.support.annotation.StringRes
+import android.support.design.widget.TextInputLayout
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.view.View.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 
 
 /**
@@ -13,4 +23,111 @@ import android.support.v4.view.ViewCompat
 fun isRtl(context: Context): Boolean {
     return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN &&
             context.resources.configuration.layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL
+}
+
+fun TextView.onTextSizeChanged(listener: (length: Int) -> Unit): TextWatcher {
+    val textWatcher: TextWatcher = object : TextWatcher {
+        var length = this@onTextSizeChanged.length()
+
+        override fun afterTextChanged(s: Editable) {
+            if (s.length != length) {
+                length = s.length
+                listener(length)
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+    }
+    addTextChangedListener(textWatcher)
+    return textWatcher
+}
+
+private fun showToast(context: Context, message: String?, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(context, message ?: "null", duration).show()
+}
+
+fun Context.toast(@StringRes messageRes: Int, duration: Int = Toast.LENGTH_SHORT) {
+    toast(getString(messageRes), duration)
+}
+
+fun Context.toast(message: String?, duration: Int = Toast.LENGTH_SHORT) {
+    showToast(this, message, duration)
+}
+
+fun Fragment.toast(@StringRes messageRes: Int, duration: Int = Toast.LENGTH_SHORT) {
+    toast(getString(messageRes), duration)
+}
+
+fun Fragment.toast(message: String?, duration: Int = Toast.LENGTH_SHORT) {
+    showToast(context!!, message, duration)
+}
+
+
+fun View.visible() {
+    visibility = VISIBLE
+}
+
+fun View.invisible() {
+    visibility = INVISIBLE
+}
+
+fun View.gone() {
+    visibility = GONE
+}
+
+fun SeekBar.onSeekBarChanged(callback: (progress: Int) -> Unit) {
+    setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            callback(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+    })
+}
+
+fun Spinner.onItemSelected(callback: (position: Int) -> Unit) {
+    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            callback(position)
+        }
+    }
+}
+
+var TextInputLayout.errorMessage: String?
+    get() = if (isErrorEnabled) error?.toString() else null
+    set(value) {
+        if (value.isNullOrEmpty()) {
+            isErrorEnabled = false
+            error = null
+        } else {
+            isErrorEnabled = true
+            error = value
+        }
+    }
+
+fun EditText.openKeyboard(delay: Long = 200) {
+    postDelayed({
+        this.requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }, delay)
+}
+
+fun getSpanCount(minWidth: Int, columnSpace: Int = 0): Int {
+    val availableWidth = Resources.getSystem().displayMetrics.widthPixels - columnSpace
+    var spanCount = 1
+    while (availableWidth - ((minWidth + columnSpace) * (spanCount + 1)) >= 0) {
+        spanCount++
+    }
+    return spanCount
 }

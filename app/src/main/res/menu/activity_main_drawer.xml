@@ -15,16 +15,16 @@
             android:icon="@drawable/ic_job_manager_black_24dp"
             android:title="@string/nav_job_manager"
             android:checked="true"/>
-        <item
-            android:id="@+id/item_nav_setting"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/nav_settings"
-            android:enabled="false"/>
     </group>
 
     <group
         android:id="@+id/nav_group_2"
         android:checkableBehavior="none">
+        <item
+            android:id="@+id/item_nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/nav_settings"
+            android:enabled="false"/>
         <item
             android:id="@+id/item_nav_about"
             android:icon="@drawable/ic_about_black_24dp"
