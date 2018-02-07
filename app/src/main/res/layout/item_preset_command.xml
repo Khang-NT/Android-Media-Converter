@@ -6,7 +6,6 @@
     android:id="@+id/itemRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_tiny"
     android:background="?selectableItemBackground"
     android:padding="@dimen/margin_small">
 
@@ -60,7 +59,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_tiny"
         android:ellipsize="end"
         android:lines="2"
         android:maxLines="2"

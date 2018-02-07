@@ -48,7 +48,7 @@ data class CommandResolver(
                     "content", "http", "https" -> {
                         val preparedInput = makeInputTempFile(jobTempDir, index)
                         if (!preparedInput.exists()) {
-                            throw FileNotFoundException("Some app data were deleted or moved.")
+                            throw FileNotFoundException("Some app data were deleted or moved.\n$preparedInput")
                         }
                         execCommandBuilder.append(" '${formatFileUri(Uri.fromFile(preparedInput))}'")
                     }

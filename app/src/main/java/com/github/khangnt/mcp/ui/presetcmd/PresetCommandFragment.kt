@@ -1,7 +1,7 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +14,8 @@ import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
+import com.github.khangnt.mcp.util.getSpanCount
 import kotlinx.android.synthetic.main.fragment_preset_command.*
 
 /**
@@ -21,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_preset_command.*
  * Email: khang.neon.1997@gmail.com
  */
 
-class PresetCommandFragment: BaseFragment() {
+class PresetCommandFragment : BaseFragment() {
 
     private val audioEncodingHeader = HeaderModel("Audio encoding")
     private val videoEncodingHeader = HeaderModel("Video encoding")
@@ -59,7 +61,19 @@ class PresetCommandFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
 
-        recyclerViewGroup.getRecyclerView().layoutManager = LinearLayoutManager(view.context)
+        val itemOffsetDecoration = ItemOffsetDecoration(view.context)
+                .setHorizontalSpace(R.dimen.margin_normal)
+                .setVerticalSpace(R.dimen.margin_small)
+                .applyTo(recyclerViewGroup.getRecyclerView())
+        val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_job_min_width)
+        val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
+        val lm = GridLayoutManager(view.context, spanCount)
+        lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int =
+                    if (adapter.getData(position) is HeaderModel) spanCount else 1
+        }
+
+        recyclerViewGroup.getRecyclerView().layoutManager = lm
         recyclerViewGroup.getRecyclerView().adapter = adapter
         recyclerViewGroup.successHasData()
     }
