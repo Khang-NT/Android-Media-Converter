@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_convert.*
 
 private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
+var isChanged = false
+
 class ConvertActivity : SingleFragmentActivity() {
 
     companion object {
@@ -67,12 +69,20 @@ class ConvertActivity : SingleFragmentActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        promptExitDialog()
+        if (isChanged) {
+            promptExitDialog()
+        } else {
+            finish()
+        }
         return true
     }
 
     override fun onBackPressed() {
-        promptExitDialog()
+        if (isChanged) {
+            promptExitDialog()
+        } else {
+            finish()
+        }
     }
 
     private fun promptExitDialog() {
