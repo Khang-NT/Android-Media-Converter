@@ -4,11 +4,9 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.ImageView
 import com.github.khangnt.mcp.PresetCommand
-import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdLong
-import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import kotlinx.android.synthetic.main.item_preset_command.view.*
 
 /**
@@ -22,7 +20,10 @@ data class PresetCommandModel(
     override val idLong: Long = presetCommand.ordinal.toLong()
 }
 
-class ItemPresetCommandViewHolder(itemView: View) : CustomViewHolder<PresetCommandModel>(itemView) {
+class ItemPresetCommandViewHolder(
+        itemView: View,
+        onClickListener: (PresetCommand) -> Unit
+) : CustomViewHolder<PresetCommandModel>(itemView) {
     private val ivIcon: ImageView = itemView.ivIcon
     private val tvShortName = itemView.tvShortName
     private val tvTitle = itemView.tvTitle
@@ -32,7 +33,8 @@ class ItemPresetCommandViewHolder(itemView: View) : CustomViewHolder<PresetComma
 
     init {
         itemView.setOnClickListener {
-            ConvertActivity.launch(it.context, model!!.presetCommand.ordinal)
+            // callback
+            onClickListener.invoke(model!!.presetCommand)
         }
     }
 
@@ -43,12 +45,6 @@ class ItemPresetCommandViewHolder(itemView: View) : CustomViewHolder<PresetComma
             tvShortName.text = shortName
             tvTitle.setText(titleRes)
             tvDescription.setText(descriptionRes)
-        }
-    }
-
-    companion object {
-        val FACTORY: ViewHolderFactory = { inflater, parent ->
-            ItemPresetCommandViewHolder(inflater.inflate(R.layout.item_preset_command, parent, false))
         }
     }
 

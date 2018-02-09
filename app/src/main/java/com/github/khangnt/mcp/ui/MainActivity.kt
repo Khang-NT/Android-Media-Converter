@@ -33,11 +33,20 @@ import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit.DAYS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
-
+private const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
 private const val KEY_SELECTED_FRAGMENT = "MainActivity:selectedFragment"
 
 class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        fun openJobManagerIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+                    .setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(EXTRA_OPEN_JOB_MANAGER, true)
+        }
+    }
 
     private val jobStatusChangedReceiver = JobStatusChangedReceiver()
     private var currentDrawerListener: DrawerLayout.DrawerListener? = null
