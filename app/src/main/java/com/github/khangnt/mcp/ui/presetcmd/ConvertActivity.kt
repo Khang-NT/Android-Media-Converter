@@ -18,16 +18,16 @@ import kotlinx.android.synthetic.main.activity_convert.*
  * Email: khang.neon.1997@gmail.com
  */
 
-const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
+private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
 var isChanged = false
 
 class ConvertActivity : SingleFragmentActivity() {
 
     companion object {
-        fun launch(context: Context, presetCommandId: Int) {
-            context.startActivity(Intent(context, ConvertActivity::class.java)
-                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommandId))
+        fun launchIntent(context: Context, presetCommandId: Int): Intent {
+            return Intent(context, ConvertActivity::class.java)
+                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommandId)
         }
     }
 

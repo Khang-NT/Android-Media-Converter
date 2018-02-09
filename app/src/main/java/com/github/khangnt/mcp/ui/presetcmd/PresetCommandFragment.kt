@@ -13,20 +13,19 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.TYPE_AUDIO
 import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.EXTRA_OPEN_JOB_MANAGER
 import com.github.khangnt.mcp.ui.MainActivity
 import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
-import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
 import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.toast
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_preset_command.*
 
 /**
  * Created by Khang NT on 1/6/18.
  * Email: khang.neon.1997@gmail.com
  */
+
+private const val RC_CONVERT_ACTIVITY = 9
 
 class PresetCommandFragment : BaseFragment() {
 
@@ -60,8 +59,8 @@ class PresetCommandFragment : BaseFragment() {
         val itemView = inflater.inflate(R.layout.item_preset_command, parent, false)
         val onItemClick = { presetCommand: PresetCommand ->
             toast(presetCommand.titleRes)
-            startActivityForResult(Intent(context, ConvertActivity::class.java)
-                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommand.ordinal), 9)
+            val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
+            startActivityForResult(intent, RC_CONVERT_ACTIVITY)
         }
         ItemPresetCommandViewHolder(itemView, onItemClick)
     }
@@ -98,21 +97,12 @@ class PresetCommandFragment : BaseFragment() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        if (requestCode == 9) {
-            Snackbar.make(recyclerViewGroup.rootView, getString(R.string.add_job_message), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.ac_view), ViewJobsListener()).show()
-        }
-    }
-
-    inner class ViewJobsListener : View.OnClickListener {
-
-        override fun onClick(v: View) {
-            val intent = Intent(context, MainActivity::class.java)
-                    .setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
-                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    .putExtra(EXTRA_OPEN_JOB_MANAGER, true)
-            startActivity(intent)
+        if (requestCode == RC_CONVERT_ACTIVITY) {
+            Snackbar.make(recyclerViewGroup.rootView, R.string.add_job_message, Snackbar.LENGTH_SHORT)
+                    .setAction(getString(R.string.ac_view), {
+                        startActivity(MainActivity.openJobManagerIntent(it.context))
+                    })
+                    .show()
         }
     }
 }
