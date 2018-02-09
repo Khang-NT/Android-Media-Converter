@@ -13,6 +13,8 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.TYPE_AUDIO
 import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
+import com.github.khangnt.mcp.ui.EXTRA_OPEN_JOB_MANAGER
+import com.github.khangnt.mcp.ui.MainActivity
 import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
@@ -97,19 +99,20 @@ class PresetCommandFragment : BaseFragment() {
             return
         }
         if (requestCode == 9) {
-            Snackbar.make(recyclerViewGroup.rootView, "New job has been added to queue!", Snackbar.LENGTH_LONG)
-                    .setAction("View", ViewJobsListener()).show()
+            Snackbar.make(recyclerViewGroup.rootView, getString(R.string.add_job_message), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.ac_view), ViewJobsListener()).show()
         }
     }
 
     inner class ViewJobsListener : View.OnClickListener {
 
         override fun onClick(v: View) {
-            val ft = fragmentManager!!.beginTransaction()
-            ft.replace(R.id.contentContainer, JobManagerFragment(), "JobManagerFragment")
-            ft.commit()
-
-            v.rootView.navigationView.setCheckedItem(R.id.item_nav_job_manager)
+            val intent = Intent(context, MainActivity::class.java)
+                    .setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(EXTRA_OPEN_JOB_MANAGER, true)
+            startActivity(intent)
         }
     }
 }

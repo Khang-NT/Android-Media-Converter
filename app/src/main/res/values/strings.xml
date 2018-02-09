@@ -84,4 +84,7 @@
     <string name="preset_command_convert_mp3_title">Convert MP3</string>
     <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily.</string>
 
+    <string name="add_job_message">New job has been added to queue!</string>
+    <string name="ac_view">View</string>
+
 </resources>
