@@ -41,7 +41,7 @@ class PresetCommandFragment : BaseFragment() {
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
                 .build()
 
-        val data: MutableList<AdapterModel> = mutableListOf<AdapterModel>()
+        val data: MutableList<AdapterModel> = mutableListOf()
         val audioPresetCmds = PresetCommand.values().filter { it.type == TYPE_AUDIO }
         val videoPresetCmds = PresetCommand.values().filter { it.type == TYPE_VIDEO }
         if (audioPresetCmds.isNotEmpty()) {
@@ -58,7 +58,6 @@ class PresetCommandFragment : BaseFragment() {
     private val presetCommandViewHolderFactory: ViewHolderFactory = { inflater, parent ->
         val itemView = inflater.inflate(R.layout.item_preset_command, parent, false)
         val onItemClick = { presetCommand: PresetCommand ->
-            toast(presetCommand.titleRes)
             val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
             startActivityForResult(intent, RC_CONVERT_ACTIVITY)
         }

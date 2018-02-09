@@ -20,8 +20,6 @@ import kotlinx.android.synthetic.main.activity_convert.*
 
 private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
-var isChanged = false
-
 class ConvertActivity : SingleFragmentActivity() {
 
     companion object {
@@ -56,7 +54,7 @@ class ConvertActivity : SingleFragmentActivity() {
 
         val scrollRange by lazy { appBarLayout.totalScrollRange }
         appBarLayout.addOnOffsetChangedListener { _, offset ->
-            if (scrollRange + offset == 0){
+            if (scrollRange + offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
@@ -69,29 +67,25 @@ class ConvertActivity : SingleFragmentActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        if (isChanged) {
-            promptExitDialog()
-        } else {
-            finish()
-        }
+        onQuit()
         return true
     }
 
     override fun onBackPressed() {
-        if (isChanged) {
-            promptExitDialog()
-        } else {
-            finish()
-        }
+        onQuit()
     }
 
-    private fun promptExitDialog() {
-        AlertDialog.Builder(this)
-                .setTitle("Do you want to exit?")
-                .setMessage("Your settings won't be saved")
-                .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
-                .setNegativeButton(R.string.action_cancel, null)
-                .show()
+    private fun onQuit() {
+        if ((getContentFragment() as? ConvertFragment)?.shouldQuit() != false) {
+            finish()
+        } else {
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.dialog_confirm_quit_title))
+                    .setMessage(getString(R.string.dialog_confirm_quit_message))
+                    .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show()
+        }
     }
 
 }

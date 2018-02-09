@@ -87,4 +87,7 @@
     <string name="add_job_message">New job has been added to queue!</string>
     <string name="ac_view">View</string>
 
+    <string name="dialog_confirm_quit_title">Do you want to exit?</string>
+    <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
+
 </resources>

@@ -15,12 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
-import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FILES_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
 import com.github.khangnt.mcp.ui.presetcmd.ConvertActivity
-import com.github.khangnt.mcp.ui.presetcmd.isChanged
+import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.util.*
 import com.github.khangnt.mcp.worker.ConverterService
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
@@ -33,7 +32,7 @@ import java.io.File
  * Or with libshine encoder:
  * ffmpeg -i input -codec:a libshine -b:a 256k mp3 output.mp3
  */
-class ConvertMp3Fragment : BaseFragment() {
+class ConvertMp3Fragment : ConvertFragment() {
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -61,7 +60,6 @@ class ConvertMp3Fragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        isChanged = false
 
         outputFolderUri = sharedPrefs.lastOutputFolderUri?.let { Uri.parse(it) }
     }
@@ -145,7 +143,6 @@ class ConvertMp3Fragment : BaseFragment() {
                     if (edOutputName.text.isEmpty()) {
                         // auto fill output file name
                         edOutputName.setText("${File(it).nameWithoutExtension}.mp3")
-                        isChanged = true
                     }
                 }
             }
@@ -153,7 +150,6 @@ class ConvertMp3Fragment : BaseFragment() {
                 data?.getStringExtra(DIRECTORY_RESULT)?.let { path ->
                     outputFolderUri = Uri.fromFile(File(path))
                     edOutputPath.setText(path)
-                    isChanged = true
                 }
             }
             RC_PICK_DOCUMENT_TREE -> {
@@ -165,7 +161,6 @@ class ConvertMp3Fragment : BaseFragment() {
                 outputFolderUri = uri
                 val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
                 edOutputPath.setText(path ?: uri.toString())
-                isChanged = true
             }
         }
     }
@@ -267,6 +262,12 @@ class ConvertMp3Fragment : BaseFragment() {
             return getString(R.string.error_file_name_empty)
         }
         return null
+    }
+
+    override fun shouldQuit(): Boolean {
+        return edOutputName.text.isEmpty() &&
+                edInput0.text.isEmpty() &&
+                outputFolderUri?.toString() == sharedPrefs.lastOutputFolderUri
     }
 
 }
