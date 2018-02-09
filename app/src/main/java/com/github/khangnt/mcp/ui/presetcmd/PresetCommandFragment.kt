@@ -1,6 +1,9 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +13,12 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.TYPE_AUDIO
 import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.AdapterModel
-import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
-import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
+import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
 import com.github.khangnt.mcp.util.getSpanCount
+import com.github.khangnt.mcp.util.toast
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_preset_command.*
 
 /**
@@ -33,7 +36,7 @@ class PresetCommandFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = MixAdapter.Builder()
-                .register(PresetCommandModel::class.java, ItemPresetCommandViewHolder.FACTORY)
+                .register(PresetCommandModel::class.java, presetCommandViewHolderFactory)
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
                 .build()
 
@@ -49,6 +52,16 @@ class PresetCommandFragment : BaseFragment() {
             data.addAll(videoPresetCmds.map { PresetCommandModel(it) })
         }
         adapter.setData(data)
+    }
+
+    private val presetCommandViewHolderFactory: ViewHolderFactory = { inflater, parent ->
+        val itemView = inflater.inflate(R.layout.item_preset_command, parent, false)
+        val onItemClick = { presetCommand: PresetCommand ->
+            toast(presetCommand.titleRes)
+            startActivityForResult(Intent(context, ConvertActivity::class.java)
+                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommand.ordinal), 9)
+        }
+        ItemPresetCommandViewHolder(itemView, onItemClick)
     }
 
     override fun onCreateView(
@@ -78,4 +91,25 @@ class PresetCommandFragment : BaseFragment() {
         recyclerViewGroup.successHasData()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+        if (requestCode == 9) {
+            Snackbar.make(recyclerViewGroup.rootView, "New job has been added to queue!", Snackbar.LENGTH_LONG)
+                    .setAction("View", ViewJobsListener()).show()
+        }
+    }
+
+    inner class ViewJobsListener : View.OnClickListener {
+
+        override fun onClick(v: View) {
+            val ft = fragmentManager!!.beginTransaction()
+            ft.replace(R.id.contentContainer, JobManagerFragment(), "JobManagerFragment")
+            ft.commit()
+
+            v.rootView.navigationView.setCheckedItem(R.id.item_nav_job_manager)
+        }
+    }
 }

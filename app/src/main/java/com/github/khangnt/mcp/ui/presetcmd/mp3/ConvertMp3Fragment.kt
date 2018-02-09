@@ -227,6 +227,7 @@ class ConvertMp3Fragment : BaseFragment() {
                 outputFormat = "mp3"
         )
 
+        (activity as? ConvertActivity)?.setResult(Activity.RESULT_OK)
         (activity as? ConvertActivity)?.finish()
     }
 

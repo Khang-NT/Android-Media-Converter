@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_convert.*
  * Email: khang.neon.1997@gmail.com
  */
 
-private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
+const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
 var isChanged = false
 
