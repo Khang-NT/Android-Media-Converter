@@ -21,6 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import timber.log.Timber
 import java.io.File
+import java.lang.ref.WeakReference
 
 typealias OnItemClickListener = (
         fragment: FileListFragment,
@@ -47,19 +48,15 @@ class FileListFragment : BaseFragment() {
     private val path: File by lazy { File(arguments!!.getString(KEY_PATH)) }
     private val createFolderItem = FileListModel(File("+folder"), TYPE_CREATE_FOLDER)
 
+    // retains instances
     private lateinit var adapter: MixAdapter
     private lateinit var recyclerViewGroupState: RecyclerViewGroupState
-
-    lateinit var onItemClickListener: OnItemClickListener
-    lateinit var checkedFilesRetriever: CheckedFilesRetriever
+    var itemClickListenerWeakRef = WeakReference<OnItemClickListener>(null)
+    var checkedFilesRetrieverWeakRef = WeakReference<CheckedFilesRetriever>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-
-        if (!(::onItemClickListener.isInitialized && ::checkedFilesRetriever.isInitialized)) {
-            throw IllegalStateException("Must initialize onItemClickListener & checkedFilesRetriever")
-        }
 
         adapter = MixAdapter.Builder("FileListFragment")
                 .register(FileListModel::class.java, { inflater, parent ->
@@ -76,7 +73,7 @@ class FileListFragment : BaseFragment() {
     private val onClickListener = { model: FileListModel, _: Int ->
         when (model.type) {
             TYPE_FOLDER, TYPE_FILE -> {
-                if (onItemClickListener(this, model.path)) {
+                if (itemClickListenerWeakRef.get()?.invoke(this, model.path) == true) {
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -84,7 +81,9 @@ class FileListFragment : BaseFragment() {
         }
     }
 
-    private val checkStateFunc: (FileListModel) -> Boolean = { checkedFilesRetriever().contains(it.path) }
+    private val checkStateFunc: (FileListModel) -> Boolean = {
+        checkedFilesRetrieverWeakRef.get()?.invoke()?.contains(it.path) == true
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -127,7 +126,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.any { it != PERMISSION_GRANTED  }) {
+        if (grantResults.any { it != PERMISSION_GRANTED }) {
             recyclerViewGroupState.error(getString(R.string.user_denied_permission))
         } else {
             reloadData()

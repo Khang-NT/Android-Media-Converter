@@ -17,7 +17,6 @@ import com.github.khangnt.mcp.ui.MainActivity
 import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.util.getSpanCount
-import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_preset_command.*
 
 /**
@@ -97,7 +96,7 @@ class PresetCommandFragment : BaseFragment() {
             return
         }
         if (requestCode == RC_CONVERT_ACTIVITY) {
-            Snackbar.make(recyclerViewGroup.rootView, R.string.add_job_message, Snackbar.LENGTH_SHORT)
+            Snackbar.make(recyclerViewGroup, R.string.add_job_message, Snackbar.LENGTH_SHORT)
                     .setAction(getString(R.string.ac_view), {
                         startActivity(MainActivity.openJobManagerIntent(it.context))
                     })
