@@ -22,7 +22,12 @@
         <com.github.khangnt.mcp.ui.filepicker.PathIndicatorView
             android:id="@+id/pathIndicatorView"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
+            android:layout_height="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:paddingEnd="@dimen/margin_tiny"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_tiny"
+            android:paddingStart="@dimen/margin_normal"/>
 
     </android.support.design.widget.AppBarLayout>
 
