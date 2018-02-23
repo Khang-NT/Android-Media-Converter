@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import java.io.File
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -61,14 +62,6 @@ class FileBrowserFragment : BaseFragment() {
                     ?: emptyList<String>()
             selectedFiles.addAll(list.map { File(it) })
         }
-
-        // re-attach callbacks
-        childFragmentManager.fragments.forEach { fragment ->
-            if (fragment is FileListFragment) {
-                fragment.onItemClickListener = onItemClickListener
-                fragment.checkedFilesRetriever = checkedFilesRetriever
-            }
-        }
     }
 
     override fun onCreateView(
@@ -95,10 +88,12 @@ class FileBrowserFragment : BaseFragment() {
             val oldDir = currentDir
             currentDir = dir
             val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
-            if (existsFragment != null) {
+            if (existsFragment is FileListFragment) { // implicit check !== null
+                assignCallback(existsFragment)
                 childFragmentManager.popBackStack(dir.absolutePath, POP_BACK_STACK_INCLUSIVE)
             } else {
-                val fragment = createFileListFragmentFor(dir)
+                val fragment = FileListFragment.newInstance(dir)
+                assignCallback(fragment)
                 showFragment(oldDir, dir, fragment)
             }
 
@@ -106,10 +101,9 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
-    private fun createFileListFragmentFor(dir: File) = FileListFragment.newInstance(dir).also {
-        // set callbacks
-        it.onItemClickListener = onItemClickListener
-        it.checkedFilesRetriever = checkedFilesRetriever
+    private fun assignCallback(fragment: FileListFragment) {
+        fragment.itemClickListenerWeakRef = WeakReference(onItemClickListener)
+        fragment.checkedFilesRetrieverWeakRef = WeakReference(checkedFilesRetriever)
     }
 
     private val onItemClickListener: OnItemClickListener = { _, clickItem ->
@@ -157,9 +151,8 @@ class FileBrowserFragment : BaseFragment() {
     override fun onBackPressed(): Boolean {
         val count = childFragmentManager.backStackEntryCount
         if (count > 0) {
-            currentDir = File(childFragmentManager.getBackStackEntryAt(count - 1).name)
-            childFragmentManager.popBackStackImmediate()
-            onDirChanged?.invoke(this, currentDir!!)
+            // pop top stack
+            goto(File(childFragmentManager.getBackStackEntryAt(count - 1).name))
             return true
         }
         return super.onBackPressed()
