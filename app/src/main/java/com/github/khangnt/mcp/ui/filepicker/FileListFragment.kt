@@ -21,18 +21,15 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import timber.log.Timber
 import java.io.File
-import java.lang.ref.WeakReference
-
-typealias OnItemClickListener = (
-        fragment: FileListFragment,
-        item: File
-) -> Boolean
-
-typealias CheckedFilesRetriever = () -> List<File>
 
 private const val KEY_PATH = "FileListFragment:path"
 
 class FileListFragment : BaseFragment() {
+    interface CallbackDeclare {
+        fun onFileItemClick(fragment: FileListFragment, item: File): Boolean
+        fun getCheckedFiles(): List<File>
+    }
+
     companion object {
         fun newInstance(path: File): FileListFragment {
             return FileListFragment().apply {
@@ -51,8 +48,6 @@ class FileListFragment : BaseFragment() {
     // retains instances
     private lateinit var adapter: MixAdapter
     private lateinit var recyclerViewGroupState: RecyclerViewGroupState
-    var itemClickListenerWeakRef = WeakReference<OnItemClickListener>(null)
-    var checkedFilesRetrieverWeakRef = WeakReference<CheckedFilesRetriever>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +65,16 @@ class FileListFragment : BaseFragment() {
         reloadData()
     }
 
+    private fun getCallbackDeclaration(): CallbackDeclare {
+        return (parentFragment as? CallbackDeclare)
+                ?: throw IllegalStateException(
+                        "Parent fragment must implement FileListFragment.CallbackDeclare")
+    }
+
     private val onClickListener = { model: FileListModel, _: Int ->
         when (model.type) {
             TYPE_FOLDER, TYPE_FILE -> {
-                if (itemClickListenerWeakRef.get()?.invoke(this, model.path) == true) {
+                if (getCallbackDeclaration().onFileItemClick(this, model.path)) {
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -82,7 +83,7 @@ class FileListFragment : BaseFragment() {
     }
 
     private val checkStateFunc: (FileListModel) -> Boolean = {
-        checkedFilesRetrieverWeakRef.get()?.invoke()?.contains(it.path) == true
+        getCallbackDeclaration().getCheckedFiles().contains(it.path)
     }
 
     override fun onCreateView(

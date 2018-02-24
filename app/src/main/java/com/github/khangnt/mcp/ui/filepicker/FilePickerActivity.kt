@@ -131,7 +131,7 @@ class FilePickerActivity : SingleFragmentActivity() {
             val result = Intent()
             if (isPickFile) {
                 result.putStringArrayListExtra(FILES_RESULT,
-                        ArrayList(fileBrowserFragment.getSelectedFiles().map { it.absolutePath }))
+                        ArrayList(fileBrowserFragment.getCheckedFiles().map { it.absolutePath }))
             } else {
                 result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDir()!!.absolutePath)
             }
