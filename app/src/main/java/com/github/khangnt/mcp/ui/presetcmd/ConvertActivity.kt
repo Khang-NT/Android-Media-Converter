@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -20,12 +21,12 @@ import kotlinx.android.synthetic.main.activity_convert.*
 
 private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
-class ConvertActivity : SingleFragmentActivity() {
+class ConvertActivity : SingleFragmentActivity(), ConvertFragment.OnSubmittedListener {
 
     companion object {
-        fun launch(context: Context, presetCommandId: Int) {
-            context.startActivity(Intent(context, ConvertActivity::class.java)
-                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommandId))
+        fun launchIntent(context: Context, presetCommandId: Int): Intent {
+            return Intent(context, ConvertActivity::class.java)
+                    .putExtra(EXTRA_PRESET_COMMAND_ID, presetCommandId)
         }
     }
 
@@ -54,7 +55,7 @@ class ConvertActivity : SingleFragmentActivity() {
 
         val scrollRange by lazy { appBarLayout.totalScrollRange }
         appBarLayout.addOnOffsetChangedListener { _, offset ->
-            if (scrollRange + offset == 0){
+            if (scrollRange + offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
@@ -67,21 +68,30 @@ class ConvertActivity : SingleFragmentActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        promptExitDialog()
+        onQuit()
         return true
     }
 
     override fun onBackPressed() {
-        promptExitDialog()
+        onQuit()
     }
 
-    private fun promptExitDialog() {
-        AlertDialog.Builder(this)
-                .setTitle("Do you want to exit?")
-                .setMessage("Your settings won't be saved")
-                .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
-                .setNegativeButton(R.string.action_cancel, null)
-                .show()
+    private fun onQuit() {
+        if ((getContentFragment() as? ConvertFragment)?.shouldConfirmDiscardChanges() == true) {
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.dialog_confirm_quit_title))
+                    .setMessage(getString(R.string.dialog_confirm_quit_message))
+                    .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show()
+        } else {
+            finish()
+        }
+    }
+
+    override fun onSubmitted(fragment: ConvertFragment) {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
 }

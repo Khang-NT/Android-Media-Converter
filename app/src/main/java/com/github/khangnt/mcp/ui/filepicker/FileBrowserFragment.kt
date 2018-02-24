@@ -23,7 +23,7 @@ private const val KET_START_UP_DIR = "FileBrowserFragment:start_up_directory"
 private const val KEY_SELECTED_FILE_LIST = "FileBrowserFragment:selected_file_list"
 private const val KEY_CURRENT_DIR = "FileBrowserFragment:current_dir"
 
-class FileBrowserFragment : BaseFragment() {
+class FileBrowserFragment : BaseFragment(), FileListFragment.CallbackDeclare {
 
     companion object {
         fun newInstance(
@@ -61,14 +61,6 @@ class FileBrowserFragment : BaseFragment() {
                     ?: emptyList<String>()
             selectedFiles.addAll(list.map { File(it) })
         }
-
-        // re-attach callbacks
-        childFragmentManager.fragments.forEach { fragment ->
-            if (fragment is FileListFragment) {
-                fragment.onItemClickListener = onItemClickListener
-                fragment.checkedFilesRetriever = checkedFilesRetriever
-            }
-        }
     }
 
     override fun onCreateView(
@@ -95,10 +87,10 @@ class FileBrowserFragment : BaseFragment() {
             val oldDir = currentDir
             currentDir = dir
             val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
-            if (existsFragment != null) {
+            if (existsFragment is FileListFragment) { // implicit check !== null
                 childFragmentManager.popBackStack(dir.absolutePath, POP_BACK_STACK_INCLUSIVE)
             } else {
-                val fragment = createFileListFragmentFor(dir)
+                val fragment = FileListFragment.newInstance(dir)
                 showFragment(oldDir, dir, fragment)
             }
 
@@ -106,29 +98,23 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
-    private fun createFileListFragmentFor(dir: File) = FileListFragment.newInstance(dir).also {
-        // set callbacks
-        it.onItemClickListener = onItemClickListener
-        it.checkedFilesRetriever = checkedFilesRetriever
-    }
-
-    private val onItemClickListener: OnItemClickListener = { _, clickItem ->
-        if (clickItem.isDirectory) {
-            goto(clickItem)
+    override fun onFileItemClick(fragment: FileListFragment, item: File): Boolean {
+        return if (item.isDirectory) {
+            goto(item)
             false
-        } else if (selectedFiles.remove(clickItem)) {
+        } else if (selectedFiles.remove(item)) {
             // discard select
             onSelectedFilesChanged()
             true
         } else if (selectedFiles.size < maxFileCanSelect) {
             // remember this file is selected
-            selectedFiles.add(clickItem)
+            selectedFiles.add(item)
             onSelectedFilesChanged()
             true
         } else if (removeOldest && selectedFiles.isNotEmpty()) {
             // exceed max file can select -> remove oldest file
             selectedFiles.removeAt(0)
-            selectedFiles.add(clickItem)
+            selectedFiles.add(item)
             onSelectedFilesChanged()
             true
         } else {
@@ -137,11 +123,9 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
-    fun getSelectedFiles(): List<File> = selectedFilesReadOnly
+    override fun getCheckedFiles(): List<File> = selectedFilesReadOnly
 
     fun getCurrentDir(): File? = currentDir
-
-    private val checkedFilesRetriever: CheckedFilesRetriever = { selectedFilesReadOnly }
 
     private fun showFragment(oldDir: File?, dir: File, fileListFragment: FileListFragment) {
         childFragmentManager.beginTransaction()
@@ -157,9 +141,8 @@ class FileBrowserFragment : BaseFragment() {
     override fun onBackPressed(): Boolean {
         val count = childFragmentManager.backStackEntryCount
         if (count > 0) {
-            currentDir = File(childFragmentManager.getBackStackEntryAt(count - 1).name)
-            childFragmentManager.popBackStackImmediate()
-            onDirChanged?.invoke(this, currentDir!!)
+            // pop top stack
+            goto(File(childFragmentManager.getBackStackEntryAt(count - 1).name))
             return true
         }
         return super.onBackPressed()

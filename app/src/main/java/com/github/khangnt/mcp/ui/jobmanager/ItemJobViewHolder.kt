@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
@@ -46,7 +47,17 @@ data class JobModel(val job: Job) : AdapterModel, HasIdLong {
 }
 
 private val cacheOutputPath = SparseArray<String>()
-private val vmPolicyBackup: StrictMode.VmPolicy = StrictMode.getVmPolicy()
+private val disabledFileExposedStrictMode by lazy {
+    // disable strict mode to enable ability sharing file://
+    // this only run once,
+    catchAll {
+        if (Build.VERSION.SDK_INT >= 24) {
+            val m = StrictMode::class.java.getMethod("disableDeathOnFileUriExposure")
+            m.invoke(null)
+        }
+    }
+    true
+}
 
 class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
 
@@ -104,9 +115,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                     .putExtra(Intent.EXTRA_STREAM, outputUri)
                     .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.share_file_subject))
             grantWritePermission(outputUri, intent)
-            disableStrictMode()
-            context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_chooser)))
-            restoreStrictMode()
+            if (disabledFileExposedStrictMode) {
+                context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_chooser)))
+            }
         }
         ivOpen.setOnClickListener {
             var outputUri = Uri.parse(currentJob!!.command.output)
@@ -125,9 +136,10 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             grantWritePermission(outputUri, intent)
 
-            disableStrictMode()
-            context.startActivity(Intent.createChooser(intent, context.getString(R.string.open_file_chooser)))
-            restoreStrictMode()
+            if (disabledFileExposedStrictMode) {
+                context.startActivity(Intent.createChooser(intent,
+                        context.getString(R.string.open_file_chooser)))
+            }
         }
         ivOpenFolder.setOnClickListener {
             val path = getPath(currentJob!!)
@@ -139,19 +151,18 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                 val intent = Intent(Intent.ACTION_VIEW)
                         .setDataAndType(Uri.fromFile(folder), "resource/folder")
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                disableStrictMode()
-                try {
-                    context.startActivity(intent)
-                    restoreStrictMode()
-                    return@setOnClickListener
-                } catch (ignore: ActivityNotFoundException) {
-                }
+                if (disabledFileExposedStrictMode) {
+                    try {
+                        context.startActivity(intent)
+                        return@setOnClickListener
+                    } catch (ignore: ActivityNotFoundException) {
+                    }
 
-                // otherwise, use mime type "*/*"
-                intent.setDataAndType(Uri.fromFile(folder), "*/*")
-                context.startActivity(Intent.createChooser(intent,
-                        context.getString(R.string.open_folder_chooser, folder.absolutePath)))
-                restoreStrictMode()
+                    // otherwise, use mime type "*/*"
+                    intent.setDataAndType(Uri.fromFile(folder), "*/*")
+                    context.startActivity(Intent.createChooser(intent,
+                            context.getString(R.string.open_folder_chooser, folder.absolutePath)))
+                }
             }
         }
         ivDeleteFile.setOnClickListener {
@@ -178,15 +189,6 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
                 }
             }
         }
-    }
-
-    private fun disableStrictMode() {
-        val builder = StrictMode.VmPolicy.Builder()
-        StrictMode.setVmPolicy(builder.build())
-    }
-
-    private fun restoreStrictMode() {
-        StrictMode.setVmPolicy(vmPolicyBackup)
     }
 
     private fun getPath(job: Job): String? {
@@ -268,8 +270,8 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
 
     private fun getOutputFormatAlias(outputFormat: String): String {
         val outputFmtUpperCase = outputFormat.toUpperCase()
-        return when(outputFmtUpperCase) {
-            "MATROSKA" ->  "MKV"
+        return when (outputFmtUpperCase) {
+            "MATROSKA" -> "MKV"
             "WEBVTT" -> "WVTT"
             else -> outputFmtUpperCase.take(4)
         }

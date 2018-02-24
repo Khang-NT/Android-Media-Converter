@@ -22,16 +22,14 @@ import kotlinx.android.synthetic.main.fragment_file_list.*
 import timber.log.Timber
 import java.io.File
 
-typealias OnItemClickListener = (
-        fragment: FileListFragment,
-        item: File
-) -> Boolean
-
-typealias CheckedFilesRetriever = () -> List<File>
-
 private const val KEY_PATH = "FileListFragment:path"
 
 class FileListFragment : BaseFragment() {
+    interface CallbackDeclare {
+        fun onFileItemClick(fragment: FileListFragment, item: File): Boolean
+        fun getCheckedFiles(): List<File>
+    }
+
     companion object {
         fun newInstance(path: File): FileListFragment {
             return FileListFragment().apply {
@@ -47,19 +45,13 @@ class FileListFragment : BaseFragment() {
     private val path: File by lazy { File(arguments!!.getString(KEY_PATH)) }
     private val createFolderItem = FileListModel(File("+folder"), TYPE_CREATE_FOLDER)
 
+    // retains instances
     private lateinit var adapter: MixAdapter
     private lateinit var recyclerViewGroupState: RecyclerViewGroupState
-
-    lateinit var onItemClickListener: OnItemClickListener
-    lateinit var checkedFilesRetriever: CheckedFilesRetriever
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-
-        if (!(::onItemClickListener.isInitialized && ::checkedFilesRetriever.isInitialized)) {
-            throw IllegalStateException("Must initialize onItemClickListener & checkedFilesRetriever")
-        }
 
         adapter = MixAdapter.Builder("FileListFragment")
                 .register(FileListModel::class.java, { inflater, parent ->
@@ -73,10 +65,16 @@ class FileListFragment : BaseFragment() {
         reloadData()
     }
 
+    private fun getCallbackDeclaration(): CallbackDeclare {
+        return (parentFragment as? CallbackDeclare)
+                ?: throw IllegalStateException(
+                        "Parent fragment must implement FileListFragment.CallbackDeclare")
+    }
+
     private val onClickListener = { model: FileListModel, _: Int ->
         when (model.type) {
             TYPE_FOLDER, TYPE_FILE -> {
-                if (onItemClickListener(this, model.path)) {
+                if (getCallbackDeclaration().onFileItemClick(this, model.path)) {
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -84,7 +82,9 @@ class FileListFragment : BaseFragment() {
         }
     }
 
-    private val checkStateFunc: (FileListModel) -> Boolean = { checkedFilesRetriever().contains(it.path) }
+    private val checkStateFunc: (FileListModel) -> Boolean = {
+        getCallbackDeclaration().getCheckedFiles().contains(it.path)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -127,7 +127,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.any { it != PERMISSION_GRANTED  }) {
+        if (grantResults.any { it != PERMISSION_GRANTED }) {
             recyclerViewGroupState.error(getString(R.string.user_denied_permission))
         } else {
             reloadData()
