@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import java.io.File
-import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,7 +23,7 @@ private const val KET_START_UP_DIR = "FileBrowserFragment:start_up_directory"
 private const val KEY_SELECTED_FILE_LIST = "FileBrowserFragment:selected_file_list"
 private const val KEY_CURRENT_DIR = "FileBrowserFragment:current_dir"
 
-class FileBrowserFragment : BaseFragment() {
+class FileBrowserFragment : BaseFragment(), FileListFragment.CallbackDeclare {
 
     companion object {
         fun newInstance(
@@ -89,11 +88,9 @@ class FileBrowserFragment : BaseFragment() {
             currentDir = dir
             val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
             if (existsFragment is FileListFragment) { // implicit check !== null
-                assignCallback(existsFragment)
                 childFragmentManager.popBackStack(dir.absolutePath, POP_BACK_STACK_INCLUSIVE)
             } else {
                 val fragment = FileListFragment.newInstance(dir)
-                assignCallback(fragment)
                 showFragment(oldDir, dir, fragment)
             }
 
@@ -101,28 +98,23 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
-    private fun assignCallback(fragment: FileListFragment) {
-        fragment.itemClickListenerWeakRef = WeakReference(onItemClickListener)
-        fragment.checkedFilesRetrieverWeakRef = WeakReference(checkedFilesRetriever)
-    }
-
-    private val onItemClickListener: OnItemClickListener = { _, clickItem ->
-        if (clickItem.isDirectory) {
-            goto(clickItem)
+    override fun onFileItemClick(fragment: FileListFragment, item: File): Boolean {
+        return if (item.isDirectory) {
+            goto(item)
             false
-        } else if (selectedFiles.remove(clickItem)) {
+        } else if (selectedFiles.remove(item)) {
             // discard select
             onSelectedFilesChanged()
             true
         } else if (selectedFiles.size < maxFileCanSelect) {
             // remember this file is selected
-            selectedFiles.add(clickItem)
+            selectedFiles.add(item)
             onSelectedFilesChanged()
             true
         } else if (removeOldest && selectedFiles.isNotEmpty()) {
             // exceed max file can select -> remove oldest file
             selectedFiles.removeAt(0)
-            selectedFiles.add(clickItem)
+            selectedFiles.add(item)
             onSelectedFilesChanged()
             true
         } else {
@@ -131,11 +123,9 @@ class FileBrowserFragment : BaseFragment() {
         }
     }
 
-    fun getSelectedFiles(): List<File> = selectedFilesReadOnly
+    override fun getCheckedFiles(): List<File> = selectedFilesReadOnly
 
     fun getCurrentDir(): File? = currentDir
-
-    private val checkedFilesRetriever: CheckedFilesRetriever = { selectedFilesReadOnly }
 
     private fun showFragment(oldDir: File?, dir: File, fileListFragment: FileListFragment) {
         childFragmentManager.beginTransaction()
