@@ -39,6 +39,8 @@ class SingleInputOutputFragment : BaseFragment() {
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
     private var outputFolderUri: Uri? = null
 
+    var autoFillExt: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState !== null) {
@@ -156,7 +158,7 @@ class SingleInputOutputFragment : BaseFragment() {
 
                     if (edOutputName.text.isEmpty()) {
                         // auto fill output file name
-                        edOutputName.setText("${File(it).nameWithoutExtension}.mp3")
+                        edOutputName.setText("${File(it).nameWithoutExtension}.${autoFillExt!!}")
                     }
                 }
             }

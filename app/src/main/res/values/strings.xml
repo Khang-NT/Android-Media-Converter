@@ -84,6 +84,9 @@
     <string name="preset_command_convert_mp3_title">Convert MP3</string>
     <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily.</string>
 
+    <string name="preset_command_convert_aac_title">Convert AAC</string>
+    <string name="preset_command_convert_aac_des">Advanced Audio Coding (AAC) designed to be the successor of the MP3 format.</string>
+
     <string name="add_job_message">New job has been added to queue!</string>
     <string name="ac_view">View</string>
 

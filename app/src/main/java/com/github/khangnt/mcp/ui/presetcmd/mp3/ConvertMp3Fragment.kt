@@ -22,6 +22,7 @@ import timber.log.Timber
  * ffmpeg -i input -codec:a libshine -b:a 256k mp3 output.mp3
  */
 class ConvertMp3Fragment : ConvertFragment() {
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -35,12 +36,14 @@ class ConvertMp3Fragment : ConvertFragment() {
                 "120-150", "100-130", "80-120", "70-105", "45-85"
         )
 
-        private val cbrMin = 45  // 45 kbps
-        private val cbrMax = 320 // 320 kbps
+        private const val CBR_MIN = 45  // 45 kbps
+        private const val CBR_MAX = 320 // 320 kbps
+        private const val CBR_RECOMMEND = 256
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getIoFragment().autoFillExt = "mp3"
         sbQuality.onSeekBarChanged { updateQualityText() }
         spinnerEncoder.onItemSelected { position ->
             when (position) {
@@ -52,9 +55,9 @@ class ConvertMp3Fragment : ConvertFragment() {
                     }
                 }
                 1 -> {
-                    if (sbQuality.max != cbrMax - cbrMin) {
-                        sbQuality.max = cbrMax - cbrMin
-                        sbQuality.progress = 256 - cbrMin
+                    if (sbQuality.max != CBR_MAX - CBR_MIN) {
+                        sbQuality.max = CBR_MAX - CBR_MIN
+                        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
                     }
                 }
             }
@@ -73,7 +76,7 @@ class ConvertMp3Fragment : ConvertFragment() {
         if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
             tvQualityValue.text = "${libMp3LameQuality[9 - sbQuality.progress]} kbps"
         } else {
-            tvQualityValue.text = "${sbQuality.progress + cbrMin} kbps"
+            tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
         }
     }
 
@@ -88,7 +91,7 @@ class ConvertMp3Fragment : ConvertFragment() {
             if (spinnerEncoder.selectedItemPosition == 0) {
                 cmdArgsBuilder.append("libmp3lame -q:a ${9 - sbQuality.progress} ")
             } else {
-                cmdArgsBuilder.append("libshine -b:a ${cbrMin + sbQuality.progress}k ")
+                cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
             }
 
             ConverterService.newJob(
