@@ -3,6 +3,7 @@ package com.github.khangnt.mcp
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import com.github.khangnt.mcp.ui.presetcmd.aac.ConvertAacFragment
+import com.github.khangnt.mcp.ui.presetcmd.flac.ConvertFlacFragment
 import com.github.khangnt.mcp.ui.presetcmd.mp3.ConvertMp3Fragment
 
 const val TYPE_AUDIO = 0
@@ -31,6 +32,12 @@ enum class PresetCommand(
             titleRes = R.string.preset_command_convert_aac_title,
             descriptionRes = R.string.preset_command_convert_aac_des,
             convertFragmentFactory = ::ConvertAacFragment
+    ),
+    CONVERT_FLAC(
+            type = TYPE_AUDIO, shortName = "FLAC", colors = colorArrayOf(0xff74ebd5, 0xffACB6E5), // DigitalWater
+            titleRes = R.string.preset_command_convert_flac_title,
+            descriptionRes = R.string.preset_command_convert_flac_des,
+            convertFragmentFactory = ::ConvertFlacFragment
     )
     ;
 }
