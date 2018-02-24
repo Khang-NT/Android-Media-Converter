@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_convert.*
 
 private const val EXTRA_PRESET_COMMAND_ID = "ConvertActivity:preset_command_id"
 
-class ConvertActivity : SingleFragmentActivity() {
+class ConvertActivity : SingleFragmentActivity(), ConvertFragment.OnSubmittedListener {
 
     companion object {
         fun launchIntent(context: Context, presetCommandId: Int): Intent {
@@ -76,16 +77,21 @@ class ConvertActivity : SingleFragmentActivity() {
     }
 
     private fun onQuit() {
-        if ((getContentFragment() as? ConvertFragment)?.shouldQuit() != false) {
-            finish()
-        } else {
+        if ((getContentFragment() as? ConvertFragment)?.shouldConfirmDiscardChanges() == true) {
             AlertDialog.Builder(this)
                     .setTitle(getString(R.string.dialog_confirm_quit_title))
                     .setMessage(getString(R.string.dialog_confirm_quit_message))
                     .setPositiveButton(R.string.action_yes, { _, _ -> finish() })
                     .setNegativeButton(R.string.action_cancel, null)
                     .show()
+        } else {
+            finish()
         }
+    }
+
+    override fun onSubmitted(fragment: ConvertFragment) {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
 }

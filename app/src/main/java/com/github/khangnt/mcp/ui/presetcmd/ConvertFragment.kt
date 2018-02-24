@@ -8,15 +8,19 @@ import com.github.khangnt.mcp.ui.BaseFragment
  */
 
 abstract class ConvertFragment: BaseFragment() {
+
+    interface OnSubmittedListener {
+        fun onSubmitted(fragment: ConvertFragment)
+    }
+
     /**
      * If this fragment is attached to [ConvertActivity], every time user want to quit, the activity
-     * will call this method to check if it's safe to quit immediately or not.
-     * Activity should ask user to confirm when it's not safe to quit.
+     * will call this method to check whether this ConvertFragment has modified data or not.
      *
-     * Return false if fragment state is valuable, and user need to confirm before quit.
-     * Otherwise return true. Default implement always return true.
+     * Return true if Activity should ask user to confirm to discard changes.
+     * Otherwise return false. (default return false)
      */
-    open fun shouldQuit(): Boolean {
-        return true
+    open fun shouldConfirmDiscardChanges(): Boolean {
+        return false
     }
 }
