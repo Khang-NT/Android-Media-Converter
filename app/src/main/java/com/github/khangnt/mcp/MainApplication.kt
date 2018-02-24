@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp
 
 import android.app.Application
+import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.util.IMMLeaks
 import com.liulishuo.filedownloader.FileDownloader
@@ -18,6 +19,8 @@ class MainApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setupStrictMode()
+
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -42,4 +45,23 @@ class MainApplication: Application() {
         }
     }
 
+    private fun setupStrictMode() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyFlashScreen()
+                    .penaltyLog()
+                    .build())
+            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .detectActivityLeaks()
+                    .penaltyLog()
+                    .build())
+        } else {
+            // on release, don't detect any thing
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().build())
+            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().penaltyLog().build())
+        }
+    }
 }

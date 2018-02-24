@@ -11,7 +11,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingBottom="@dimen/margin_normal">
 
         <LinearLayout
@@ -100,13 +100,12 @@
             android:layout_height="32dp"
             android:layout_marginLeft="@dimen/margin_normal"
             android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="4dp"
             android:src="@drawable/console"
             android:tint="@color/gray_600"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobLocation"/>
+            app:layout_constraintTop_toTopOf="@id/buttonLayout"/>
 
         <LinearLayout
             android:id="@+id/buttonLayout"
@@ -115,10 +114,11 @@
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginRight="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_normal"
-            android:gravity="end"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobLocation">
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation"
+            app:layout_constraintVertical_bias="1">
 
             <ImageView
                 android:id="@+id/ivShare"

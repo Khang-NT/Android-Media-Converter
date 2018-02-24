@@ -15,11 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
-import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FILES_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
 import com.github.khangnt.mcp.ui.presetcmd.ConvertActivity
+import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.util.*
 import com.github.khangnt.mcp.worker.ConverterService
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
@@ -32,7 +32,7 @@ import java.io.File
  * Or with libshine encoder:
  * ffmpeg -i input -codec:a libshine -b:a 256k mp3 output.mp3
  */
-class ConvertMp3Fragment : BaseFragment() {
+class ConvertMp3Fragment : ConvertFragment() {
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -222,6 +222,7 @@ class ConvertMp3Fragment : BaseFragment() {
                 outputFormat = "mp3"
         )
 
+        (activity as? ConvertActivity)?.setResult(Activity.RESULT_OK)
         (activity as? ConvertActivity)?.finish()
     }
 
@@ -261,6 +262,12 @@ class ConvertMp3Fragment : BaseFragment() {
             return getString(R.string.error_file_name_empty)
         }
         return null
+    }
+
+    override fun shouldQuit(): Boolean {
+        return edOutputName.text.isEmpty() &&
+                edInput0.text.isEmpty() &&
+                outputFolderUri?.toString() == sharedPrefs.lastOutputFolderUri
     }
 
 }

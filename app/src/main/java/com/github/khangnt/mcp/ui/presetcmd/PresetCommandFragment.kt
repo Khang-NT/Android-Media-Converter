@@ -1,6 +1,9 @@
 package com.github.khangnt.mcp.ui.presetcmd
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +13,8 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.TYPE_AUDIO
 import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.AdapterModel
-import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
-import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.ui.MainActivity
+import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.util.getSpanCount
 import kotlinx.android.synthetic.main.fragment_preset_command.*
@@ -22,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_preset_command.*
  * Created by Khang NT on 1/6/18.
  * Email: khang.neon.1997@gmail.com
  */
+
+private const val RC_CONVERT_ACTIVITY = 9
 
 class PresetCommandFragment : BaseFragment() {
 
@@ -33,11 +36,11 @@ class PresetCommandFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = MixAdapter.Builder()
-                .register(PresetCommandModel::class.java, ItemPresetCommandViewHolder.FACTORY)
+                .register(PresetCommandModel::class.java, presetCommandViewHolderFactory)
                 .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
                 .build()
 
-        val data: MutableList<AdapterModel> = mutableListOf<AdapterModel>()
+        val data: MutableList<AdapterModel> = mutableListOf()
         val audioPresetCmds = PresetCommand.values().filter { it.type == TYPE_AUDIO }
         val videoPresetCmds = PresetCommand.values().filter { it.type == TYPE_VIDEO }
         if (audioPresetCmds.isNotEmpty()) {
@@ -49,6 +52,15 @@ class PresetCommandFragment : BaseFragment() {
             data.addAll(videoPresetCmds.map { PresetCommandModel(it) })
         }
         adapter.setData(data)
+    }
+
+    private val presetCommandViewHolderFactory: ViewHolderFactory = { inflater, parent ->
+        val itemView = inflater.inflate(R.layout.item_preset_command, parent, false)
+        val onItemClick = { presetCommand: PresetCommand ->
+            val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
+            startActivityForResult(intent, RC_CONVERT_ACTIVITY)
+        }
+        ItemPresetCommandViewHolder(itemView, onItemClick)
     }
 
     override fun onCreateView(
@@ -78,4 +90,17 @@ class PresetCommandFragment : BaseFragment() {
         recyclerViewGroup.successHasData()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+        if (requestCode == RC_CONVERT_ACTIVITY) {
+            Snackbar.make(recyclerViewGroup, R.string.add_job_message, Snackbar.LENGTH_SHORT)
+                    .setAction(getString(R.string.ac_view), {
+                        startActivity(MainActivity.openJobManagerIntent(it.context))
+                    })
+                    .show()
+        }
+    }
 }

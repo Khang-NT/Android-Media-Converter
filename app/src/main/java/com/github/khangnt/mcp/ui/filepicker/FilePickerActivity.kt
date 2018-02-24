@@ -4,17 +4,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import com.github.khangnt.mcp.util.catchAll
 import kotlinx.android.synthetic.main.activity_file_picker.*
+import timber.log.Timber
 import java.io.File
+import java.util.*
+
 
 /**
  * Created by Khang NT on 1/30/18.
@@ -125,7 +131,7 @@ class FilePickerActivity : SingleFragmentActivity() {
             val result = Intent()
             if (isPickFile) {
                 result.putStringArrayListExtra(FILES_RESULT,
-                        ArrayList(fileBrowserFragment.getSelectedFiles().map { it.absolutePath }))
+                        ArrayList(fileBrowserFragment.getCheckedFiles().map { it.absolutePath }))
             } else {
                 result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDir()!!.absolutePath)
             }
@@ -151,7 +157,7 @@ class FilePickerActivity : SingleFragmentActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_file_picker, menu)
-        val isKitkat = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
+        val isKitkat = SDK_INT == Build.VERSION_CODES.KITKAT
         menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat && sdCardPath.isNotEmpty()
         return true
     }
@@ -175,7 +181,7 @@ class FilePickerActivity : SingleFragmentActivity() {
                             .setSingleChoiceItems(options, -1, { _, which ->
                                 selected[0] = which
                             })
-                            .setPositiveButton(R.string.action_ok, {_, _ ->
+                            .setPositiveButton(R.string.action_ok, { _, _ ->
                                 if (selected[0] > -1) {
                                     fragment?.goto(sdCardPath[selected[0]])
                                 }
@@ -191,13 +197,35 @@ class FilePickerActivity : SingleFragmentActivity() {
 
     private val sdCardPath: Array<File> by lazy {
         // try to find sd card path if any
-        val envExternalStorage = Environment.getExternalStorageDirectory()
-        val secondaryStorage = catchAll { System.getenv("SECONDARY_STORAGE") }
-        secondaryStorage?.split(":")
-                ?.dropLastWhile { it.isEmpty() }
-                ?.map { File(it) }
-                ?.filter { file -> file != envExternalStorage && catchAll { file.canRead() } == true }
-                ?.toTypedArray()
-                ?: emptyArray()
+        return@lazy try {
+            getStorageDirectories().map { File(it) }.toTypedArray()
+        } catch (error: Throwable) {
+            Timber.d(error, "Failed to detect SD card")
+            emptyArray<File>()
+        }
+    }
+
+    private fun getStorageDirectories(): List<String> {
+        val rawSecondaryStorage = catchAll { System.getenv("SECONDARY_STORAGE") } ?: ""
+
+        if (SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            val results = ArrayList<String>()
+            val externalDirs = applicationContext.getExternalFilesDirs(null) ?: emptyArray()
+            for (file in externalDirs) {
+                if (!file.path.contains("/Android")) continue
+                val path = file.path.split("/Android")[0]
+                if (SDK_INT >= LOLLIPOP && Environment.isExternalStorageRemovable(file)
+                        || rawSecondaryStorage.contains(path)) {
+                    results.add(path)
+                }
+            }
+            return results
+        } else {
+            if (!TextUtils.isEmpty(rawSecondaryStorage)) {
+                return rawSecondaryStorage.split(":")
+                        .filter { it.isNotEmpty() }
+            }
+        }
+        return emptyList()
     }
 }
