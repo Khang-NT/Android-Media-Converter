@@ -89,5 +89,8 @@
 
     <string name="dialog_confirm_quit_title">Do you want to exit?</string>
     <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
+    <string name="mp3_encoder_header">MP3 Encoder:</string>
+    <string name="quality_header">Quality:</string>
+    <string name="start_conversion_button">Start conversion</string>
 
 </resources>
