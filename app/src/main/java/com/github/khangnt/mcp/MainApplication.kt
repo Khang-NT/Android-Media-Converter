@@ -8,6 +8,8 @@ import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.database.NoDatabaseImpl
 import com.squareup.leakcanary.LeakCanary
 import io.fabric.sdk.android.Fabric
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 
 /**
@@ -43,6 +45,8 @@ class MainApplication: Application() {
         } else {
             Timber.plant(CrashlyticsTree())
         }
+
+        setUpRxPlugins()
     }
 
     private fun setupStrictMode() {
@@ -62,6 +66,17 @@ class MainApplication: Application() {
             // on release, don't detect any thing
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().build())
             StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().penaltyLog().build())
+        }
+    }
+
+    private fun setUpRxPlugins() {
+        RxJavaPlugins.setErrorHandler { throwable ->
+            Timber.d(throwable)
+            if (throwable is UndeliverableException) {
+                reportNonFatal(throwable.cause!!, "rx_undeliverable_exception")
+            } else {
+                reportNonFatal(throwable, "rx_undeliverable_exception")
+            }
         }
     }
 }
