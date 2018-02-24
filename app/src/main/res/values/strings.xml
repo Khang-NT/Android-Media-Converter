@@ -82,18 +82,23 @@
     <string name="action_rename">Rename</string>
 
     <string name="preset_command_convert_mp3_title">Convert MP3</string>
-    <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily.</string>
+    <string name="preset_command_convert_mp3_des">Convert any video or audio file to MP3 format easily</string>
 
     <string name="preset_command_convert_aac_title">Convert AAC</string>
-    <string name="preset_command_convert_aac_des">Advanced Audio Coding (AAC) designed to be the successor of the MP3 format.</string>
+    <string name="preset_command_convert_aac_des">Advanced Audio Coding (AAC) designed to be the successor of the MP3 format</string>
+
+    <string name="preset_command_convert_flac_title">Convert FLAC</string>
+    <string name="preset_command_convert_flac_des">Converts without any loss in quality with FLAC encoder - Free lossless Audio Codec</string>
 
     <string name="add_job_message">New job has been added to queue!</string>
     <string name="ac_view">View</string>
 
     <string name="dialog_confirm_quit_title">Do you want to exit?</string>
     <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
+
     <string name="mp3_encoder_header">MP3 Encoder:</string>
     <string name="quality_header">Quality:</string>
+    <string name="compression_level_header">Compression level:</string>
     <string name="start_conversion_button">Start conversion</string>
 
 </resources>

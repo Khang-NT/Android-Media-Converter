@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.presetcmd.aac
+package com.github.khangnt.mcp.ui.presetcmd.flac
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,7 +10,7 @@ import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import com.github.khangnt.mcp.worker.ConverterService
-import kotlinx.android.synthetic.main.fragment_convert_aac.*
+import kotlinx.android.synthetic.main.fragment_convert_flac.*
 import timber.log.Timber
 
 /**
@@ -18,26 +18,18 @@ import timber.log.Timber
  * Email: khang.neon.1997@gmail.com
  */
 
-class ConvertAacFragment : ConvertFragment() {
-
-    companion object {
-        private const val CBR_MIN = 45  // 45 kbps
-        private const val CBR_MAX = 320 // 320 kbps
-        private const val CBR_RECOMMEND = 256
-    }
+class ConvertFlacFragment : ConvertFragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_convert_aac, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_convert_flac, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getIoFragment().autoFillExt = "m4a"
-        sbQuality.max = CBR_MAX - CBR_MIN
-        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
-        sbQuality.onSeekBarChanged { updateQualityText() }
+        getIoFragment().autoFillExt = "flac"
+        sbCompressionLevel.onSeekBarChanged { updateQualityText() }
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
 
@@ -48,7 +40,7 @@ class ConvertAacFragment : ConvertFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
-        tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
+        tvCompressionLevel.text = "${sbCompressionLevel.progress}"
     }
 
     private fun getIoFragment(): SingleInputOutputFragment {
@@ -59,8 +51,8 @@ class ConvertAacFragment : ConvertFragment() {
     private fun validateAndStartConversion() {
         getIoFragment().validateAndGetInputOutputData { inputOutputData ->
             val cmdArgsBuilder = StringBuffer()
-            cmdArgsBuilder.append("-hide_banner -map 0:a -map_metadata 0:g -codec:a aac ")
-                    .append("-b:a ${CBR_MIN + sbQuality.progress}k ")
+            cmdArgsBuilder.append("-hide_banner -map 0:a -map_metadata 0:g -codec:a flac ")
+                    .append("-compression_level ${sbCompressionLevel.progress} ")
 
             ConverterService.newJob(
                     context!!,
@@ -68,7 +60,7 @@ class ConvertAacFragment : ConvertFragment() {
                     inputs = listOf(inputOutputData.inputUri),
                     args = cmdArgsBuilder.toString(),
                     outputUri = inputOutputData.outputUri,
-                    outputFormat = "ipod"
+                    outputFormat = "flac"
             )
 
             (activity as? OnSubmittedListener)?.onSubmitted(this)
