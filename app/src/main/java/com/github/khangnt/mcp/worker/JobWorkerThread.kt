@@ -237,7 +237,7 @@ class JobWorkerThread(
                         }
                         Timber.d(line)
                         catchAll(printLog = true) {
-                            if (fileSize <= 500) {  // 500 KB
+                            if (fileSize <= 50) {  // 50 KB
                                 logFileOutputStream?.appendln(line)
                                 logFileOutputStream?.flush()
                             }
