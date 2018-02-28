@@ -64,7 +64,7 @@ android {
         }
     }
 
-    final _versionCode = 21
+    final _versionCode = 22
 
     flavorDimensions 'cpuArch'
     productFlavors {
