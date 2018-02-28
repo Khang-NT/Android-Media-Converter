@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.google.apis:google-api-services-androidpublisher:v2-rev49-1.23.0'
+        classpath 'com.google.apis:google-api-services-androidpublisher:v2-rev54-1.23.0'
     }
 }
 
