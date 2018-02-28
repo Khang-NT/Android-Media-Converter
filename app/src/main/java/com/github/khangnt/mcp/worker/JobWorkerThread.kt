@@ -22,8 +22,6 @@ import java.io.*
  * Email: khang.neon.1997@gmail.com
  */
 
-private var logFile: File? = null
-
 class JobWorkerThread(
         private val appContext: Context,
         private var job: Job,
@@ -44,6 +42,7 @@ class JobWorkerThread(
         }
     }
 
+    private var logFile: File? = null
     private var jobTempDir: File? = null
 
     override fun run() {
@@ -180,7 +179,7 @@ class JobWorkerThread(
         reportNonFatal(error, "JobWorkerThread#onError", message)
     }
 
-    private class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
+    private inner class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
         private val regex = Regex("(\\w+=\\s*([^\\s]+))")
         private val durationRe = Regex("Duration:\\s(\\d\\d:\\d\\d:\\d\\d)")
         var lastLine: String? = null

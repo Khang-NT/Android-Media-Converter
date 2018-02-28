@@ -78,6 +78,11 @@ class JobManagerFragment : BaseFragment() {
             }
         }
         recyclerViewGroupState.bind(recyclerViewGroup, adapter, lm)
+        /*
+         * Experiment to fix issue: https://issuetracker.google.com/issues/37132919
+         * The reason maybe adapter's data refresh during configuration change.
+         */
+        adapter.notifyDataSetChanged()
     }
 
     override fun onResume() {

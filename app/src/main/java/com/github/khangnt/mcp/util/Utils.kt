@@ -104,13 +104,18 @@ fun File.ensureDirExists(): File {
 
 fun File.deleteRecursiveIgnoreError() {
     if (isDirectory) {
-        (listFiles() as? Array<File>)?.forEach { it.deleteRecursiveIgnoreError() }
+        listFilesNotNull().forEach { it.deleteRecursiveIgnoreError() }
     }
     catchAll { this.delete() }
 }
 
 fun File.deleteIgnoreError() {
     catchAll { delete() }
+}
+
+fun File.listFilesNotNull(): Array<File> {
+    val files: Array<File>? = listFiles()
+    return files ?: emptyArray()
 }
 
 fun String.parseInputUri(): Uri {
