@@ -185,6 +185,7 @@ class JobWorkerThread(
         var lastLine: String? = null
         var durationSeconds: Long? = null
         var fileSize: Int = 0
+        var skippedLine: Int = 0
 
         init {
             jobManager.recordLiveLog("")
@@ -240,13 +241,17 @@ class JobWorkerThread(
                             if (fileSize <= 50) {  // 50 KB
                                 logFileOutputStream?.appendln(line)
                                 logFileOutputStream?.flush()
+                            } else {
+                                skippedLine++
                             }
                         }
                     }
                 }
             }
-            logFileOutputStream?.appendln("[...]\n" + lastLine)
-            logFileOutputStream?.flush()
+            if (skippedLine > 0) {
+                logFileOutputStream?.appendln("[...]\n$skippedLine lines was skipped\n[...]\n$lastLine")
+                logFileOutputStream?.flush()
+            }
             logFileOutputStream.closeQuietly()
             jobManager.recordLiveLog("")
         }
