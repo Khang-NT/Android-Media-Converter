@@ -120,7 +120,7 @@ class PublishTask extends DefaultTask {
             println(apk)
             // update mapping file
             println("Start uploading ${publishConfig.mappings[index]}")
-            def mappingFileContent = new FileContent('text/plain', publishConfig.mappings[index])
+            def mappingFileContent = new FileContent('application/octet-stream', publishConfig.mappings[index])
             def mappingFile = edits.deobfuscationfiles().upload(publishConfig.packageName,
                     editId, apk.getVersionCode(), "proguard", mappingFileContent).execute()
             println("Upload mapping file success  ${publishConfig.mappings[index]}")
