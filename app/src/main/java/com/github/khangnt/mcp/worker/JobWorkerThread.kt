@@ -184,6 +184,7 @@ class JobWorkerThread(
         private val durationRe = Regex("Duration:\\s(\\d\\d:\\d\\d:\\d\\d)")
         var lastLine: String? = null
         var durationSeconds: Long? = null
+        var fileSize: Int = 0
 
         init {
             jobManager.recordLiveLog("")
@@ -198,6 +199,7 @@ class JobWorkerThread(
                 InputStreamReader(input).use { inputReader ->
                     inputReader.forEachLine { line ->
                         lastLine = line
+                        fileSize = (logFile?.length()?.div(1024))!!.toInt()
 
                         if (durationSeconds === null && !converting) {
                             durationRe.find(line)?.let { match ->
@@ -235,12 +237,16 @@ class JobWorkerThread(
                         }
                         Timber.d(line)
                         catchAll(printLog = true) {
-                            logFileOutputStream?.appendln(line)
-                            logFileOutputStream?.flush()
+                            if (fileSize <= 500) {  // 500 KB
+                                logFileOutputStream?.appendln(line)
+                                logFileOutputStream?.flush()
+                            }
                         }
                     }
                 }
             }
+            logFileOutputStream?.appendln("[...]\n" + lastLine)
+            logFileOutputStream?.flush()
             logFileOutputStream.closeQuietly()
             jobManager.recordLiveLog("")
         }
