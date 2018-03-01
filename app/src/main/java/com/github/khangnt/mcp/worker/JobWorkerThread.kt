@@ -17,10 +17,7 @@ import com.github.khangnt.mcp.util.deleteRecursiveIgnoreError
 import timber.log.Timber
 import java.io.*
 
-/**
- * Created by Khang NT on 1/3/18.
- * Email: khang.neon.1997@gmail.com
- */
+private const val MAX_LOG_FILE_SIZE = 50 * 1024 // 50 KB
 
 class JobWorkerThread(
         private val appContext: Context,
@@ -180,10 +177,15 @@ class JobWorkerThread(
     }
 
     private inner class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
+
         private val regex = Regex("(\\w+=\\s*([^\\s]+))")
         private val durationRe = Regex("Duration:\\s(\\d\\d:\\d\\d:\\d\\d)")
+        private var fileSize: Int = 0
+        private var skippedLine: Int = 0
+        private var durationSeconds: Long? = null
+
         var lastLine: String? = null
-        var durationSeconds: Long? = null
+
 
         init {
             jobManager.recordLiveLog("")
@@ -191,7 +193,14 @@ class JobWorkerThread(
 
         override fun run() {
             val logFileOutputStream: OutputStreamWriter? = catchAll {
-                logFile?.let { OutputStreamWriter(FileOutputStream(it)) }
+                logFile?.let {
+                    OutputStreamWriter(object : FileOutputStream(it) {
+                        override fun write(b: ByteArray?, off: Int, len: Int) {
+                            fileSize += len
+                            super.write(b, off, len)
+                        }
+                    })
+                }
             }
             var converting = false
             catchAll {
@@ -209,12 +218,12 @@ class JobWorkerThread(
                         var bitrate: String? = null
                         var time: String? = null
                         regex.findAll(line).forEach { matchResult ->
-                            if (matchResult.groupValues[1].startsWith("size=")) {
-                                size = matchResult.groupValues[2]
-                            } else if (matchResult.groupValues[1].startsWith("bitrate=")) {
-                                bitrate = matchResult.groupValues[2]
-                            } else if (matchResult.groupValues[1].startsWith("time=")) {
-                                time = matchResult.groupValues[2]
+                            with(matchResult.groupValues[1]) {
+                                when {
+                                    startsWith("size=") -> size = matchResult.groupValues[2]
+                                    startsWith("bitrate=") -> bitrate = matchResult.groupValues[2]
+                                    startsWith("time=") -> time = matchResult.groupValues[2]
+                                }
                             }
                         }
                         val stringBuilder = StringBuilder()
@@ -234,12 +243,18 @@ class JobWorkerThread(
                             jobManager.recordLiveLog(stringBuilder.toString())
                         }
                         Timber.d(line)
-                        catchAll(printLog = true) {
-                            logFileOutputStream?.appendln(line)
-                            logFileOutputStream?.flush()
+                        catchAll<Unit>(printLog = true) {
+                            if (fileSize < MAX_LOG_FILE_SIZE) {
+                                logFileOutputStream?.appendln(line)
+                            } else {
+                                skippedLine++
+                            }
                         }
                     }
                 }
+            }
+            if (skippedLine > 0) {
+                logFileOutputStream?.appendln("[...]\n$skippedLine lines was skipped\n[...]\n$lastLine")
             }
             logFileOutputStream.closeQuietly()
             jobManager.recordLiveLog("")
