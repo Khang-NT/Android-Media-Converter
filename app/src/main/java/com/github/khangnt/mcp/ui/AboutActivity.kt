@@ -2,7 +2,9 @@ package com.github.khangnt.mcp.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.graphics.drawable.DrawableCompat
 import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.GITHUB_REPO
 import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
@@ -33,7 +35,21 @@ class AboutActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        btnFRequest.isSelected = true
+        val scrollRange by lazy {
+            // decrease scrim visible height (-1/4)
+            collapsingToolbar.scrimVisibleHeightTrigger =
+                    collapsingToolbar.scrimVisibleHeightTrigger * 3 / 4
+            appBarLayout.totalScrollRange
+        }
+
+        appBarLayout.addOnOffsetChangedListener { _, offset ->
+            if (scrollRange + offset == 0) {
+                toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
+            } else if (offset == 0) {
+                toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
+            }
+        }
+
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         rateUs.setOnClickListener {
@@ -51,23 +67,6 @@ class AboutActivity : BaseActivity() {
                     .show()
         }
 
-        btnFRequest.setOnClickListener{
-            btnFRequest.isSelected = true
-            btnBReport.isSelected = false
-            btnQuestion.isSelected = false
-        }
-
-        btnBReport.setOnClickListener{
-            btnFRequest.isSelected = false
-            btnBReport.isSelected = true
-            btnQuestion.isSelected = false
-        }
-
-        btnQuestion.setOnClickListener{
-            btnFRequest.isSelected = false
-            btnBReport.isSelected = false
-            btnQuestion.isSelected = true
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

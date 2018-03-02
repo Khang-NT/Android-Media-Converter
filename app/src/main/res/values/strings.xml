@@ -26,7 +26,7 @@
     <string name="retry">Retry</string>
 
     <string name="fork_on_github">Fork on Github</string>
-    <string name="licenses">Licenses</string>
+    <string name="licenses">Open source licenses</string>
     <string name="app_version_format">Version %s</string>
     <string name="permission_not_granted">Permission denied, action was cancelled</string>
     <string name="job_output_location">Location: %s</string>

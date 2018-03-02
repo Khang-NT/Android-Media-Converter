@@ -22,4 +22,6 @@
     <dimen name="item_preset_cmd_min_width">300dp</dimen>
 
     <dimen name="fragment_convert_padding">16dp</dimen>
+
+    <dimen name="activity_about_padding">16dp</dimen>
 </resources>
