@@ -33,6 +33,7 @@ class AboutActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        btnFRequest.isSelected = true
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         rateUs.setOnClickListener {
@@ -48,6 +49,24 @@ class AboutActivity : BaseActivity() {
                     .setNotices(R.raw.licenses)
                     .build()
                     .show()
+        }
+
+        btnFRequest.setOnClickListener{
+            btnFRequest.isSelected = true
+            btnBReport.isSelected = false
+            btnQuestion.isSelected = false
+        }
+
+        btnBReport.setOnClickListener{
+            btnFRequest.isSelected = false
+            btnBReport.isSelected = true
+            btnQuestion.isSelected = false
+        }
+
+        btnQuestion.setOnClickListener{
+            btnFRequest.isSelected = false
+            btnBReport.isSelected = false
+            btnQuestion.isSelected = true
         }
     }
 

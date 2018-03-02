@@ -56,8 +56,6 @@
         <activity android:name=".ui.presetcmd.ConvertActivity"
                   android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
 
-        <activity android:name=".ui.FeedbackActivity" />
-
     </application>
 
 </manifest>

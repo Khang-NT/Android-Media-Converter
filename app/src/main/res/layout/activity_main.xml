@@ -23,17 +23,6 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer">
 
-        <Button
-            android:id="@+id/btnFeedback"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/margin_normal"
-            android:paddingEnd="@dimen/margin_huge"
-            android:paddingStart="@dimen/margin_huge"
-            android:text="Feedback" />
-
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

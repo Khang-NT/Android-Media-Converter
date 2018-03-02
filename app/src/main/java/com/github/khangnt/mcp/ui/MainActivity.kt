@@ -59,11 +59,6 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
             // request permission without checking result
             requestPermissions(appPermissions, 0)
         }
-
-        btnFeedback.setOnClickListener {
-            val intent = Intent(this, FeedbackActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
