@@ -103,7 +103,16 @@ class AboutActivity : BaseActivity() {
 
         btnSendFB.setOnClickListener {
             toggleFeedbackCard()
-            sendEmail(this, "Feedback from " + device.getModel() + " Android " + device.getAndroidVersion(), edFeedbackDetails.text.toString() + "\n--------------------\n" + device.toString())
+
+            var feedBackType = ""
+
+            when (tabLayout.selectedTabPosition) {
+                0 -> feedBackType = "Feature Request"
+                1 -> feedBackType = "Bug Report"
+                2 -> feedBackType = "Question"
+            }
+
+            sendEmail(this, "$feedBackType from ${device.getModel()} Android ${device.getAndroidVersion()}", "${edFeedbackDetails.text}\n\n\n\n${device.toString()}")
         }
 
     }
