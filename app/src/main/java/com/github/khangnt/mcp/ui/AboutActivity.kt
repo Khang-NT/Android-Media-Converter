@@ -69,7 +69,7 @@ class AboutActivity : BaseActivity() {
         }
 
         forkOnGithub.setOnClickListener {
-            openUrl(this, GITHUB_REPO, "Open Github")
+            openUrl(this, GITHUB_REPO, getString(R.string.open_github))
         }
 
         licenses.setOnClickListener {
@@ -80,11 +80,11 @@ class AboutActivity : BaseActivity() {
         }
 
         contact.setOnClickListener {
-            sendEmail(this, "", "")
+            sendEmail(this)
         }
 
         translate.setOnClickListener {
-            openUrl(this, TRANSLATE_PAGE, "Open Translate page")
+            openUrl(this, TRANSLATE_PAGE, getString(R.string.open_translate_page))
         }
 
         bugReport.setOnClickListener {
@@ -92,9 +92,9 @@ class AboutActivity : BaseActivity() {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Device Info", device.toString())
             clipboard.primaryClip = clip
-            toast("Copied Device info to clipboard")
+            toast(getString(R.string.prompt_device_info_copied))
 
-            openUrl(this, GITHUB_ISSUE, "Open GitHub Issues")
+            openUrl(this, GITHUB_ISSUE, getString(R.string.open_github_issues))
         }
 
         emailFeedback.setOnClickListener {
@@ -107,12 +107,16 @@ class AboutActivity : BaseActivity() {
             var feedBackType = ""
 
             when (tabLayout.selectedTabPosition) {
-                0 -> feedBackType = "Feature Request"
-                1 -> feedBackType = "Bug Report"
-                2 -> feedBackType = "Question"
+                0 -> feedBackType = getString(R.string.feature_request)
+                1 -> feedBackType = getString(R.string.bug_report)
+                2 -> feedBackType = getString(R.string.question)
             }
 
-            sendEmail(this, "$feedBackType from ${device.getModel()} Android ${device.getAndroidVersion()}", "${edFeedbackDetails.text}\n\n\n\n${device.toString()}")
+            sendEmail(
+                    this,
+                    "$feedBackType from ${device.getModel()} Android ${device.getAndroidVersion()}",
+                    "${edFeedbackDetails.text}\n\n\n\n$device"
+            )
         }
 
     }

@@ -110,7 +110,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:text="General"
+                        android:text="@string/general"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -139,7 +139,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
-                            android:text="Changelog"
+                            android:text="@string/changelog"
                             android:textColor="?android:textColorPrimary"/>
                     </LinearLayout>
 
@@ -247,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
-                            android:text="Contact us"
+                            android:text="@string/contact_us"
                             android:textColor="?android:textColorPrimary"/>
                     </LinearLayout>
 
@@ -276,7 +276,7 @@
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:text="Support development"
+                        android:text="@string/support_development"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -312,7 +312,7 @@
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivTranslate"
                             android:layout_toRightOf="@+id/ivTranslate"
-                            android:text="Translate"
+                            android:text="@string/translate_title"
                             android:textColor="?android:textColorPrimary"/>
 
                         <TextView
@@ -324,7 +324,7 @@
                             android:layout_marginStart="@dimen/margin_normal"
                             android:layout_toEndOf="@+id/ivTranslate"
                             android:layout_toRightOf="@+id/ivTranslate"
-                            android:text="Helps translating Media Converter app to your native language"
+                            android:text="@string/translate_summary"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/text_small"/>
                     </RelativeLayout>
@@ -360,7 +360,7 @@
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivBug"
                             android:layout_toRightOf="@+id/ivBug"
-                            android:text="Report bugs on Github"
+                            android:text="@string/report_bugs_title"
                             android:textColor="?android:textColorPrimary"/>
 
                         <TextView
@@ -372,7 +372,7 @@
                             android:layout_marginStart="@dimen/margin_normal"
                             android:layout_toEndOf="@+id/ivBug"
                             android:layout_toRightOf="@+id/ivBug"
-                            android:text="Open new issue on Github to submit a bug or new feature request, your device info will be copied to clipboard."
+                            android:text="@string/report_bugs_summary"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/text_small"/>
                     </RelativeLayout>
@@ -408,7 +408,7 @@
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivEmailFeedback"
                             android:layout_toRightOf="@+id/ivEmailFeedback"
-                            android:text="Feedback by email"
+                            android:text="@string/feedback_title"
                             android:textColor="?android:textColorPrimary"/>
 
                         <TextView
@@ -420,7 +420,7 @@
                             android:layout_marginStart="@dimen/margin_normal"
                             android:layout_toEndOf="@+id/ivEmailFeedback"
                             android:layout_toRightOf="@+id/ivEmailFeedback"
-                            android:text="If you don't have Github account, please click here to send your feedback by email."
+                            android:text="@string/feedback_summary"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/text_small"/>
                     </RelativeLayout>
@@ -464,19 +464,19 @@
                                 android:id="@+id/tabFeatureRequest"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Feature Request" />
+                                android:text="@string/feature_request" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabBugReport"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Bug report" />
+                                android:text="@string/bug_report" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabQuestion"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Question" />
+                                android:text="@string/question" />
                         </android.support.design.widget.TabLayout>
                     </FrameLayout>
 
@@ -485,7 +485,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_normal"
-                        android:hint="Enter the details"
+                        android:hint="@string/enter_the_details"
                         android:paddingLeft="@dimen/margin_normal"
                         android:paddingRight="@dimen/margin_normal"
                         app:layout_constraintEnd_toEndOf="@id/tabLayoutBackground"
@@ -510,7 +510,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:text="Send Feedback"
+                        android:text="@string/send_feedback"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/textInputLayout"
                         app:layout_constraintStart_toStartOf="@id/textInputLayout"

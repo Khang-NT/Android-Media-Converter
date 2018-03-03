@@ -101,4 +101,28 @@
     <string name="compression_level_header">Compression level:</string>
     <string name="start_conversion_button">Start conversion</string>
 
+    <string name="open_github">Open Github</string>
+    <string name="open_translate_page">Open Translate page</string>
+    <string name="open_github_issues">Open GitHub Issues</string>
+    <string name="open_play_store">Open Play Store</string>
+
+    <string name="prompt_device_info_copied">Copied device info to clipboard</string>
+    <string name="enter_the_details">Enter the details</string>
+    <string name="send_feedback">Send Feedback</string>
+
+    <string name="general">General</string>
+    <string name="changelog">Changelog</string>
+    <string name="contact_us">Contact us</string>
+    <string name="support_development">Support development</string>
+
+    <string name="translate_title">Translate</string>
+    <string name="translate_summary">Helps translating Media Converter app to your native language</string>
+    <string name="report_bugs_title">Report bugs on Github</string>
+    <string name="report_bugs_summary">Open new issue on Github to submit a bug or new feature request, your device info will be copied to clipboard.</string>
+    <string name="feedback_title">Feedback by email</string>
+    <string name="feedback_summary">If you don\'t have Github account, please click here to send your feedback by email.</string>
+
+    <string name="feature_request">Feature Request</string>
+    <string name="bug_report">Bug report</string>
+    <string name="question">Question</string>
 </resources>

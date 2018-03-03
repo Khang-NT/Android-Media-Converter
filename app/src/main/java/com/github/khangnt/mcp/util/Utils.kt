@@ -7,6 +7,7 @@ import android.support.v4.provider.DocumentFile
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.KB
 import com.github.khangnt.mcp.MB
+import com.github.khangnt.mcp.R
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -91,11 +92,11 @@ fun openPlayStore(context: Context, packageName: String) {
                 Uri.parse("market://details?id=$packageName")))
     } catch (activityNotFound: Throwable) {
         openUrl(context, "https://play.google.com/store/apps/details?id=$packageName",
-                "Open PlayStore")
+                context.getString(R.string.open_play_store))
     }
 }
 
-fun sendEmail(context: Context, subject: String, msg: String) {
+fun sendEmail(context: Context, subject: String = "", msg: String = "") {
     val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
             "mailto", "help.mediaconverter@gmail.com", null))
     emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
