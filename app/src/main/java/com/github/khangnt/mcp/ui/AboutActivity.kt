@@ -2,6 +2,8 @@ package com.github.khangnt.mcp.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -9,14 +11,14 @@ import android.os.Bundle
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.View
 import android.widget.ScrollView
-import com.github.khangnt.mcp.BuildConfig
-import com.github.khangnt.mcp.GITHUB_REPO
-import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
-import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.util.openPlayStore
 import com.github.khangnt.mcp.util.openUrl
+import com.github.khangnt.mcp.util.sendEmail
+import com.github.khangnt.mcp.util.toast
 import de.psdev.licensesdialog.LicensesDialog
 import kotlinx.android.synthetic.main.activity_about.*
+
 
 /**
  * About page UI is inspired by Phonograph
@@ -24,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_about.*
  */
 
 class AboutActivity : BaseActivity() {
+
+    private var cardHeight: Float = 0.0f
 
     companion object {
         fun launch(context: Context) {
@@ -34,6 +38,10 @@ class AboutActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
+
+        val device = DeviceInfo(this)
+
+        cardHeight = cardFeedback.height.toFloat()
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -71,38 +79,31 @@ class AboutActivity : BaseActivity() {
                     .show()
         }
 
-        val cardHeight = cardFeedback.height.toFloat()
+        contact.setOnClickListener {
+            sendEmail(this, "", "")
+        }
+
+        translate.setOnClickListener {
+            openUrl(this, TRANSLATE_PAGE, "Open Translate page")
+        }
+
+        bugReport.setOnClickListener {
+            // copy device info to clipboard
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("Device Info", device.toString())
+            clipboard.primaryClip = clip
+            toast("Copied Device info to clipboard")
+
+            openUrl(this, GITHUB_ISSUE, "Open GitHub Issues")
+        }
+
         emailFeedback.setOnClickListener {
-            if (cardFeedback.visibility == View.GONE) {
-                cardFeedback.visibility = View.VISIBLE
-                cardFeedback.alpha = 0.0f
+            toggleFeedbackCard()
+        }
 
-                cardFeedback.animate()
-                        .translationY(cardHeight)
-                        .alpha(1.0f)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                super.onAnimationEnd(animation)
-                                edFeedbackDetails.requestFocus()
-                            }
-
-                            override fun onAnimationStart(animation: Animator?) {
-                                super.onAnimationStart(animation)
-                                scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
-                            }
-                        })
-            } else {
-                cardFeedback.animate()
-                        .translationY(0.0f)
-                        .alpha(0.0f)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                super.onAnimationEnd(animation)
-                                cardFeedback.visibility = View.GONE
-                            }
-                        })
-            }
-
+        btnSendFB.setOnClickListener {
+            toggleFeedbackCard()
+            sendEmail(this, "Feedback from " + device.getModel() + " Android " + device.getAndroidVersion(), edFeedbackDetails.text.toString() + "\n--------------------\n" + device.toString())
         }
 
     }
@@ -110,6 +111,38 @@ class AboutActivity : BaseActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    private fun toggleFeedbackCard() {
+        if (cardFeedback.visibility == View.GONE) {
+            cardFeedback.visibility = View.VISIBLE
+            cardFeedback.alpha = 0.0f
+
+            cardFeedback.animate()
+                    .translationY(cardHeight)
+                    .alpha(1.0f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            edFeedbackDetails.requestFocus()
+                        }
+
+                        override fun onAnimationStart(animation: Animator?) {
+                            super.onAnimationStart(animation)
+                            scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
+                        }
+                    })
+        } else {
+            cardFeedback.animate()
+                    .translationY(0.0f)
+                    .alpha(0.0f)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            cardFeedback.visibility = View.GONE
+                        }
+                    })
+        }
     }
 
 }

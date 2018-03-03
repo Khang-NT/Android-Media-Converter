@@ -95,6 +95,14 @@ fun openPlayStore(context: Context, packageName: String) {
     }
 }
 
+fun sendEmail(context: Context, subject: String, msg: String) {
+    val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+            "mailto", "help.mediaconverter@gmail.com", null))
+    emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+    emailIntent.putExtra(Intent.EXTRA_TEXT, msg)
+    context.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+}
+
 fun File.ensureDirExists(): File {
     if (!exists() && !mkdirs()) {
         throw FileNotFoundException("Can't mkdirs $this")

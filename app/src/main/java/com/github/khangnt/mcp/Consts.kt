@@ -27,4 +27,6 @@ const val KB = 1024
 const val MB = KB * 1024
 
 const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
+const val GITHUB_ISSUE = "https://github.com/Khang-NT/Android-Media-Converter/issues"
 const val PLAY_STORE_PACKAGE = "com.github.khangnt.mcp"
+const val TRANSLATE_PAGE = "http://translate.music-app.me"
