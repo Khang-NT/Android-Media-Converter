@@ -428,8 +428,10 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
+                android:id="@+id/cardFeedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true">
 
@@ -453,7 +455,6 @@
                             app:tabGravity="center"
                             app:tabIndicatorColor="?android:textColorPrimaryInverse"
                             app:tabIndicatorHeight="2dp"
-                            app:tabMode="scrollable"
                             app:tabPaddingEnd="@dimen/margin_normal"
                             app:tabPaddingStart="@dimen/margin_normal"
                             app:tabSelectedTextColor="?android:textColorPrimaryInverse"
@@ -463,19 +464,19 @@
                                 android:id="@+id/tabFeatureRequest"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Feature Request"/>
+                                android:text="Feature Request" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabBugReport"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Bug report"/>
+                                android:text="Bug report" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabQuestion"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Question"/>
+                                android:text="Question" />
                         </android.support.design.widget.TabLayout>
                     </FrameLayout>
 
@@ -497,7 +498,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="top"
                             android:inputType="textCapSentences|textMultiLine"
-                            android:minLines="7"/>
+                            android:minLines="7" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -513,7 +514,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/textInputLayout"
                         app:layout_constraintStart_toStartOf="@id/textInputLayout"
-                        app:layout_constraintTop_toBottomOf="@id/textInputLayout"/>
+                        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
 
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
