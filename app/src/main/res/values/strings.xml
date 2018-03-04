@@ -123,6 +123,6 @@
     <string name="feedback_summary">If you don\'t have Github account, please click here to send your feedback by email.</string>
 
     <string name="feature_request">Feature Request</string>
-    <string name="bug_report">Bug report</string>
+    <string name="bug_report">Bug Report</string>
     <string name="question">Question</string>
 </resources>

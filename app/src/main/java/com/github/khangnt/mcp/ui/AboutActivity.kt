@@ -2,14 +2,13 @@ package com.github.khangnt.mcp.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v7.app.AlertDialog
 import android.view.View
+import android.webkit.WebView
 import android.widget.ScrollView
 import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.util.openPlayStore
@@ -63,6 +62,16 @@ class AboutActivity : BaseActivity() {
         }
 
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
+
+        changelog.setOnClickListener{
+            val web = WebView(this)
+            web.loadUrl("file:///android_asset/changelog.html");
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Changelog")
+                    .setView(web)
+                    .setPositiveButton("Close", null)
+                    .show()
+        }
 
         rateUs.setOnClickListener {
             openPlayStore(this, PLAY_STORE_PACKAGE)
