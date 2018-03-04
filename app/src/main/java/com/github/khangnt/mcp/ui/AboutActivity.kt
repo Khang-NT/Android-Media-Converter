@@ -69,7 +69,7 @@ class AboutActivity : BaseActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Changelog")
                     .setView(web)
-                    .setPositiveButton("Close", null)
+                    .setPositiveButton(getString(R.string.close), null)
                     .show()
         }
 

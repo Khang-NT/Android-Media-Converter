@@ -125,4 +125,6 @@
     <string name="feature_request">Feature Request</string>
     <string name="bug_report">Bug Report</string>
     <string name="question">Question</string>
+
+    <string name="close">Close</string>
 </resources>
