@@ -26,8 +26,6 @@ import kotlinx.android.synthetic.main.activity_about.*
 
 class AboutActivity : BaseActivity() {
 
-    private var cardHeight: Float = 0.0f
-
     companion object {
         fun launch(context: Context) {
             context.startActivity(Intent(context, AboutActivity::class.java))
@@ -39,8 +37,6 @@ class AboutActivity : BaseActivity() {
         setContentView(R.layout.activity_about)
 
         val device = DeviceInfo(this)
-
-        cardHeight = cardFeedback.height.toFloat()
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -141,7 +137,7 @@ class AboutActivity : BaseActivity() {
             cardFeedback.alpha = 0.0f
 
             cardFeedback.animate()
-                    .translationY(cardHeight)
+                    .translationY(0.0f)
                     .alpha(1.0f)
                     .setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
