@@ -5,8 +5,13 @@ import android.animation.AnimatorListenerAdapter
 import android.content.*
 import android.graphics.Color
 import android.os.Bundle
+import android.support.transition.Fade
+import android.support.transition.Slide
+import android.support.transition.TransitionManager
+import android.support.transition.TransitionSet
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
+import android.view.Gravity
 import android.view.View
 import android.webkit.WebView
 import android.widget.ScrollView
@@ -124,6 +129,10 @@ class AboutActivity : BaseActivity() {
             )
         }
 
+        edFeedbackDetails.setOnFocusChangeListener { _, _ ->
+            scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -132,34 +141,18 @@ class AboutActivity : BaseActivity() {
     }
 
     private fun toggleFeedbackCard() {
+        val transition = TransitionSet()
+        transition.addTransition(Fade())
+        transition.addTransition(Slide(Gravity.LEFT))
+
+        TransitionManager.beginDelayedTransition(transitionsContainer, transition)
+
         if (cardFeedback.visibility == View.GONE) {
             cardFeedback.visibility = View.VISIBLE
-            cardFeedback.alpha = 0.0f
-
-            cardFeedback.animate()
-                    .translationY(0.0f)
-                    .alpha(1.0f)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            super.onAnimationEnd(animation)
-                            edFeedbackDetails.requestFocus()
-                        }
-
-                        override fun onAnimationStart(animation: Animator?) {
-                            super.onAnimationStart(animation)
-                            scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
-                        }
-                    })
+            edFeedbackDetails.clearFocus()
+            edFeedbackDetails.requestFocus()
         } else {
-            cardFeedback.animate()
-                    .translationY(0.0f)
-                    .alpha(0.0f)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            super.onAnimationEnd(animation)
-                            cardFeedback.visibility = View.GONE
-                        }
-                    })
+            cardFeedback.visibility = View.GONE
         }
     }
 
