@@ -3,13 +3,10 @@
 set -e
 
 currentDir=$(pwd)
-artifact_folder="$currentDir/artifacts"
-apk_folder="$artifact_folder/apks"
-mapping_folder="$artifact_folder/mappings"
-report_folder="$artifact_folder/reports"
-mkdir ${artifact_folder}
-mkdir ${apk_folder}
-mkdir ${report_folder}
+artifact_folder="$currentDir/artifacts"; mkdir ${artifact_folder}
+apk_folder="$artifact_folder/apks"; mkdir ${apk_folder}
+mapping_folder="$artifact_folder/mappings"; mkdir ${mapping_folder}
+report_folder="$artifact_folder/reports"; mkdir ${report_folder}
 
 for path in $(find app/build/outputs/apk -name '*.apk');
 do
