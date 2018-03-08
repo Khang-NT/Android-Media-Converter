@@ -143,7 +143,7 @@ class AboutActivity : BaseActivity() {
     private fun toggleFeedbackCard() {
         val transition = TransitionSet()
         transition.addTransition(Fade())
-        transition.addTransition(Slide(Gravity.LEFT))
+        transition.addTransition(Slide(Gravity.START))
 
         TransitionManager.beginDelayedTransition(transitionsContainer, transition)
 
