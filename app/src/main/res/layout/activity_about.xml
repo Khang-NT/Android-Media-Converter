@@ -11,16 +11,20 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:expanded="false">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/colorPrimary"
+            app:collapsedTitleTextAppearance="@style/ToolbarTitle.Inverse"
+            app:contentScrim="?colorAccent"
             app:expandedTitleGravity="start|bottom"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="@string/nav_about"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:statusBarScrim="?colorAccent"
+            app:title="@string/nav_feedback"
             app:titleEnabled="true">
 
             <View
@@ -33,10 +37,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/nav_about"/>
+                app:title="@string/nav_feedback"/>
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -49,63 +52,67 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/transitionsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/margin_normal"
-            android:paddingRight="@dimen/margin_normal">
+            android:padding="@dimen/activity_about_padding">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_launcher_round_high_res"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/app_name"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/text_huge"/>
+
+            <TextView
+                android:id="@+id/tvAppVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintBottom_toBottomOf="@+id/ivAppIcon"
+                app:layout_constraintLeft_toRightOf="@+id/ivAppIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Version: 0.7.0-arm7-4000"/>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_normal"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true">
 
-                <android.support.constraint.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_small">
-
-                    <ImageView
-                        android:id="@+id/ivAppIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="@dimen/margin_normal"
-                        android:layout_marginStart="@dimen/margin_normal"
-                        android:src="@drawable/ic_launcher_round_high_res"
-                        app:layout_constraintLeft_toLeftOf="parent"/>
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_normal"
+                    android:paddingTop="@dimen/margin_normal">
 
                     <TextView
-                        android:id="@+id/tvAppName"
+                        android:id="@+id/tvGeneral"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
-                        android:text="@string/app_name"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivAppIcon"
-                        app:layout_constraintLeft_toRightOf="@+id/ivAppIcon"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:layout_marginBottom="@dimen/margin_tiny"
+                        android:text="@string/general"
+                        android:textStyle="bold"/>
 
-                    <TextView
-                        android:id="@+id/tvAppDescription"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_normal"
-                        android:layout_marginLeft="@dimen/margin_normal"
-                        android:layout_marginRight="@dimen/margin_normal"
-                        android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:text="@string/app_short_intro"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivAppIcon"/>
 
                     <LinearLayout
-                        android:id="@+id/version"
+                        android:id="@+id/changelog"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="@dimen/margin_small"
@@ -114,48 +121,44 @@
                         android:focusable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@+id/tvAppDescription">
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginLeft="@dimen/margin_normal"
-                            android:layout_marginStart="@dimen/margin_normal"
-                            android:src="@drawable/ic_about_black_24dp"
+                            android:src="@drawable/ic_history_black_24dp"
                             app:tint="@color/gray_600"/>
 
                         <TextView
-                            android:id="@+id/tvAppVersion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
-                            android:textColor="?android:textColorPrimary"
-                            tools:text="Version 0.0.1"/>
+                            android:text="@string/changelog"
+                            android:textColor="?android:textColorPrimary"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/rateUs"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_tiny"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@+id/version">
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginLeft="@dimen/margin_normal"
-                            android:layout_marginStart="@dimen/margin_normal"
                             android:src="@drawable/star"
                             app:tint="@color/gray_600"/>
 
                         <TextView
-                            android:id="@+id/tvRateUs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_normal"
@@ -168,17 +171,16 @@
                         android:id="@+id/forkOnGithub"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_tiny"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@+id/rateUs">
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginLeft="@dimen/margin_normal"
-                            android:layout_marginStart="@dimen/margin_normal"
                             android:src="@drawable/github_circle"
                             app:tint="@color/gray_600"/>
 
@@ -195,17 +197,17 @@
                         android:id="@+id/licenses"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_tiny"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@+id/forkOnGithub">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginLeft="@dimen/margin_normal"
-                            android:layout_marginStart="@dimen/margin_normal"
                             android:src="@drawable/file_document_box"
                             app:tint="@color/gray_600"/>
 
@@ -218,9 +220,307 @@
                             android:textColor="?android:textColorPrimary"/>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@+id/licenses">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_email_black_24dp"
+                            app:tint="@color/gray_600"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:text="@string/contact_us"
+                            android:textColor="?android:textColorPrimary"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:cardCornerRadius="4dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_normal"
+                    android:paddingTop="@dimen/margin_normal">
+
+                    <TextView
+                        android:id="@+id/tvSupport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_normal"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:layout_marginBottom="@dimen/margin_tiny"
+                        android:text="@string/support_development"
+                        android:textStyle="bold"/>
+
+
+                    <RelativeLayout
+                        android:id="@+id/translate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp"
+                        android:paddingBottom="@dimen/margin_tiny"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/ivTranslate"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_translate_black_24dp"
+                            app:tint="@color/gray_600"/>
+
+                        <TextView
+                            android:id="@+id/tvTranslateTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:layout_toEndOf="@+id/ivTranslate"
+                            android:layout_toRightOf="@+id/ivTranslate"
+                            android:text="@string/translate_title"
+                            android:textColor="?android:textColorPrimary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTranslateTitle"
+                            android:layout_marginBottom="@dimen/margin_tiny"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_toEndOf="@+id/ivTranslate"
+                            android:layout_toRightOf="@+id/ivTranslate"
+                            android:text="@string/translate_summary"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="@dimen/text_small"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/bugReport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp"
+                        android:paddingBottom="@dimen/margin_tiny"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/ivBug"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_bug_report_black_24dp"
+                            app:tint="@color/gray_600"/>
+
+                        <TextView
+                            android:id="@+id/tvBugReport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:layout_toEndOf="@+id/ivBug"
+                            android:layout_toRightOf="@+id/ivBug"
+                            android:text="@string/report_bugs_title"
+                            android:textColor="?android:textColorPrimary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvBugReport"
+                            android:layout_marginBottom="@dimen/margin_tiny"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_toEndOf="@+id/ivBug"
+                            android:layout_toRightOf="@+id/ivBug"
+                            android:text="@string/report_bugs_summary"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="@dimen/text_small"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/emailFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:minHeight="48dp"
+                        android:paddingBottom="@dimen/margin_tiny"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/ivEmailFeedback"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_send_black_24dp"
+                            app:tint="@color/gray_600"/>
+
+                        <TextView
+                            android:id="@+id/tvEmailFeedback"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:layout_toEndOf="@+id/ivEmailFeedback"
+                            android:layout_toRightOf="@+id/ivEmailFeedback"
+                            android:text="@string/feedback_title"
+                            android:textColor="?android:textColorPrimary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvEmailFeedback"
+                            android:layout_marginBottom="@dimen/margin_tiny"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_toEndOf="@+id/ivEmailFeedback"
+                            android:layout_toRightOf="@+id/ivEmailFeedback"
+                            android:text="@string/feedback_summary"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="@dimen/text_small"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardCornerRadius="4dp"
+                app:cardUseCompatPadding="true">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:id="@+id/tabLayoutBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?colorAccent">
+
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/tabLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:tabGravity="center"
+                            app:tabIndicatorColor="?android:textColorPrimaryInverse"
+                            app:tabIndicatorHeight="2dp"
+                            app:tabPaddingEnd="@dimen/margin_normal"
+                            app:tabPaddingStart="@dimen/margin_normal"
+                            app:tabSelectedTextColor="?android:textColorPrimaryInverse"
+                            app:tabTextColor="?android:textColorSecondaryInverse">
+
+                            <android.support.design.widget.TabItem
+                                android:id="@+id/tabFeatureRequest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feature_request"/>
+
+                            <android.support.design.widget.TabItem
+                                android:id="@+id/tabBugReport"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bug_report"/>
+
+                            <android.support.design.widget.TabItem
+                                android:id="@+id/tabQuestion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/question"/>
+                        </android.support.design.widget.TabLayout>
+                    </FrameLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:hint="@string/enter_the_details"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        app:layout_constraintEnd_toEndOf="@id/tabLayoutBackground"
+                        app:layout_constraintStart_toStartOf="@id/tabLayoutBackground"
+                        app:layout_constraintTop_toBottomOf="@+id/tabLayoutBackground">
+
+                        <EditText
+                            android:id="@+id/edFeedbackDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="7"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <Button
+                        android:id="@+id/btnSendFb"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/send_feedback"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/textInputLayout"
+                        app:layout_constraintStart_toStartOf="@id/textInputLayout"
+                        app:layout_constraintTop_toBottomOf="@id/textInputLayout"/>
+
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
 

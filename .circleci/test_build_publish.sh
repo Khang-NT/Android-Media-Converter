@@ -18,7 +18,7 @@ else
     echo "===========> Skip PlayStore publish"
 fi
 
-./gradlew ${commandBuilder}
+./gradlew ${commandBuilder} -PdisablePreDex
 
 ./copy_artifacts.sh
 

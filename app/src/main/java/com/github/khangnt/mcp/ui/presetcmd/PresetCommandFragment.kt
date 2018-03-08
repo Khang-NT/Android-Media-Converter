@@ -77,7 +77,7 @@ class PresetCommandFragment : BaseFragment() {
                 .setHorizontalSpace(R.dimen.margin_normal)
                 .setVerticalSpace(R.dimen.margin_small)
                 .applyTo(recyclerViewGroup.getRecyclerView())
-        val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_job_min_width)
+        val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_preset_cmd_min_width)
         val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

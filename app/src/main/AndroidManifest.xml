@@ -48,13 +48,17 @@
 
         <activity
             android:name=".ui.AboutActivity"
+            android:label="@string/nav_feedback"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"
+            android:windowSoftInputMode="adjustPan|stateUnchanged"/>
+
+        <activity
+            android:name=".ui.filepicker.FilePickerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".ui.filepicker.FilePickerActivity"
-                  android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".ui.presetcmd.ConvertActivity"
-                  android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
+        <activity
+            android:name=".ui.presetcmd.ConvertActivity"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"/>
 
     </application>
 
