@@ -29,11 +29,9 @@ jobs:
           name: Test - Build - Publish
           command: ./.circleci/test_build_publish.sh
       - run:
-          name: Copy report when build failed
-          command: |
-            if ! test "$(ls -A artifacts)"; then
-                ./copy_artifacts.sh;
-            fi;
+          name: Copy error report
+          command: ./copy_artifacts.sh;
+          when: on_fail
       - store_artifacts:
           path: artifacts
 
