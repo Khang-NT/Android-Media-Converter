@@ -10,10 +10,7 @@ import android.widget.EditText
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
-import com.github.khangnt.mcp.util.appPermissions
-import com.github.khangnt.mcp.util.hasWriteStoragePermission
-import com.github.khangnt.mcp.util.onTextSizeChanged
-import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.util.*
 import com.github.khangnt.mcp.view.RecyclerViewGroupState
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -105,7 +102,7 @@ class FileListFragment : BaseFragment() {
         }
         Observable
                 .defer {
-                    val listFile: Array<File> = path.listFiles() ?: emptyArray()
+                    val listFile: Array<File> = path.listFilesNotNull()
                     return@defer Observable.fromArray(*listFile)
                 }
                 .map { FileListModel(it, if (it.isDirectory) TYPE_FOLDER else TYPE_FILE) }

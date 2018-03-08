@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.google.apis:google-api-services-androidpublisher:v2-rev49-1.23.0'
+        classpath 'com.google.apis:google-api-services-androidpublisher:v2-rev54-1.23.0'
     }
 }
 
@@ -30,6 +30,7 @@ class PublishPlugin implements Plugin<Project> {
 
 class PublishConfigExtension {
     final ConfigurableFileCollection apkFiles
+    final ConfigurableFileCollection mappings
     String track
     String serviceAccountJson
     String packageName
@@ -37,6 +38,7 @@ class PublishConfigExtension {
     PublishConfigExtension(Project project) {
         track = 'alpha'
         apkFiles = project.files()
+        mappings = project.files()
     }
 
     FileCollection getApkFiles() {
@@ -45,6 +47,10 @@ class PublishConfigExtension {
 
     void setApkFiles(FileCollection files) {
         apkFiles.setFrom(files)
+    }
+
+    void setMappings(FileCollection files) {
+        mappings.setFrom(files)
     }
 
     String getTrack() {
@@ -78,6 +84,9 @@ class PublishTask extends DefaultTask {
         if (publishConfig.apkFiles.isEmpty()) {
             throw IllegalStateException("Must specify at least one APK in 'apkFiles'")
         }
+        if (publishConfig.apkFiles.size() != publishConfig.mappings.size()) {
+            throw IllegalStateException("Each apk file must have a corresponding mapping file (apkFiles.size() == mappings.size())")
+        }
         if (!["production", "beta", "alpha"].contains(publishConfig.track)) {
             throw IllegalArgumentException("Invalid track: ${publishConfig.track}")
         }
@@ -101,17 +110,24 @@ class PublishTask extends DefaultTask {
 
         def versionCodes = new ArrayList<Integer>()
 
-        // upload apks
-        publishConfig.apkFiles.each {
+        // upload APKs
+        publishConfig.apkFiles.eachWithIndex { it, index ->
             println("Start uploading $it")
             def apkContent = new FileContent('application/vnd.android.package-archive', it)
             def apk = edits.apks().upload(publishConfig.packageName, editId, apkContent).execute()
             versionCodes.add(apk.getVersionCode())
-            println("Upload success  $it")
+            println("Upload APK success  $it")
             println(apk)
+            // update mapping file
+            println("Start uploading ${publishConfig.mappings[index]}")
+            def mappingFileContent = new FileContent('application/octet-stream', publishConfig.mappings[index])
+            def mappingFile = edits.deobfuscationfiles().upload(publishConfig.packageName,
+                    editId, apk.getVersionCode(), "proguard", mappingFileContent).execute()
+            println("Upload mapping file success  ${publishConfig.mappings[index]}")
+            println(mappingFile)
         }
 
-        // set track for all version code
+        // set track version codes
         def track = new Track().setTrack(publishConfig.track).setVersionCodes(versionCodes)
         edits.tracks().update(publishConfig.packageName, editId, publishConfig.track, track).execute()
 

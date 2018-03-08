@@ -1,6 +1,8 @@
-![](app/src/main/res/mipmap-xhdpi/ic_launcher.png)  
 # Android Media Converter
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE) [![CircleCI](https://img.shields.io/circleci/project/github/Khang-NT/Android-Media-Converter.svg)](https://circleci.com/gh/Khang-NT/Android-Media-Converter) [![Latest Release](https://img.shields.io/github/release/Khang-NT/Android-Media-Converter.svg)](https://github.com/Khang-NT/Android-Media-Converter/releases)
+
+<img src="app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" height="70px"><a href='https://play.google.com/store/apps/details?id=com.github.khangnt.mcp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="70px"/></a>
+
+[![CircleCI](https://img.shields.io/circleci/project/github/Khang-NT/Android-Media-Converter.svg)](https://circleci.com/gh/Khang-NT/Android-Media-Converter) [![Latest Release](https://img.shields.io/github/release/Khang-NT/Android-Media-Converter.svg)](https://github.com/Khang-NT/Android-Media-Converter/releases) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)  [![Translate](http://translate.ymusicapp.com/widgets/media-converter/en/strings/svg-badge.svg)](http://translate.ymusicapp.com/engage/media-converter/en/?utm_source=widget)
 
 **Media Converter** is a robust Android application build on top of [`FFmpeg`](https://ffmpeg.org) with clean UI.
 As it name, user can convert media file to other encoding format easily with preset commands. The app 
