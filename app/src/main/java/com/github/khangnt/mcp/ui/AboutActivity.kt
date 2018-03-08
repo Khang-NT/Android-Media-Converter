@@ -1,8 +1,9 @@
 package com.github.khangnt.mcp.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.transition.Fade
