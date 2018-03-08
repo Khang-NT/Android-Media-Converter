@@ -163,4 +163,24 @@ class AboutActivity : BaseActivity() {
         }
     }
 
+    public override fun onSaveInstanceState(savedInstanceState: Bundle?) {
+
+        savedInstanceState!!.putInt("CurrentTab", tabLayout.selectedTabPosition)
+        savedInstanceState!!.putInt("FBCardVisibility", cardFeedback.visibility)
+
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+
+        super.onRestoreInstanceState(savedInstanceState)
+
+        val currentTab = savedInstanceState.getInt("CurrentTab")
+        val tab = tabLayout.getTabAt(currentTab)
+        tab!!.select()
+
+        cardFeedback.visibility = savedInstanceState.getInt("FBCardVisibility")
+
+    }
+
 }
