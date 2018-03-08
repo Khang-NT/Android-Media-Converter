@@ -1,5 +1,7 @@
-![](app/src/main/res/mipmap-xhdpi/ic_launcher.png)  
 # Android Media Converter
+
+<img src="app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" height="70px"><a href='https://play.google.com/store/apps/details?id=com.github.khangnt.mcp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="70px"/></a>
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE) [![CircleCI](https://img.shields.io/circleci/project/github/Khang-NT/Android-Media-Converter.svg)](https://circleci.com/gh/Khang-NT/Android-Media-Converter) [![Latest Release](https://img.shields.io/github/release/Khang-NT/Android-Media-Converter.svg)](https://github.com/Khang-NT/Android-Media-Converter/releases)
 
 **Media Converter** is a robust Android application build on top of [`FFmpeg`](https://ffmpeg.org) with clean UI.
