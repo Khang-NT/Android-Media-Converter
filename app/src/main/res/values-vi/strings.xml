@@ -3,4 +3,5 @@
 
 
 <string name="app_name">Media Converter</string>
+    <string name="action_settings">Cài đặt</string>
     </resources>
