@@ -27,8 +27,8 @@
             android:enabled="false"/>
         <item
             android:id="@+id/item_nav_about"
-            android:icon="@drawable/ic_about_black_24dp"
-            android:title="@string/nav_about"/>
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/nav_feedback"/>
     </group>
 
 </menu>
