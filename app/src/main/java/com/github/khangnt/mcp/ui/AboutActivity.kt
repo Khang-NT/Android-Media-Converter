@@ -24,18 +24,15 @@ import com.github.khangnt.mcp.util.toast
 import de.psdev.licensesdialog.LicensesDialog
 import kotlinx.android.synthetic.main.activity_about.*
 
-
-/**
- * About page UI is inspired by Phonograph
- * https://github.com/kabouzeid/Phonograph
- */
-
 class AboutActivity : BaseActivity() {
 
     companion object {
         fun launch(context: Context) {
             context.startActivity(Intent(context, AboutActivity::class.java))
         }
+
+        private const val KEY_CURRENT_TAB = "AboutActivity.currentTab"
+        private const val KEY_CARD_FEEDBACK_VISIBILITY = "AboutActivity.cardFbVisibility"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,10 +63,12 @@ class AboutActivity : BaseActivity() {
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         changelog.setOnClickListener{
+            val paddingHorizontal = resources.getDimensionPixelOffset(R.dimen.margin_normal)
             val web = WebView(this)
-            web.loadUrl("file:///android_asset/changelog.html");
+            web.loadUrl("file:///android_asset/changelog.html")
+            web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Changelog")
+            builder.setTitle(R.string.changelog)
                     .setView(web)
                     .setPositiveButton(getString(R.string.close), null)
                     .show()
@@ -101,7 +100,7 @@ class AboutActivity : BaseActivity() {
         bugReport.setOnClickListener {
             // copy device info to clipboard
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Device Info", device.toString())
+            val clip = ClipData.newPlainText("Device Info", device.toMarkdown())
             clipboard.primaryClip = clip
             toast(getString(R.string.prompt_device_info_copied))
 
@@ -112,15 +111,14 @@ class AboutActivity : BaseActivity() {
             toggleFeedbackCard()
         }
 
-        btnSendFB.setOnClickListener {
+        btnSendFb.setOnClickListener {
             toggleFeedbackCard()
 
-            var feedBackType = ""
-
-            when (tabLayout.selectedTabPosition) {
-                0 -> feedBackType = getString(R.string.feature_request)
-                1 -> feedBackType = getString(R.string.bug_report)
-                2 -> feedBackType = getString(R.string.question)
+            val feedBackType = when (tabLayout.selectedTabPosition) {
+                0 -> getString(R.string.feature_request)
+                1 -> getString(R.string.bug_report)
+                2 -> getString(R.string.question)
+                else -> null
             }
 
             sendEmail(
@@ -130,8 +128,10 @@ class AboutActivity : BaseActivity() {
             )
         }
 
-        edFeedbackDetails.setOnFocusChangeListener { _, _ ->
-            scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
+        edFeedbackDetails.setOnFocusChangeListener { _, focused ->
+            if (focused) {
+                scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
+            }
         }
 
     }
@@ -145,36 +145,27 @@ class AboutActivity : BaseActivity() {
         val transition = TransitionSet()
         transition.addTransition(Fade())
         transition.addTransition(Slide(Gravity.START))
-
         TransitionManager.beginDelayedTransition(transitionsContainer, transition)
 
         if (cardFeedback.visibility == View.GONE) {
             cardFeedback.visibility = View.VISIBLE
-            edFeedbackDetails.clearFocus()
-            edFeedbackDetails.requestFocus()
+            scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
         } else {
             cardFeedback.visibility = View.GONE
         }
     }
 
-    public override fun onSaveInstanceState(savedInstanceState: Bundle?) {
-
-        savedInstanceState!!.putInt("CurrentTab", tabLayout.selectedTabPosition)
-        savedInstanceState!!.putInt("FBCardVisibility", cardFeedback.visibility)
-
+    public override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putInt(KEY_CURRENT_TAB, tabLayout.selectedTabPosition)
+        savedInstanceState.putInt(KEY_CARD_FEEDBACK_VISIBILITY, cardFeedback.visibility)
     }
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-
         super.onRestoreInstanceState(savedInstanceState)
-
-        val currentTab = savedInstanceState.getInt("CurrentTab")
-        val tab = tabLayout.getTabAt(currentTab)
-        tab!!.select()
-
-        cardFeedback.visibility = savedInstanceState.getInt("FBCardVisibility")
-
+        val currentTab = savedInstanceState.getInt(KEY_CURRENT_TAB)
+        tabLayout.getTabAt(currentTab)?.select()
+        cardFeedback.visibility = savedInstanceState.getInt(KEY_CARD_FEEDBACK_VISIBILITY)
     }
 
 }

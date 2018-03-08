@@ -44,21 +44,22 @@ class DeviceInfo(context: Context) {
     private val model = Build.MODEL
     private val product = Build.PRODUCT
     private val hardware = Build.HARDWARE
+    @Suppress("DEPRECATION")
     @SuppressLint("NewApi")
-    private val abis = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        Build.SUPPORTED_ABIS
-    else
-        arrayOf(Build.CPU_ABI, Build.CPU_ABI2)
+    private val abis = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> Build.SUPPORTED_ABIS
+        else -> arrayOf(Build.CPU_ABI, Build.CPU_ABI2)
+    }
     @SuppressLint("NewApi")
-    private val abis32Bits = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        Build.SUPPORTED_32_BIT_ABIS
-    else
-        null
+    private val abis32Bits = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> Build.SUPPORTED_32_BIT_ABIS
+        else -> null
+    }
     @SuppressLint("NewApi")
-    private val abis64Bits = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        Build.SUPPORTED_64_BIT_ABIS
-    else
-        null
+    private val abis64Bits = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> Build.SUPPORTED_64_BIT_ABIS
+        else -> null
+    }
 
     init {
         var packageInfo: PackageInfo?
@@ -78,7 +79,7 @@ class DeviceInfo(context: Context) {
         }
     }
 
-    internal fun toMarkdown(): String {
+    fun toMarkdown(): String {
         return ("Device info:\n"
                 + "---\n"
                 + "<table>\n"
