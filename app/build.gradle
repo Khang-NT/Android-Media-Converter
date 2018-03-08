@@ -133,6 +133,9 @@ android {
         }
     }
 
+    lintOptions {
+        ignore 'ExtraTranslation', 'MissingTranslation'
+    }
 }
 
 dependencies {
