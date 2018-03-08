@@ -104,7 +104,7 @@ class AboutActivity : BaseActivity() {
             clipboard.primaryClip = clip
             toast(getString(R.string.prompt_device_info_copied))
 
-            openUrl(this, GITHUB_ISSUE, getString(R.string.open_github_issues))
+            openUrl(this, GITHUB_NEW_ISSUE_URL, getString(R.string.open_github_issues))
         }
 
         emailFeedback.setOnClickListener {

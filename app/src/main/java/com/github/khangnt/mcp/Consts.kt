@@ -26,7 +26,8 @@ const val CONVERTER_NOTIFICATION_CHANNEL = "ConverterChannel"
 const val KB = 1024
 const val MB = KB * 1024
 
-const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
-const val GITHUB_ISSUE = "https://github.com/Khang-NT/Android-Media-Converter/issues"
 const val PLAY_STORE_PACKAGE = "com.github.khangnt.mcp"
+const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
+const val GITHUB_ISSUE_URL = "$GITHUB_REPO/issues"
+const val GITHUB_NEW_ISSUE_URL = "$GITHUB_ISSUE_URL/new"
 const val TRANSLATE_PAGE = "http://translate.ymusicapp.com/projects/media-converter/"
