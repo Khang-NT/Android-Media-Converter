@@ -14,6 +14,7 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.ScrollView
 import com.github.khangnt.mcp.*
@@ -62,16 +63,17 @@ class AboutActivity : BaseActivity() {
 
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
-        changelog.setOnClickListener{
-            val paddingHorizontal = resources.getDimensionPixelOffset(R.dimen.margin_normal)
-            val web = WebView(this)
-            web.loadUrl("file:///android_asset/changelog.html")
-            web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.changelog)
-                    .setView(web)
+        changelog.setOnClickListener {
+            val webView = WebView(this)
+            AlertDialog.Builder(this).setTitle(R.string.changelog)
+                    .setView(webView)
                     .setPositiveButton(getString(R.string.close), null)
                     .show()
+
+            val margin = resources.getDimensionPixelOffset(R.dimen.margin_normal)
+            (webView.layoutParams as ViewGroup.MarginLayoutParams)
+                    .setMargins(margin, 0, margin, 0)
+            webView.loadUrl(CHANGELOG_URL)
         }
 
         rateUs.setOnClickListener {
