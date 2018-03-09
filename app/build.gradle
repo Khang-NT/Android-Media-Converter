@@ -165,6 +165,8 @@ dependencies {
 
     implementation 'com.liulishuo.filedownloader:library:1.7.1'
 
+    implementation 'cat.ereza:customactivityoncrash:2.2.0'
+
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 

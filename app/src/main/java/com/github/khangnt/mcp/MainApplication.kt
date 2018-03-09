@@ -2,6 +2,7 @@ package com.github.khangnt.mcp
 
 import android.app.Application
 import android.os.StrictMode
+import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.util.IMMLeaks
 import com.liulishuo.filedownloader.FileDownloader
@@ -39,6 +40,13 @@ class MainApplication: Application() {
                 .commit()
 
         Fabric.with(this, Crashlytics())
+
+        CaocConfig.Builder.create()
+                .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT)
+                .showErrorDetails(true)
+                .showRestartButton(true)
+                .trackActivities(true)
+                .apply()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
