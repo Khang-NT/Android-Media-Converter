@@ -27,14 +27,7 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
             JobStatus.COMPLETED to mutableListOf(),
             JobStatus.FAILED to mutableListOf()
     )
-    private val mapSubject = mapOf(
-            JobStatus.PENDING to BehaviorSubject.create<List<Job>>(),
-            JobStatus.PREPARING to BehaviorSubject.create<List<Job>>(),
-            JobStatus.READY to BehaviorSubject.create<List<Job>>(),
-            JobStatus.RUNNING to BehaviorSubject.create<List<Job>>(),
-            JobStatus.COMPLETED to BehaviorSubject.create<List<Job>>(),
-            JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
-    )
+    private var mapSubject = newMapSubject()
 
     private val liveLogSubject = BehaviorSubject.create<String>()
 
@@ -159,10 +152,20 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
     private fun loadJobToMemoryIfNeeded() {
         synchronized(lock) {
             if (!loadedJobToMemory) {
-                jobDb.getAllJob().forEach { mapJobList[it.status]!!.add(it) }
-                loadedJobToMemory = true
-                notifyJobListChanged(JobStatus.RUNNING, JobStatus.PENDING, JobStatus.PREPARING, JobStatus.READY,
-                        JobStatus.COMPLETED, JobStatus.FAILED)
+                try {
+                    jobDb.getAllJob().forEach { mapJobList[it.status]!!.add(it) }
+                    loadedJobToMemory = true
+                    notifyJobListChanged(JobStatus.RUNNING, JobStatus.PENDING, JobStatus.PREPARING, JobStatus.READY,
+                            JobStatus.COMPLETED, JobStatus.FAILED)
+                } catch (error: Throwable) {
+                    loadedJobToMemory = false
+                    // notify error
+                    mapJobList.keys.forEach { status ->
+                        mapJobList[status]!!.clear()
+                        mapSubject[status]!!.onError(error)
+                    }
+                    mapSubject = newMapSubject()
+                }
             }
         }
     }
@@ -170,5 +173,14 @@ class DefaultJobManager(private val jobDb: JobDb) : JobManager {
     private fun notifyJobListChanged(@JobStatus vararg status: Int) {
         status.forEach { mapSubject[it]!!.onNext(mapJobList[it]!!) }
     }
+
+    private fun newMapSubject() = mapOf(
+            JobStatus.PENDING to BehaviorSubject.create<List<Job>>(),
+            JobStatus.PREPARING to BehaviorSubject.create<List<Job>>(),
+            JobStatus.READY to BehaviorSubject.create<List<Job>>(),
+            JobStatus.RUNNING to BehaviorSubject.create<List<Job>>(),
+            JobStatus.COMPLETED to BehaviorSubject.create<List<Job>>(),
+            JobStatus.FAILED to BehaviorSubject.create<List<Job>>()
+    )
 
 }

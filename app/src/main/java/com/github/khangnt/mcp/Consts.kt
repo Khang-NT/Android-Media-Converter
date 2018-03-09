@@ -31,3 +31,5 @@ const val GITHUB_REPO = "https://github.com/Khang-NT/Android-Media-Converter"
 const val GITHUB_ISSUE_URL = "$GITHUB_REPO/issues"
 const val GITHUB_NEW_ISSUE_URL = "$GITHUB_ISSUE_URL/new"
 const val TRANSLATE_PAGE = "http://translate.ymusicapp.com/projects/media-converter/"
+
+const val CHANGELOG_URL = "file:///android_asset/changelog.html"

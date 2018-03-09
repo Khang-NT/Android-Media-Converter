@@ -60,6 +60,11 @@
             android:name=".ui.presetcmd.ConvertActivity"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"/>
 
+        <activity
+            android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
+            android:theme="@style/CustomActivityOnCrashTheme"
+            android:process=":error_activity" />
+
     </application>
 
 </manifest>
