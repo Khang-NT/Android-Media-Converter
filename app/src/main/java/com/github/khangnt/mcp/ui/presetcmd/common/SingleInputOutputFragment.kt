@@ -3,8 +3,7 @@ package com.github.khangnt.mcp.ui.presetcmd.common
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -173,9 +172,12 @@ class SingleInputOutputFragment : BaseFragment() {
                 val uri = data!!.data
                 val takeFlags = data.flags and
                         (FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION)
-                context!!.contentResolver.takePersistableUriPermission(uri, takeFlags)
+                if (data.flags and FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                        == FLAG_GRANT_PERSISTABLE_URI_PERMISSION) {
+                    context!!.contentResolver.takePersistableUriPermission(uri, takeFlags)
+                    sharedPrefs.lastOutputFolderUri = uri.toString()
+                }
 
-                sharedPrefs.lastOutputFolderUri = uri.toString()
                 outputFolderUri = uri
 
                 val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }

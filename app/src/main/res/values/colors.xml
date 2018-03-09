@@ -14,5 +14,9 @@
     <color name="red_500">#F44336</color>
     <color name="green_600">#43A047</color>
     <color name="gray_600">#757575</color>
-    
+
+    <color name="custom_activity_on_crash_primary">#C62828</color>
+    <color name="custom_activity_on_crash_primary_dark">#B71C1C</color>
+    <color name="custom_activity_on_crash_accent">#FF5252</color>
+
 </resources>
