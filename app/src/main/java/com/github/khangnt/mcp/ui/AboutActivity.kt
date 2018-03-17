@@ -60,7 +60,7 @@ class AboutActivity : BaseActivity() {
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         changelog.setOnClickListener{
-            viewChangelog(this, resources)
+            viewChangelog(this)
         }
 
         rateUs.setOnClickListener {

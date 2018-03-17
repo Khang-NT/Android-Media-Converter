@@ -156,8 +156,8 @@ fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
     }
 }
 
-fun viewChangelog(context: Context, resources: Resources) {
-    val paddingHorizontal = resources.getDimensionPixelOffset(R.dimen.margin_normal)
+fun viewChangelog(context: Context) {
+    val paddingHorizontal = context.resources.getDimensionPixelOffset(R.dimen.margin_normal)
     val web = WebView(context)
     web.loadUrl("file:///android_asset/changelog.html")
     web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
