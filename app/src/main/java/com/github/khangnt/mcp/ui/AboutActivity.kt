@@ -17,10 +17,7 @@ import android.view.View
 import android.webkit.WebView
 import android.widget.ScrollView
 import com.github.khangnt.mcp.*
-import com.github.khangnt.mcp.util.openPlayStore
-import com.github.khangnt.mcp.util.openUrl
-import com.github.khangnt.mcp.util.sendEmail
-import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.util.*
 import de.psdev.licensesdialog.LicensesDialog
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -63,15 +60,7 @@ class AboutActivity : BaseActivity() {
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
         changelog.setOnClickListener{
-            val paddingHorizontal = resources.getDimensionPixelOffset(R.dimen.margin_normal)
-            val web = WebView(this)
-            web.loadUrl("file:///android_asset/changelog.html")
-            web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.changelog)
-                    .setView(web)
-                    .setPositiveButton(getString(R.string.close), null)
-                    .show()
+            viewChangelog(this)
         }
 
         rateUs.setOnClickListener {

@@ -2,8 +2,11 @@ package com.github.khangnt.mcp.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.support.v4.provider.DocumentFile
+import android.support.v7.app.AlertDialog
+import android.webkit.WebView
 import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
 import com.github.khangnt.mcp.KB
 import com.github.khangnt.mcp.MB
@@ -151,4 +154,16 @@ fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
         val documentTree = DocumentFile.fromTreeUri(this, folderUri)
         documentTree.findFile(fileName).uri
     }
+}
+
+fun viewChangelog(context: Context) {
+    val paddingHorizontal = context.resources.getDimensionPixelOffset(R.dimen.margin_normal)
+    val web = WebView(context)
+    web.loadUrl("file:///android_asset/changelog.html")
+    web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle(R.string.changelog)
+            .setView(web)
+            .setPositiveButton(context.getString(R.string.close), null)
+            .show()
 }
