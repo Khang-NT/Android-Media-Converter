@@ -1,2 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="navigation_drawer_open">Buka bilah navigasi</string>
+    <string name="navigation_drawer_close">Tutup bilah navigsi</string>
+
+    <string name="action_settings">Pengaturan</string>
+    <string name="notification_channel_converter">Layanan Konversi</string>
+    <string name="notification_channel_converter_des">Notifikasi akan ditampilkan ketika layana berjalan di latar</string>
+
+    <string name="converter_service_running">Layanan konversi berjalan</string>
+    <string name="converter_service_running_with_speed">Layanan Konversi berjalan: %s</string>
+    <string name="nav_job_manager">Manajer pekerjaan</string>
+    <string name="nav_settings">Pengaturan</string>
+    <string name="nav_feedback">Bantuan &amp; Umpan Balik</string>
+    <string name="close_drawer_des">Tutup sisi menu</string>
+    <string name="open_drawer_des">Buka sisi menu</string>
+
+    <string name="job_list_empty_message">Tidak ada pekerja
+\nBuat baru melalui perintah saat ini.</string>
+    <string name="share_file_subject">Membagikan file…</string>
+    <string name="share_chooser">Bagikan ke</string>
+    <string name="open_file_chooser">Buka berkas</string>
+    <string name="open_folder_chooser">Buka berkas: %s</string>
+    <string name="action_yes">Ya</string>
+    <string name="action_cancel">Batal</string>
+
+    <string name="network_error">Jaringan bermasalah</string>
+
+    <string name="rate_us_title">Nilai kami</string>
+    <string name="rate_us_not_now">Tidak sekarang</string>
+    <string name="reload">Memuat ulang</string>
+    <string name="create_new_folder">Folder Baru</string>
+    <string name="permission_denied">Perijinan ditolak</string>
+    <string name="hint_type_folder_name">Nama folder</string>
+    <string name="folder_exists">Folder telah ada</string>
+    <string name="select">Pilih</string>
+    <string name="pick_file">Ambil berkas</string>
+    <string name="pick_folder">Ambil folder</string>
+    <string name="close">Tutup</string>
+</resources>
