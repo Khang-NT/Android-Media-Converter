@@ -4,4 +4,15 @@
         <item>Libmp3lame (High quality)</item>
         <item>Libshine (High speed)</item>
     </string-array>
+    <string-array name="mp4Presets">
+        <item>Ultra fast</item>
+        <item>Super fast</item>
+        <item>Very fast</item>
+        <item>Faster</item>
+        <item>Fast</item>
+        <item>Medium – default preset</item>
+        <item>Slow</item>
+        <item>Slower</item>
+        <item>Very slow</item>
+    </string-array>
 </resources>

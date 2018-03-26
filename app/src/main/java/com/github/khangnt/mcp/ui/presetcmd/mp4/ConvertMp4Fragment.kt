@@ -11,15 +11,13 @@ import com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment
 import com.github.khangnt.mcp.util.onItemSelected
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import com.github.khangnt.mcp.worker.ConverterService
-import kotlinx.android.synthetic.main.fragment_convert_mp3.*
+import kotlinx.android.synthetic.main.fragment_convert_mp4.*
 import timber.log.Timber
 
 
 /**
- * GUI helps create convert mp3 command, likes:
- * ffmpeg -i input -codec:a libmp3lame -q:a 0 -f mp3 output.mp3
- * Or with libshine encoder:
- * ffmpeg -i input -codec:a libshine -b:a 256k mp3 output.mp3
+ * GUI helps create convert mp4 command, likes:
+ * ffmpeg -i input.avi -c:v libx264 -preset slow -crf 22 -c:a copy output.mkv
  */
 class ConvertMp4Fragment : ConvertFragment() {
 
@@ -27,13 +25,14 @@ class ConvertMp4Fragment : ConvertFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_convert_mp3, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_convert_mp4   , container, false)
 
     companion object {
-        // https://trac.ffmpeg.org/wiki/Encode/MP3
-        private val libMp3LameQuality = arrayOf(
-                "220-260", "190-250", "170-210", "150-195", "140-185",
-                "120-150", "100-130", "80-120", "70-105", "45-85"
+        // https://trac.ffmpeg.org/wiki/Encode/H.264
+        private val mp4Presets = arrayOf(
+                "ultrafast", "superfast", "veryfast",
+                "faster", "fast", "medium",
+                "slow", "slower", "veryslow"
         )
 
         private const val CBR_MIN = 45  // 45 kbps
@@ -43,25 +42,25 @@ class ConvertMp4Fragment : ConvertFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getIoFragment().autoFillExt = "mp3"
-        sbQuality.onSeekBarChanged { updateQualityText() }
-        spinnerEncoder.onItemSelected { position ->
-            when (position) {
-                0 -> {
-                    // libMp3lame
-                    if (sbQuality.max != 9) {
-                        sbQuality.progress = 9
-                        sbQuality.max = 9
-                    }
-                }
-                1 -> {
-                    if (sbQuality.max != CBR_MAX - CBR_MIN) {
-                        sbQuality.max = CBR_MAX - CBR_MIN
-                        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
-                    }
-                }
-            }
-        }
+        getIoFragment().autoFillExt = "mp4"
+//        sbQuality.onSeekBarChanged { updateQualityText() }
+//        spinnerEncoder.onItemSelected { position ->
+//            when (position) {
+//                0 -> {
+//                    // libMp3lame
+//                    if (sbQuality.max != 9) {
+//                        sbQuality.progress = 9
+//                        sbQuality.max = 9
+//                    }
+//                }
+//                1 -> {
+//                    if (sbQuality.max != CBR_MAX - CBR_MIN) {
+//                        sbQuality.max = CBR_MAX - CBR_MIN
+//                        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
+//                    }
+//                }
+//            }
+//        }
 
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
@@ -73,11 +72,11 @@ class ConvertMp4Fragment : ConvertFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
-        if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
-            tvQualityValue.text = "${libMp3LameQuality[9 - sbQuality.progress]} kbps"
-        } else {
-            tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
-        }
+//        if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
+//            tvQualityValue.text = "${libMp3LameQuality[9 - sbQuality.progress]} kbps"
+//        } else {
+//            tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
+//        }
     }
 
     private fun getIoFragment(): SingleInputOutputFragment {
@@ -87,12 +86,9 @@ class ConvertMp4Fragment : ConvertFragment() {
 
     private fun validateAndStartConversion() {
         getIoFragment().validateAndGetInputOutputData { inputOutputData ->
-            val cmdArgsBuilder = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g -codec:a ")
-            if (spinnerEncoder.selectedItemPosition == 0) {
-                cmdArgsBuilder.append("libmp3lame -q:a ${9 - sbQuality.progress} ")
-            } else {
-                cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
-            }
+            val cmdArgsBuilder = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g -c:v libx264 -acodec aac -preset medium ")
+
+//            cmdArgsBuilder.append("-preset ${mp4Presets[spinnerPresets.selectedItemPosition]} ")
 
             ConverterService.newJob(
                     context!!,
@@ -100,7 +96,7 @@ class ConvertMp4Fragment : ConvertFragment() {
                     inputs = listOf(inputOutputData.inputUri),
                     args = cmdArgsBuilder.toString(),
                     outputUri = inputOutputData.outputUri,
-                    outputFormat = "mp3"
+                    outputFormat = "mp4"
             )
 
             (activity as? OnSubmittedListener)?.onSubmitted(this)
