@@ -41,7 +41,7 @@ enum class PresetCommand(
             convertFragmentFactory = ::ConvertFlacFragment
     ),
     CONVERT_MP4(
-            type = TYPE_VIDEO, shortName = "MP4", colors = colorArrayOf(0xff74ebd5, 0xffACB6E5), // DigitalWater
+            type = TYPE_VIDEO, shortName = "MP4", colors = colorArrayOf(0xff2980b9, 0xff2c3e50), // Nighthawk
             titleRes = R.string.preset_command_convert_mp4_title,
             descriptionRes = R.string.preset_command_convert_mp4_des,
             convertFragmentFactory = ::ConvertMp4Fragment
