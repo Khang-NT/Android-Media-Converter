@@ -90,7 +90,7 @@
     <string name="preset_command_convert_flac_des">Converts without any loss in quality with FLAC encoder - Free lossless Audio Codec</string>
 
     <string name="preset_command_convert_mp4_title">Convert MP4</string>
-    <string name="preset_command_convert_mp4_des">Convert any video or audio file to MP4 format easily</string>
+    <string name="preset_command_convert_mp4_des">Convert any video file to MP4 format easily using MPEG-4 encoder</string>
 
     <string name="add_job_message">New job has been added to queue!</string>
     <string name="ac_view">View</string>
