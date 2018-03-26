@@ -36,7 +36,7 @@
             android:id="@+id/spinnerVideoQuality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/mp4Presets"
+            android:entries="@array/mp4VideoQuality"
             app:layout_constraintBaseline_toBaselineOf="@+id/mp4VideoQualityHeader"
             app:layout_constraintLeft_toRightOf="@+id/mp4VideoQualityHeader" />
 

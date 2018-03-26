@@ -26,8 +26,8 @@ class ConvertMp4Fragment : ConvertFragment() {
 
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MPEG-4
-        private val mp4Presets = arrayOf(
-                "2", "6", "12", "25", "26"
+        private val mp4VideoQuality = arrayOf(
+                "2", "6", "12", "18", "26"
         )
     }
 
@@ -52,7 +52,7 @@ class ConvertMp4Fragment : ConvertFragment() {
         getIoFragment().validateAndGetInputOutputData { inputOutputData ->
             val cmdArgsBuilder = StringBuffer("-hide_banner -map_metadata 0:g -map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt ")
 
-            cmdArgsBuilder.append("-q:v ${mp4Presets[spinnerVideoQuality.selectedItemPosition]} ")
+            cmdArgsBuilder.append("-q:v ${mp4VideoQuality[spinnerVideoQuality.selectedItemPosition]} ")
 
             ConverterService.newJob(
                     context!!,
