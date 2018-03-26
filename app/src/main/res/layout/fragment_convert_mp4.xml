@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/fragment_convert_padding">
+
+        <fragment
+            android:id="@+id/fragmentInputOutput"
+            android:name="com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout="@layout/fragment_single_input_output"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mp3EncoderHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/mp3_encoder_header"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput"/>
+
+        <Spinner
+            android:id="@+id/spinnerEncoder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/mp3Encoders"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mp3EncoderHeader"
+            app:layout_constraintLeft_toRightOf="@+id/mp3EncoderHeader"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/qualityHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/quality_header"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/mp3EncoderHeader"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvQualityValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_tiny"
+            android:layout_marginStart="@dimen/margin_tiny"
+            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
+            app:layout_constraintLeft_toRightOf="@id/qualityHeader"
+            tools:text="128 - 172 kbps"/>
+
+        <SeekBar
+            android:id="@+id/sbQuality"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:max="9"
+            android:progress="9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"/>
+
+
+        <Button
+            android:id="@+id/btnStartConversion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:paddingLeft="@dimen/margin_huge"
+            android:paddingRight="@dimen/margin_huge"
+            android:text="@string/start_conversion_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sbQuality"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>

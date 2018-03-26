@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import com.github.khangnt.mcp.ui.presetcmd.aac.ConvertAacFragment
 import com.github.khangnt.mcp.ui.presetcmd.flac.ConvertFlacFragment
 import com.github.khangnt.mcp.ui.presetcmd.mp3.ConvertMp3Fragment
+import com.github.khangnt.mcp.ui.presetcmd.mp4.ConvertMp4Fragment
 
 const val TYPE_AUDIO = 0
 const val TYPE_VIDEO = 1
@@ -38,6 +39,12 @@ enum class PresetCommand(
             titleRes = R.string.preset_command_convert_flac_title,
             descriptionRes = R.string.preset_command_convert_flac_des,
             convertFragmentFactory = ::ConvertFlacFragment
+    ),
+    CONVERT_MP4(
+            type = TYPE_VIDEO, shortName = "MP4", colors = colorArrayOf(0xff74ebd5, 0xffACB6E5), // DigitalWater
+            titleRes = R.string.preset_command_convert_mp4_title,
+            descriptionRes = R.string.preset_command_convert_mp4_des,
+            convertFragmentFactory = ::ConvertMp4Fragment
     )
     ;
 }
