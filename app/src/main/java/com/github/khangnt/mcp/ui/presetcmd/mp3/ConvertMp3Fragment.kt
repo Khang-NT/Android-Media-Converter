@@ -71,6 +71,7 @@ class ConvertMp3Fragment : ConvertFragment() {
         updateQualityText()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
         if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
             tvQualityValue.text = "${libMp3LameQuality[9 - sbQuality.progress]} kbps"
