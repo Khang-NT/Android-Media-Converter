@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:layout="@layout/fragment_single_input_output"/>
+            tools:layout="@layout/fragment_single_input_output" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/mp3EncoderHeader"
@@ -29,7 +29,8 @@
             android:text="@string/mp3_encoder_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput" />
 
         <Spinner
             android:id="@+id/spinnerEncoder"
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:entries="@array/mp3Encoders"
             app:layout_constraintBaseline_toBaselineOf="@+id/mp3EncoderHeader"
-            app:layout_constraintLeft_toRightOf="@+id/mp3EncoderHeader"/>
+            app:layout_constraintStart_toEndOf="@id/mp3EncoderHeader" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/qualityHeader"
@@ -47,7 +48,7 @@
             android:text="@string/quality_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/mp3EncoderHeader"/>
+            app:layout_constraintTop_toBottomOf="@+id/mp3EncoderHeader" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tvQualityValue"
@@ -57,7 +58,7 @@
             android:layout_marginStart="@dimen/margin_tiny"
             app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
             app:layout_constraintLeft_toRightOf="@id/qualityHeader"
-            tools:text="128 - 172 kbps"/>
+            tools:text="128 - 172 kbps" />
 
         <SeekBar
             android:id="@+id/sbQuality"
@@ -68,7 +69,7 @@
             android:progress="9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader"/>
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader" />
 
 
         <Button
@@ -81,6 +82,6 @@
             android:text="@string/start_conversion_button"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbQuality"/>
+            app:layout_constraintTop_toBottomOf="@+id/sbQuality" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

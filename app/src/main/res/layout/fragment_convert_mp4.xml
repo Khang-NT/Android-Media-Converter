@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:layout="@layout/fragment_single_input_output"/>
+            tools:layout="@layout/fragment_single_input_output" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/mp4VideoQualityHeader"
@@ -29,8 +29,8 @@
             android:text="@string/mp4_video_quality_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput"
-            tools:layout_editor_absoluteX="24dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput" />
 
         <Spinner
             android:id="@+id/spinnerVideoQuality"
@@ -38,42 +38,7 @@
             android:layout_height="wrap_content"
             android:entries="@array/mp4VideoQuality"
             app:layout_constraintBaseline_toBaselineOf="@+id/mp4VideoQualityHeader"
-            app:layout_constraintLeft_toRightOf="@+id/mp4VideoQualityHeader" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/qualityHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/quality_header"
-            android:textColor="?attr/colorAccent"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/mp4VideoQualityHeader"
-            tools:layout_editor_absoluteX="16dp" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvQualityValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_tiny"
-            android:visibility="gone"
-            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
-            app:layout_constraintLeft_toRightOf="@id/qualityHeader"
-            tools:text="128 - 172 kbps" />
-
-        <SeekBar
-            android:id="@+id/sbQuality"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:max="9"
-            android:progress="9"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader" />
-
+            app:layout_constraintStart_toEndOf="@+id/mp4VideoQualityHeader" />
 
         <Button
             android:id="@+id/btnStartConversion"
@@ -85,6 +50,6 @@
             android:text="@string/start_conversion_button"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbQuality"/>
+            app:layout_constraintTop_toBottomOf="@+id/spinnerVideoQuality" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
