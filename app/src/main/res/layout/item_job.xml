@@ -35,7 +35,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:backgroundTint="#ff00"
-                tools:text="MP3"/>
+                tools:text="MP3" />
 
             <TextView
                 android:id="@+id/tvJobTitle"
@@ -51,7 +51,7 @@
                 android:textColor="?android:textColorPrimary"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                tools:text="Hello world.mp3"/>
+                tools:text="Hello world.mp3" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ivCancelJob"
@@ -59,14 +59,14 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"
-                app:tint="?android:textColorSecondary"/>
+                app:tint="?android:textColorSecondary" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@drawable/shadow"
-            app:layout_constraintTop_toBottomOf="@+id/titleContainer"/>
+            app:layout_constraintTop_toBottomOf="@+id/titleContainer" />
 
         <TextView
             android:id="@+id/tvJobStatus"
@@ -80,7 +80,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleContainer"
-            tools:text="Status: RUNNING. Hello world bla baskdjasdlkajsd mnasdkjasldj"/>
+            tools:text="Status: RUNNING. Hello world bla baskdjasdlkajsd mnasdkjasldj" />
 
         <TextView
             android:id="@+id/tvJobLocation"
@@ -92,7 +92,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvJobStatus"
-            tools:text="Location: /sdcard/Music/Hello world.mp3"/>
+            tools:text="Location: /sdcard/Music/Hello world.mp3" />
 
         <ImageView
             android:id="@+id/ivLogs"
@@ -100,12 +100,13 @@
             android:layout_height="32dp"
             android:layout_marginLeft="@dimen/margin_normal"
             android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="4dp"
             android:src="@drawable/console"
             android:tint="@color/gray_600"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/buttonLayout"/>
+            app:layout_constraintTop_toBottomOf="@id/tvJobLocation" />
 
         <LinearLayout
             android:id="@+id/buttonLayout"
@@ -130,7 +131,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
                 android:src="@drawable/ic_share"
-                android:tint="@color/gray_600"/>
+                android:tint="@color/gray_600" />
 
             <ImageView
                 android:id="@+id/ivOpen"
@@ -142,7 +143,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
                 android:src="@drawable/ic_open_black_24dp"
-                android:tint="@color/gray_600"/>
+                android:tint="@color/gray_600" />
 
             <ImageView
                 android:id="@+id/ivOpenFolder"
@@ -154,7 +155,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
                 android:src="@drawable/ic_folder_black_24dp"
-                android:tint="@color/gray_600"/>
+                android:tint="@color/gray_600" />
 
             <ImageView
                 android:id="@+id/ivDeleteFile"
@@ -164,7 +165,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
                 android:src="@drawable/ic_delete_black_24dp"
-                android:tint="@color/gray_600"/>
+                android:tint="@color/gray_600" />
 
         </LinearLayout>
 

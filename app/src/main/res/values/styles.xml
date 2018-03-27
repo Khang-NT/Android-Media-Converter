@@ -40,5 +40,11 @@
         <item name="android:textColor">?android:textColorPrimaryInverse</item>
     </style>
 
+    <style name="CustomActivityOnCrashTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/custom_activity_on_crash_primary</item>
+        <item name="colorPrimaryDark">@color/custom_activity_on_crash_primary_dark</item>
+        <item name="colorAccent">@color/custom_activity_on_crash_accent</item>
+    </style>
+
 
 </resources>

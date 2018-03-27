@@ -13,10 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
-import com.github.khangnt.mcp.ID_UNSET
-import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
-import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.SingletonInstances
+import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
@@ -24,6 +21,7 @@ import com.github.khangnt.mcp.ui.presetcmd.PresetCommandFragment
 import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
+import com.github.khangnt.mcp.util.viewChangelog
 import com.github.khangnt.mcp.worker.ACTION_JOB_STATUS_CHANGED
 import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
@@ -59,6 +57,13 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
             // request permission without checking result
             requestPermissions(appPermissions, 0)
         }
+
+        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        if (sharedPrefs.lastKnownVersionCode < BuildConfig.VERSION_CODE) {
+            viewChangelog(this)
+            sharedPrefs.lastKnownVersionCode = BuildConfig.VERSION_CODE
+        }
+
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
