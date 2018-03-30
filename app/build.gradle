@@ -113,28 +113,16 @@ android {
             versionCode 40000 + _versionCode
             versionNameSuffix "-x86_64"
         }
-        mips {
-            dimension 'cpuArch'
-            ndk {
-                abiFilter 'mips'
-            }
-
-            versionCode 50000 + _versionCode
-            versionNameSuffix "-mips"
-        }
-        mips64 {
-            dimension 'cpuArch'
-            ndk {
-                abiFilter 'mips64'
-            }
-
-            versionCode 60000 + _versionCode
-            versionNameSuffix "-mips64"
-        }
     }
 
     lintOptions {
         ignore 'ExtraTranslation', 'MissingTranslation'
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+        }
     }
 }
 
@@ -155,7 +143,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
-    implementation 'com.jakewharton.timber:timber:4.6.1'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
 
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
 
@@ -184,8 +172,6 @@ publishConfig {
             "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
             "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
             "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
-            "$buildDir/outputs/apk/mips/release/app-mips-release.apk",
-            "$buildDir/outputs/apk/mips64/release/app-mips64-release.apk",
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
             "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
     )
@@ -193,8 +179,6 @@ publishConfig {
             "$buildDir/outputs/mapping/arm/release/mapping.txt",
             "$buildDir/outputs/mapping/arm7/release/mapping.txt",
             "$buildDir/outputs/mapping/arm8/release/mapping.txt",
-            "$buildDir/outputs/mapping/mips/release/mapping.txt",
-            "$buildDir/outputs/mapping/mips64/release/mapping.txt",
             "$buildDir/outputs/mapping/x86/release/mapping.txt",
             "$buildDir/outputs/mapping/x86_64/release/mapping.txt",
     )
@@ -207,17 +191,13 @@ afterEvaluate {
             "testArm7ReleaseUnitTest",
             "testArm8ReleaseUnitTest",
             "testX86ReleaseUnitTest",
-            "testX86_64ReleaseUnitTest",
-            "testMipsReleaseUnitTest",
-            "testMips64ReleaseUnitTest"
+            "testX86_64ReleaseUnitTest"
     )
     tasks.create("lintRelease").dependsOn(
             "lintArmRelease",
             "lintArm7Release",
             "lintArm8Release",
             "lintX86Release",
-            "lintX86_64Release",
-            "lintMipsRelease",
-            "lintMips64Release"
+            "lintX86_64Release"
     )
 }
