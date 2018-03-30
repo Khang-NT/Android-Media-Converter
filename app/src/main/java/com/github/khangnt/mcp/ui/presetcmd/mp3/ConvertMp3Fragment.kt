@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment
+import com.github.khangnt.mcp.ui.presetcmd.common.TrimmerFragment
 import com.github.khangnt.mcp.util.onItemSelected
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import com.github.khangnt.mcp.worker.ConverterService
@@ -83,6 +84,11 @@ class ConvertMp3Fragment : ConvertFragment() {
     private fun getIoFragment(): SingleInputOutputFragment {
         val fragment = childFragmentManager.findFragmentById(R.id.fragmentInputOutput)
         return fragment as SingleInputOutputFragment
+    }
+
+    private fun getTrimFragment(): TrimmerFragment {
+        val fragment = childFragmentManager.findFragmentById(R.id.fragmentTrimmer)
+        return fragment as TrimmerFragment
     }
 
     private fun validateAndStartConversion() {
