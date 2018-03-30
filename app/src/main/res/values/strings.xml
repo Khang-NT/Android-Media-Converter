@@ -66,6 +66,8 @@
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
+    <string name="start_position_hint">Start Position</string>
+    <string name="end_position_hint">End Position</string>
 
     <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
     <string name="error_input_text_empty">Input can\'t empty</string>
