@@ -5,6 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/TrimHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_huge"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:text="@string/trim_options_header"
+        android:textColor="?attr/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til0"
         android:layout_width="0dp"
@@ -12,7 +24,8 @@
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
         app:layout_constraintEnd_toStartOf="@+id/til1"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TrimHeader">
 
         <EditText
             android:id="@+id/edStartPos"
@@ -35,7 +48,8 @@
         android:layout_marginRight="@dimen/margin_small"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/til0">
+        app:layout_constraintStart_toEndOf="@+id/til0"
+        app:layout_constraintTop_toBottomOf="@+id/TrimHeader">
 
         <EditText
             android:id="@+id/edEndPos"
