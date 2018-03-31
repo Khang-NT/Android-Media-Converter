@@ -11,10 +11,8 @@ import android.support.transition.Slide
 import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.View
-import android.webkit.WebView
 import android.widget.ScrollView
 import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.util.*

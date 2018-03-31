@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.ui.presetcmd.common
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
@@ -72,16 +73,17 @@ class SingleInputOutputFragment : BaseFragment() {
             startActivityForResult(pickFileIntent, RC_PICK_INPUT_FILE)
         }
         edOutputPath.setOnClickListener {
-            val requestCode: Int
-            val pickOutputFolderIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                requestCode = RC_PICK_DOCUMENT_TREE
-                Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra("android.content.extra.SHOW_ADVANCED", outputFolderUri === null)
-            } else {
-                requestCode = RC_PICK_FOLDER
-                FilePickerActivity.pickFolderIntent(it.context, ensureWritable = true)
+                try {
+                    startActivityForResult(intent, RC_PICK_DOCUMENT_TREE)
+                    return@setOnClickListener
+                } catch (ignore: ActivityNotFoundException) {
+                }
             }
-            startActivityForResult(pickOutputFolderIntent, requestCode)
+            val intent = FilePickerActivity.pickFolderIntent(it.context, ensureWritable = true)
+            startActivityForResult(intent, RC_PICK_FOLDER)
         }
     }
 
