@@ -10,6 +10,7 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.job.jobComparator
+import com.github.khangnt.mcp.reportNonFatal
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
@@ -74,15 +75,21 @@ class JobManagerFragment : BaseFragment() {
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getData(position) is HeaderModel) spanCount else 1
+                val data = try {
+                    adapter.getData(position)
+                } catch (error: IndexOutOfBoundsException) {
+                    // https://issuetracker.google.com/issues/37132919
+                    reportNonFatal(
+                            throwable = error,
+                            where = "getSpanSize",
+                            message = "Call by thread: ${Thread.currentThread().name}"
+                    )
+                    return 1
+                }
+                return if (data is HeaderModel) spanCount else 1
             }
         }
         recyclerViewGroupState.bind(recyclerViewGroup, adapter, lm)
-        /*
-         * Experiment to fix issue: https://issuetracker.google.com/issues/37132919
-         * The reason maybe adapter's data refresh during configuration change.
-         */
-        adapter.notifyDataSetChanged()
     }
 
     override fun onResume() {

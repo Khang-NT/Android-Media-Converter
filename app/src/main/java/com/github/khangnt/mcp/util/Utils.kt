@@ -2,15 +2,12 @@ package com.github.khangnt.mcp.util
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
+import android.view.ViewGroup
 import android.webkit.WebView
-import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
-import com.github.khangnt.mcp.KB
-import com.github.khangnt.mcp.MB
-import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.*
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -157,13 +154,14 @@ fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
 }
 
 fun viewChangelog(context: Context) {
-    val paddingHorizontal = context.resources.getDimensionPixelOffset(R.dimen.margin_normal)
-    val web = WebView(context)
-    web.loadUrl("file:///android_asset/changelog.html")
-    web.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
-    val builder = AlertDialog.Builder(context)
-    builder.setTitle(R.string.changelog)
-            .setView(web)
-            .setPositiveButton(context.getString(R.string.close), null)
+    val webView = WebView(context)
+    AlertDialog.Builder(context).setTitle(R.string.changelog)
+            .setView(webView)
+            .setPositiveButton(R.string.close, null)
             .show()
+
+    val margin = context.resources.getDimensionPixelOffset(R.dimen.margin_normal)
+    (webView.layoutParams as ViewGroup.MarginLayoutParams)
+            .setMargins(margin, 0, margin, 0)
+    webView.loadUrl(CHANGELOG_URL)
 }
