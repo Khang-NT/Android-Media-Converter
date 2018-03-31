@@ -79,7 +79,7 @@
             android:layout_marginTop="@dimen/margin_normal"
             android:paddingLeft="@dimen/margin_huge"
             android:paddingRight="@dimen/margin_huge"
-            android:text="Advanced ↓"
+            android:text="@string/advanced_arrow_down"
             app:layout_constraintEnd_toStartOf="@+id/btnStartConversion"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sbQuality" />

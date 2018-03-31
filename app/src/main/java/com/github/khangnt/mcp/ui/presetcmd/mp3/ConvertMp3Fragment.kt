@@ -95,10 +95,10 @@ class ConvertMp3Fragment : ConvertFragment() {
 
         if (advancedLayout.visibility == View.GONE) {
             advancedLayout.visibility = View.VISIBLE
-            btnAdvancedToggle.text = "Advanced ↑"
+            btnAdvancedToggle.text = getString(R.string.advanced_arrow_up)
         } else {
             advancedLayout.visibility = View.GONE
-            btnAdvancedToggle.text = "Advanced ↓"
+            btnAdvancedToggle.text = getString(R.string.advanced_arrow_down)
         }
     }
 

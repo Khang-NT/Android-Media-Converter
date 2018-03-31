@@ -134,4 +134,9 @@
     <string name="question">Question</string>
 
     <string name="close">Close</string>
+    <string name="trim_options_header">Trim options:</string>
+    <string name="mark_at_begin">Mark at begin</string>
+    <string name="mark_at_end">Mark at end</string>
+    <string name="advanced_arrow_down">Advanced ↓</string>
+    <string name="advanced_arrow_up">Advanced ↑</string>
 </resources>
