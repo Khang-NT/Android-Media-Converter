@@ -2,6 +2,12 @@ package com.github.khangnt.mcp.ui.presetcmd.mp3
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.transition.Fade
+import android.support.transition.Slide
+import android.support.transition.TransitionManager
+import android.support.transition.TransitionSet
+import android.support.v4.app.FragmentTransaction
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,12 +70,29 @@ class ConvertMp3Fragment : ConvertFragment() {
             }
         }
 
+        btnAdvancedToggle.setOnClickListener { toggleAdvanced() }
+
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         updateQualityText()
+    }
+
+    private fun toggleAdvanced() {
+        val transition = TransitionSet()
+        transition.addTransition(Fade())
+        transition.addTransition(Slide(Gravity.TOP))
+        TransitionManager.beginDelayedTransition(advancedLayout, transition)
+
+        if (advancedLayout.visibility == View.GONE) {
+            advancedLayout.visibility = View.VISIBLE
+            btnAdvancedToggle.text = "Advanced ↑"
+        } else {
+            advancedLayout.visibility = View.GONE
+            btnAdvancedToggle.text = "Advanced ↓"
+        }
     }
 
     @SuppressLint("SetTextI18n")
