@@ -50,7 +50,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/markBegin"
+        android:id="@+id/btnMarkBegin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mark at begin"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/til0" />
 
     <Button
-        android:id="@+id/markEnd"
+        android:id="@+id/btnMarkEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mark at end"

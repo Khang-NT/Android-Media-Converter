@@ -6,7 +6,6 @@ import android.support.transition.Fade
 import android.support.transition.Slide
 import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
-import android.support.v4.app.FragmentTransaction
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -71,6 +70,14 @@ class ConvertMp3Fragment : ConvertFragment() {
         }
 
         btnAdvancedToggle.setOnClickListener { toggleAdvanced() }
+
+        getTrimFragment().getMarkBeginButton().setOnClickListener {
+            getTrimFragment().getStartPos().setText("0")
+        }
+
+        getTrimFragment().getMarkEndButton().setOnClickListener {
+            getTrimFragment().getEndPos().setText("999999999")
+        }
 
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
