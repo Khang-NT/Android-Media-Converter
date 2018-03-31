@@ -34,7 +34,14 @@ class TrimmerFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        btnMarkBegin.setOnClickListener {
+            edStartPos.setText("0")
+        }
 
+        btnMarkEnd.setOnClickListener {
+            edEndPos.setText("9999999")
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -78,22 +85,6 @@ class TrimmerFragment : BaseFragment() {
         }
 
         callback(BeginEndPosition(true, startPoint, endPoint, false))
-    }
-
-    fun getMarkBeginButton(): Button {
-        return btnMarkBegin
-    }
-
-    fun getMarkEndButton(): Button {
-        return btnMarkEnd
-    }
-
-    fun getStartPos(): EditText {
-        return edStartPos
-    }
-
-    fun getEndPos(): EditText {
-        return edEndPos
     }
 
 }

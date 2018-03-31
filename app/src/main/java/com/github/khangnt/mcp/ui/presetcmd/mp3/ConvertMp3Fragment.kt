@@ -71,14 +71,6 @@ class ConvertMp3Fragment : ConvertFragment() {
 
         btnAdvancedToggle.setOnClickListener { toggleAdvanced() }
 
-        getTrimFragment().getMarkBeginButton().setOnClickListener {
-            getTrimFragment().getStartPos().setText("0")
-        }
-
-        getTrimFragment().getMarkEndButton().setOnClickListener {
-            getTrimFragment().getEndPos().setText("9999999")
-        }
-
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
 
