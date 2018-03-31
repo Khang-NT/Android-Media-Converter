@@ -35,8 +35,8 @@ class RecyclerViewGroupState {
     ) {
         recyclerViewGroupWeakRef = WeakReference(recyclerViewGroup)
         recyclerViewGroup.setRetryFunc(retryFunc)
-        recyclerViewGroup.getRecyclerView().adapter = adapter
         recyclerViewGroup.getRecyclerView().layoutManager = layoutManager
+        recyclerViewGroup.getRecyclerView().swapAdapter(adapter, true)
         updateState()
     }
 
