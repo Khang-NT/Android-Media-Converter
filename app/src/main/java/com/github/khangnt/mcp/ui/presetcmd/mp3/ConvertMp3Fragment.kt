@@ -121,6 +121,7 @@ class ConvertMp3Fragment : ConvertFragment() {
         return fragment as TrimmerFragment
     }
 
+    @SuppressLint("SetTextI18n")
     private fun validateAndStartConversion() {
         getIoFragment().validateAndGetInputOutputData { inputOutputData ->
             val cmdArgsBuilder = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g -codec:a ")
@@ -129,6 +130,19 @@ class ConvertMp3Fragment : ConvertFragment() {
             } else {
                 cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
             }
+
+            if (getTrimFragment().getStartPos().text.toString().startsWith(".")) {
+                getTrimFragment().getStartPos().setText("0" + getTrimFragment().getStartPos().text)
+            }
+
+            if (getTrimFragment().getEndPos().text.toString().startsWith(".")) {
+                getTrimFragment().getEndPos().setText("0" + getTrimFragment().getEndPos().text)
+            }
+
+            val startPoint = getTrimFragment().getStartPos().text.toString().toFloat()
+            val endPoint = getTrimFragment().getEndPos().text.toString().toFloat() - startPoint
+
+            cmdArgsBuilder.append("-ss $startPoint -t $endPoint ")
 
             ConverterService.newJob(
                     context!!,
