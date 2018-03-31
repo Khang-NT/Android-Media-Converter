@@ -47,7 +47,7 @@ private const val JOB_HANDLER_MAX_FREE_TIME = 10_000 / JOB_HANDLER_LOOP_INTERVAL
 
 private const val NOTIFICATION_UPDATE_INTERVAL = 500L
 
-private const val SERVICE_WAKE_LOCK_TAG = "ConverterServiceWakeLock"
+private const val SERVICE_WAKE_LOCK_TAG = "converterService:wakeLock"
 
 const val ACTION_ADD_JOB = "${BuildConfig.APPLICATION_ID}.action.add_job"
 const val ACTION_CANCEL_JOB = "${BuildConfig.APPLICATION_ID}.action.cancel_job"
