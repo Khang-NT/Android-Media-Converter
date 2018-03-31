@@ -76,6 +76,7 @@
     <string name="error_invalid_url">Invalid URL</string>
     <string name="error_output_folder_empty">Please select output folder</string>
     <string name="error_file_name_empty">Please set file name</string>
+    <string name="error_invalid_position">Invalid position</string>
 
     <string name="dialog_error_file_exists">File name exists</string>
     <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>

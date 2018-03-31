@@ -76,7 +76,7 @@ class ConvertMp3Fragment : ConvertFragment() {
         }
 
         getTrimFragment().getMarkEndButton().setOnClickListener {
-            getTrimFragment().getEndPos().setText("999999999")
+            getTrimFragment().getEndPos().setText("9999999")
         }
 
         btnStartConversion.setOnClickListener { validateAndStartConversion() }
@@ -121,7 +121,6 @@ class ConvertMp3Fragment : ConvertFragment() {
         return fragment as TrimmerFragment
     }
 
-    @SuppressLint("SetTextI18n")
     private fun validateAndStartConversion() {
         getIoFragment().validateAndGetInputOutputData { inputOutputData ->
             val cmdArgsBuilder = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g -codec:a ")
@@ -131,30 +130,25 @@ class ConvertMp3Fragment : ConvertFragment() {
                 cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
             }
 
-            if (getTrimFragment().getStartPos().text.toString().startsWith(".")) {
-                getTrimFragment().getStartPos().setText("0" + getTrimFragment().getStartPos().text)
+            getTrimFragment().validateAndGetBeginEndPostition { beginEndPosition ->
+                if (beginEndPosition.isTrimmed) {
+                    cmdArgsBuilder.append("-ss ${beginEndPosition.beginPos} -t ${beginEndPosition.endPos} ")
+                }
+
+                if (!beginEndPosition.isError) {
+                    ConverterService.newJob(
+                            context!!,
+                            title = inputOutputData.title,
+                            inputs = listOf(inputOutputData.inputUri),
+                            args = cmdArgsBuilder.toString(),
+                            outputUri = inputOutputData.outputUri,
+                            outputFormat = "mp3"
+                    )
+
+                    (activity as? OnSubmittedListener)?.onSubmitted(this)
+                            ?: Timber.w("Host activity does not implement OnSubmittedListener")
+                }
             }
-
-            if (getTrimFragment().getEndPos().text.toString().startsWith(".")) {
-                getTrimFragment().getEndPos().setText("0" + getTrimFragment().getEndPos().text)
-            }
-
-            val startPoint = getTrimFragment().getStartPos().text.toString().toFloat()
-            val endPoint = getTrimFragment().getEndPos().text.toString().toFloat() - startPoint
-
-            cmdArgsBuilder.append("-ss $startPoint -t $endPoint ")
-
-            ConverterService.newJob(
-                    context!!,
-                    title = inputOutputData.title,
-                    inputs = listOf(inputOutputData.inputUri),
-                    args = cmdArgsBuilder.toString(),
-                    outputUri = inputOutputData.outputUri,
-                    outputFormat = "mp3"
-            )
-
-            (activity as? OnSubmittedListener)?.onSubmitted(this)
-                    ?: Timber.w("Host activity does not implement OnSubmittedListener")
         }
     }
 
