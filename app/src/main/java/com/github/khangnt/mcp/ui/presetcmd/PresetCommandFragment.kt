@@ -81,8 +81,9 @@ class PresetCommandFragment : BaseFragment() {
         val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int =
-                    if (adapter.getData(position) is HeaderModel) spanCount else 1
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getData(position) is HeaderModel) spanCount else 1
+            }
         }
 
         recyclerViewGroup.getRecyclerView().layoutManager = lm

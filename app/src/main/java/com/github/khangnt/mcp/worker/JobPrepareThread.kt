@@ -18,11 +18,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.lang.Exception
 
-/**
- * Created by Khang NT on 1/22/18.
- * Email: khang.neon.1997@gmail.com
- */
-
 private const val DOWNLOAD_TASK_UPDATE_INTERVAL = 500
 
 /**

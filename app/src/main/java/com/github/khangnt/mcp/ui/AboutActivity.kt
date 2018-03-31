@@ -11,17 +11,11 @@ import android.support.transition.Slide
 import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.app.AlertDialog
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.ScrollView
 import com.github.khangnt.mcp.*
-import com.github.khangnt.mcp.util.openPlayStore
-import com.github.khangnt.mcp.util.openUrl
-import com.github.khangnt.mcp.util.sendEmail
-import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.util.*
 import de.psdev.licensesdialog.LicensesDialog
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -63,17 +57,8 @@ class AboutActivity : BaseActivity() {
 
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
-        changelog.setOnClickListener {
-            val webView = WebView(this)
-            AlertDialog.Builder(this).setTitle(R.string.changelog)
-                    .setView(webView)
-                    .setPositiveButton(getString(R.string.close), null)
-                    .show()
-
-            val margin = resources.getDimensionPixelOffset(R.dimen.margin_normal)
-            (webView.layoutParams as ViewGroup.MarginLayoutParams)
-                    .setMargins(margin, 0, margin, 0)
-            webView.loadUrl(CHANGELOG_URL)
+        changelog.setOnClickListener{
+            viewChangelog(this)
         }
 
         rateUs.setOnClickListener {

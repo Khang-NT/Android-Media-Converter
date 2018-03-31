@@ -35,12 +35,7 @@ abstract class BaseFragment : RxFragment() {
     }
 
     protected fun getActivitySupportActionBar(): ActionBar? {
-        val hostingActivity = activity
-        return if (hostingActivity is AppCompatActivity) {
-            hostingActivity.supportActionBar
-        } else {
-            null
-        }
+        return (activity as? AppCompatActivity)?.supportActionBar
     }
 
 }

@@ -97,6 +97,7 @@ class FileListFragment : BaseFragment() {
     private fun reloadData() {
         recyclerViewGroupState.loading()
         if (!hasWriteStoragePermission(context!!)) {
+            // todo: handle permission rationale
             requestPermissions(appPermissions, RC_REQUEST_PERMISSION)
             return
         }

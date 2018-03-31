@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.provider.DocumentFile
-import com.github.khangnt.mcp.DEFAULT_IO_BUFFER_LENGTH
-import com.github.khangnt.mcp.KB
-import com.github.khangnt.mcp.MB
-import com.github.khangnt.mcp.R
+import android.support.v7.app.AlertDialog
+import android.view.ViewGroup
+import android.webkit.WebView
+import com.github.khangnt.mcp.*
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -151,4 +151,17 @@ fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
         val documentTree = DocumentFile.fromTreeUri(this, folderUri)
         documentTree.findFile(fileName).uri
     }
+}
+
+fun viewChangelog(context: Context) {
+    val webView = WebView(context)
+    AlertDialog.Builder(context).setTitle(R.string.changelog)
+            .setView(webView)
+            .setPositiveButton(R.string.close, null)
+            .show()
+
+    val margin = context.resources.getDimensionPixelOffset(R.dimen.margin_normal)
+    (webView.layoutParams as ViewGroup.MarginLayoutParams)
+            .setMargins(margin, 0, margin, 0)
+    webView.loadUrl(CHANGELOG_URL)
 }

@@ -25,6 +25,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_output_folder, null)
         set(value) = putString(R.string.pref_key_last_output_folder, value)
 
+    var lastKnownVersionCode: Int
+        get() = getInt(R.string.pref_key_last_version_code, 0)
+        set(lastVersionCode) = putInt(R.string.pref_key_last_version_code, lastVersionCode)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }
