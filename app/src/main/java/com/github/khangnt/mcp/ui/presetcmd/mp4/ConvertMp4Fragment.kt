@@ -82,12 +82,12 @@ class ConvertMp4Fragment : ConvertFragment() {
             cmdArgsBuilder.append("-q:v ${mp4VideoQuality[spinnerVideoQuality.selectedItemPosition]} ")
 
 
-            getTrimFragment().validateAndGetStartPositionDuration { startPositionDuration ->
-                if (startPositionDuration.isTrimmed) {
-                    cmdArgsBuilder.append("-ss ${startPositionDuration.startPos} -t ${startPositionDuration.duration} ")
+            getTrimFragment().validateAndGetTrimConfig { TrimConfig ->
+                if (TrimConfig.isTrimmed) {
+                    cmdArgsBuilder.append("-ss ${TrimConfig.startPos} -t ${TrimConfig.duration} ")
                 }
 
-                if (!startPositionDuration.isError) {
+                if (!TrimConfig.isError) {
                     ConverterService.newJob(
                             context!!,
                             title = inputOutputData.title,

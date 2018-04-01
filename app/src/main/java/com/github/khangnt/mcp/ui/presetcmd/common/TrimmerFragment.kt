@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_trimmer.*
  * Email: simonpham.dn@gmail.com
  */
 
-data class StartPositionDuration(val startPos: Float, val duration: Float, val isError: Boolean, val isTrimmed: Boolean)
+data class TrimConfig(val startPos: Float, val duration: Float, val isError: Boolean, val isTrimmed: Boolean)
 
 class TrimmerFragment : BaseFragment() {
 
@@ -49,10 +49,10 @@ class TrimmerFragment : BaseFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun validateAndGetStartPositionDuration(callback: (StartPositionDuration) -> Unit) {
+    fun validateAndGetTrimConfig(callback: (TrimConfig) -> Unit) {
         // validate
         if ((edStartPos.text.toString() == "" && edEndPos.text.toString() == "")) {
-            callback(StartPositionDuration(0.0f, 0.0f, false, false))
+            callback(TrimConfig(0.0f, 0.0f, false, false))
             return
         }
 
@@ -84,11 +84,11 @@ class TrimmerFragment : BaseFragment() {
         if (duration <= 0.0f) {
             edEndPos.error = getString(R.string.error_invalid_position)
             edEndPos.openKeyboard()
-            callback(StartPositionDuration(startPoint, duration, true, false))
+            callback(TrimConfig(startPoint, duration, true, false))
             return
         }
 
-        callback(StartPositionDuration(startPoint, duration,false, true))
+        callback(TrimConfig(startPoint, duration,false, true))
     }
 
 }

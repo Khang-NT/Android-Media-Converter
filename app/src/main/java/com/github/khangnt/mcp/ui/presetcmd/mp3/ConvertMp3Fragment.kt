@@ -122,12 +122,12 @@ class ConvertMp3Fragment : ConvertFragment() {
                 cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
             }
 
-            getTrimFragment().validateAndGetStartPositionDuration { startPositionDuration ->
-                if (startPositionDuration.isTrimmed) {
-                    cmdArgsBuilder.append("-ss ${startPositionDuration.startPos} -t ${startPositionDuration.duration} ")
+            getTrimFragment().validateAndGetTrimConfig { TrimConfig ->
+                if (TrimConfig.isTrimmed) {
+                    cmdArgsBuilder.append("-ss ${TrimConfig.startPos} -t ${TrimConfig.duration} ")
                 }
 
-                if (!startPositionDuration.isError) {
+                if (!TrimConfig.isError) {
                     ConverterService.newJob(
                             context!!,
                             title = inputOutputData.title,
