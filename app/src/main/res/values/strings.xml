@@ -66,6 +66,8 @@
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
+    <string name="start_position_hint">Start Position (sec)</string>
+    <string name="end_position_hint">End Position (sec)</string>
 
     <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
     <string name="error_input_text_empty">Input can\'t empty</string>
@@ -74,6 +76,7 @@
     <string name="error_invalid_url">Invalid URL</string>
     <string name="error_output_folder_empty">Please select output folder</string>
     <string name="error_file_name_empty">Please set file name</string>
+    <string name="error_invalid_position">Invalid position</string>
 
     <string name="dialog_error_file_exists">File name exists</string>
     <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
@@ -131,4 +134,9 @@
     <string name="question">Question</string>
 
     <string name="close">Close</string>
+    <string name="trim_options_header">Trim options:</string>
+    <string name="mark_at_begin">Mark at begin</string>
+    <string name="mark_at_end">Mark at end</string>
+    <string name="advanced_arrow_down">Advanced ↓</string>
+    <string name="advanced_arrow_up">Advanced ↑</string>
 </resources>

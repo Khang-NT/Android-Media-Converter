@@ -56,6 +56,18 @@
 
 
         <Button
+            android:id="@+id/btnAdvancedToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:paddingLeft="@dimen/margin_huge"
+            android:paddingRight="@dimen/margin_huge"
+            android:text="@string/advanced_arrow_down"
+            app:layout_constraintEnd_toStartOf="@+id/btnStartConversion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sbQuality" />
+
+        <Button
             android:id="@+id/btnStartConversion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,8 +75,28 @@
             android:paddingLeft="@dimen/margin_huge"
             android:paddingRight="@dimen/margin_huge"
             android:text="@string/start_conversion_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbQuality"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnAdvancedToggle"
+            app:layout_constraintTop_toBottomOf="@+id/sbQuality" />
+
+        <LinearLayout
+            android:id="@+id/advancedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/btnAdvancedToggle"
+            app:layout_constraintRight_toRightOf="@+id/btnAdvancedToggle"
+            app:layout_constraintTop_toBottomOf="@+id/btnAdvancedToggle">
+
+            <fragment
+                android:id="@+id/fragmentTrimmer"
+                android:name="com.github.khangnt.mcp.ui.presetcmd.common.TrimmerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_trimmer" />
+
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
