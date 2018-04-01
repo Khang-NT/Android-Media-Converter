@@ -17,9 +17,13 @@ import kotlinx.android.synthetic.main.fragment_trimmer.*
  * Email: simonpham.dn@gmail.com
  */
 
-data class BeginEndPosition(val isTrimmed: Boolean, val beginPos: Float, val endPos: Float, val isError: Boolean)
+data class StartPositionDuration(val startPos: Float, val duration: Float, val isError: Boolean, val isTrimmed: Boolean)
 
 class TrimmerFragment : BaseFragment() {
+
+    companion object {
+        private const val MAX_DURATION = "99999999"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +44,15 @@ class TrimmerFragment : BaseFragment() {
         }
 
         btnMarkEnd.setOnClickListener {
-            edEndPos.setText("9999999")
+            edEndPos.setText(MAX_DURATION)
         }
     }
 
     @SuppressLint("SetTextI18n")
-    fun validateAndGetBeginEndPostition(callback: (BeginEndPosition) -> Unit) {
+    fun validateAndGetStartPositionDuration(callback: (StartPositionDuration) -> Unit) {
         // validate
         if ((edStartPos.text.toString() == "" && edEndPos.text.toString() == "")) {
-            callback(BeginEndPosition(false, 0.0f, 0.0f, false))
+            callback(StartPositionDuration(0.0f, 0.0f, false, false))
             return
         }
 
@@ -57,7 +61,7 @@ class TrimmerFragment : BaseFragment() {
         }
 
         if (edEndPos.text.toString() == "" && edStartPos.text.toString() != "") {
-            edEndPos.setText("9999999")
+            edEndPos.setText(MAX_DURATION)
         }
 
         if (edStartPos.text.toString().startsWith(".")) {
@@ -75,16 +79,16 @@ class TrimmerFragment : BaseFragment() {
         }
 
         val startPoint = edStartPos.text.toString().toFloat()
-        val endPoint = edEndPos.text.toString().toFloat() - startPoint
+        val duration = edEndPos.text.toString().toFloat() - startPoint
 
-        if (endPoint <= 0.0f) {
+        if (duration <= 0.0f) {
             edEndPos.error = getString(R.string.error_invalid_position)
             edEndPos.openKeyboard()
-            callback(BeginEndPosition(false, startPoint, endPoint, true))
+            callback(StartPositionDuration(startPoint, duration, true, false))
             return
         }
 
-        callback(BeginEndPosition(true, startPoint, endPoint, false))
+        callback(StartPositionDuration(startPoint, duration,false, true))
     }
 
 }

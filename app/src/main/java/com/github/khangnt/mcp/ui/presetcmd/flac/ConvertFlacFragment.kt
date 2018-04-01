@@ -83,12 +83,12 @@ class ConvertFlacFragment : ConvertFragment() {
                     .append("-compression_level ${sbCompressionLevel.progress} ")
 
 
-            getTrimFragment().validateAndGetBeginEndPostition { beginEndPosition ->
-                if (beginEndPosition.isTrimmed) {
-                    cmdArgsBuilder.append("-ss ${beginEndPosition.beginPos} -t ${beginEndPosition.endPos} ")
+            getTrimFragment().validateAndGetStartPositionDuration { startPositionDuration ->
+                if (startPositionDuration.isTrimmed) {
+                    cmdArgsBuilder.append("-ss ${startPositionDuration.startPos} -t ${startPositionDuration.duration} ")
                 }
 
-                if (!beginEndPosition.isError) {
+                if (!startPositionDuration.isError) {
                     ConverterService.newJob(
                             context!!,
                             title = inputOutputData.title,
