@@ -173,14 +173,14 @@ publishConfig {
             "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
             "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
-            "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
+            "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk"
     )
     mappings = files(
             "$buildDir/outputs/mapping/arm/release/mapping.txt",
             "$buildDir/outputs/mapping/arm7/release/mapping.txt",
             "$buildDir/outputs/mapping/arm8/release/mapping.txt",
             "$buildDir/outputs/mapping/x86/release/mapping.txt",
-            "$buildDir/outputs/mapping/x86_64/release/mapping.txt",
+            "$buildDir/outputs/mapping/x86_64/release/mapping.txt"
     )
     serviceAccountJson = 'app/service_account.json'
 }
