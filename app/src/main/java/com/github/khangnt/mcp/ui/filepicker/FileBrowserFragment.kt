@@ -91,7 +91,7 @@ class FileBrowserFragment : BaseFragment(){
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle? // todo: rename fragment_file_list
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_file_browser, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

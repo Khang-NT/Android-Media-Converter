@@ -29,7 +29,6 @@ import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.toast
-import com.github.khangnt.mcp.worker.ConverterService
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import kotlinx.android.synthetic.main.item_job.view.*
 import java.io.File
