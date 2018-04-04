@@ -18,10 +18,11 @@
     <string name="close_drawer_des">Close side menu</string>
     <string name="open_drawer_des">Open side menu</string>
 
-    <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
-    <string name="job_list_load_error_message">Load Job failed</string>
+    <string name="empty_job_list">No Job found\nLet create new one via preset command.</string>
+    <string name="loading_job_list">Loading jobs…</string>
+
     <string name="file_list_load_error_message">Load file list failed</string>
-    <string name="preset_command_load_error_message">Load preset commands failed</string>
+
     <string name="retry">Retry</string>
 
     <string name="fork_on_github">Fork on Github</string>
@@ -131,4 +132,14 @@
     <string name="question">Question</string>
 
     <string name="close">Close</string>
+
+    <string name="header_running_job">Running %s</string>
+    <string name="header_preparing_job">Preparing</string>
+    <string name="header_ready_job">Ready</string>
+    <string name="header_pending_job">Pending</string>
+    <string name="header_finished_job">Finished</string>
+    <string name="header_audio_encoding">Audio encoding</string>
+    <string name="header_video_encoding">Video encoding</string>
+
+    <string name="hint_limit_file_select_count">You can\'t select more than %d files</string>
 </resources>

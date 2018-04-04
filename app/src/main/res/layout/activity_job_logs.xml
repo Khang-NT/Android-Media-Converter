@@ -75,7 +75,7 @@
                     android:fontFamily="monospace"
                     android:padding="@dimen/margin_normal"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="Hello world" />
 
             </ScrollView>

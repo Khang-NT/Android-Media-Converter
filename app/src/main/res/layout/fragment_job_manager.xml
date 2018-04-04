@@ -41,12 +41,13 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <com.github.khangnt.mcp.view.RecyclerViewGroup
-        android:id="@+id/recyclerViewGroup"
+    <com.github.khangnt.mcp.view.RecyclerViewContainer
+        android:id="@+id/recyclerViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:emptyStateMessage="@string/job_list_empty_message"
-        app:errorStateMessage="@string/job_list_load_error_message"
+        app:rv_emptyText="@string/empty_job_list"
+        app:rv_loadingText="@string/loading_job_list"
+        app:rv_showReloadOnEmpty="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

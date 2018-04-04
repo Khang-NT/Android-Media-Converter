@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <declare-styleable name="RecyclerViewContainer">
+        <attr name="rv_loadingText" format="string|reference"/>
+        <attr name="rv_emptyText" format="string|reference" />
+        <attr name="rv_showReloadOnEmpty" format="boolean|reference"/>
+        <attr name="rv_paddingVertical" format="dimension"/>
+        <attr name="rv_paddingHorizontal" format="dimension"/>
+        <attr name="rv_clipToPadding" format="boolean|reference" />
     </declare-styleable>
 </resources>
