@@ -41,11 +41,10 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <com.github.khangnt.mcp.view.RecyclerViewGroup
-        android:id="@+id/recyclerViewGroup"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:errorStateMessage="@string/preset_command_load_error_message"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

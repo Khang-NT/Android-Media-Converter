@@ -14,7 +14,10 @@ import com.github.khangnt.mcp.TYPE_AUDIO
 import com.github.khangnt.mcp.TYPE_VIDEO
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.MainActivity
-import com.github.khangnt.mcp.ui.common.*
+import com.github.khangnt.mcp.ui.common.AdapterModel
+import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
+import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.util.getSpanCount
 import kotlinx.android.synthetic.main.fragment_preset_command.*
@@ -28,18 +31,24 @@ private const val RC_CONVERT_ACTIVITY = 9
 
 class PresetCommandFragment : BaseFragment() {
 
-    private val audioEncodingHeader = HeaderModel("Audio encoding")
-    private val videoEncodingHeader = HeaderModel("Video encoding")
-
     private lateinit var adapter: MixAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = MixAdapter.Builder()
-                .register(PresetCommandModel::class.java, presetCommandViewHolderFactory)
-                .register(HeaderModel::class.java, ItemHeaderViewHolder.Factory)
-                .build()
+        adapter = MixAdapter.Builder {
+            withModel<HeaderModel> { ItemHeaderViewHolder.Factory() }
+            withModel<PresetCommandModel> {
+                ItemPresetCommandViewHolder.Factory {
+                    onClickListener = { presetCommand ->
+                        val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
+                        startActivityForResult(intent, RC_CONVERT_ACTIVITY)
+                    }
+                }
+            }
+        }.build()
 
+        val audioEncodingHeader = HeaderModel(getString(R.string.header_audio_encoding))
+        val videoEncodingHeader = HeaderModel(getString(R.string.header_video_encoding))
         val data: MutableList<AdapterModel> = mutableListOf()
         val audioPresetCmds = PresetCommand.values().filter { it.type == TYPE_AUDIO }
         val videoPresetCmds = PresetCommand.values().filter { it.type == TYPE_VIDEO }
@@ -54,15 +63,6 @@ class PresetCommandFragment : BaseFragment() {
         adapter.setData(data)
     }
 
-    private val presetCommandViewHolderFactory: ViewHolderFactory = { inflater, parent ->
-        val itemView = inflater.inflate(R.layout.item_preset_command, parent, false)
-        val onItemClick = { presetCommand: PresetCommand ->
-            val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
-            startActivityForResult(intent, RC_CONVERT_ACTIVITY)
-        }
-        ItemPresetCommandViewHolder(itemView, onItemClick)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -72,23 +72,21 @@ class PresetCommandFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setActivitySupportActionBar(toolbar)
-
         val itemOffsetDecoration = ItemOffsetDecoration(view.context)
                 .setHorizontalSpace(R.dimen.margin_normal)
                 .setVerticalSpace(R.dimen.margin_small)
-                .applyTo(recyclerViewGroup.getRecyclerView())
+                .applyTo(recyclerView)
         val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_preset_cmd_min_width)
         val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getData(position) is HeaderModel) spanCount else 1
+                return if (adapter.getItemData(position) is HeaderModel) spanCount else 1
             }
         }
 
-        recyclerViewGroup.getRecyclerView().layoutManager = lm
-        recyclerViewGroup.getRecyclerView().adapter = adapter
-        recyclerViewGroup.successHasData()
+        recyclerView.layoutManager = lm
+        recyclerView.adapter = adapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -97,7 +95,7 @@ class PresetCommandFragment : BaseFragment() {
             return
         }
         if (requestCode == RC_CONVERT_ACTIVITY) {
-            Snackbar.make(recyclerViewGroup, R.string.add_job_message, Snackbar.LENGTH_SHORT)
+            Snackbar.make(recyclerView, R.string.add_job_message, Snackbar.LENGTH_SHORT)
                     .setAction(getString(R.string.ac_view), {
                         startActivity(MainActivity.openJobManagerIntent(it.context))
                     })
