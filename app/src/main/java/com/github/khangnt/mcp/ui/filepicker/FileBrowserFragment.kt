@@ -41,7 +41,7 @@ class FileBrowserFragment : BaseFragment(){
         }
     }
 
-    private val limitSelectCount by lazy { arguments!!.getInt(KEY_LIMIT_SELECT_COUNT) }
+    private val limitSelectCount: Int by lazy { arguments!!.getInt(KEY_LIMIT_SELECT_COUNT) }
     private val startUpDirectory by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
 
     private lateinit var viewModel: FileBrowserViewModel

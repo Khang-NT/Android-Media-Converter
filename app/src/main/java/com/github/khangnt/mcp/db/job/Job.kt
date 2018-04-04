@@ -31,20 +31,3 @@ data class Job(
 
     fun isDone(): Boolean = status == JobStatus.FAILED || status == JobStatus.COMPLETED
 }
-
-val jobComparator: Comparator<Job> = Comparator { job1, job2 ->
-    if (job1.status == job2.status || (job1.isDone() && job2.isDone())) {
-        // if two jobs are same status, in case:
-        // failed, completed: the newer job will show above older job
-        if (job1.status == JobStatus.FAILED || job1.status == JobStatus.COMPLETED) {
-            return@Comparator -job1.id.compareTo(job2.id)
-        }
-        // otherwise (running, preparing, ready, pending)
-        // like a queue (FIFO), the newer job will show below older job
-        return@Comparator job1.id.compareTo(job2.id)
-    }
-
-    // otherwise, compare job status by order:
-    // running < preparing < ready < pending < failed, completed
-    return@Comparator -job1.status.compareTo(job2.status)
-}
