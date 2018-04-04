@@ -41,7 +41,7 @@ private const val KEY_BTN_SELECT_ENABLED = "key:btnSelectEnabled"
 const val FILES_RESULT = "FilePickerActivity:files_result"
 const val DIRECTORY_RESULT = "FilePickerActivity:directory_result"
 
-class FilePickerActivity : SingleFragmentActivity() {
+class FilePickerActivity : SingleFragmentActivity(), FileBrowserFragment.Callbacks {
 
     companion object {
         fun pickFolderIntent(
@@ -109,21 +109,8 @@ class FilePickerActivity : SingleFragmentActivity() {
         }
 
         val fileBrowserFragment = fragment as FileBrowserFragment
-        fileBrowserFragment.onSelectedFilesChanged = { _, files ->
-            check(isPickFile == true)
-            btnSelect.isEnabled = files.size == maxFileCanPick
-        }
-        fileBrowserFragment.onDirChanged = { _, dir ->
-            pathIndicatorView.setPath(dir)
-            if (!isPickFile) {
-                btnSelect.isEnabled = catchAll {
-                    (!ensureReadable || dir.canRead())
-                            && (!ensureWritable || dir.canWrite())
-                } ?: false
-            }
-        }
-        pathIndicatorView.onPathClick = { _, dir ->
-            fileBrowserFragment.goto(dir)
+        pathIndicatorView.onPathClick = { _, directory ->
+            fileBrowserFragment.goto(directory)
         }
 
         btnCancel.setOnClickListener { finish() }
@@ -131,12 +118,27 @@ class FilePickerActivity : SingleFragmentActivity() {
             val result = Intent()
             if (isPickFile) {
                 result.putStringArrayListExtra(FILES_RESULT,
-                        ArrayList(fileBrowserFragment.getCheckedFiles().map { it.absolutePath }))
+                        ArrayList(fileBrowserFragment.getSelectedFiles().map { it.absolutePath }))
             } else {
-                result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDir()!!.absolutePath)
+                result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDirectory().absolutePath)
             }
             setResult(Activity.RESULT_OK, result)
             finish()
+        }
+    }
+
+    override fun onSelectFilesChanged(files: List<File>) {
+        check(isPickFile)
+        btnSelect.isEnabled = files.size == maxFileCanPick
+    }
+
+    override fun onCurrentDirectoryChanged(directory: File) {
+        pathIndicatorView.setPath(directory)
+        if (!isPickFile) {
+            btnSelect.isEnabled = catchAll {
+                (!ensureReadable || directory.canRead())
+                        && (!ensureWritable || directory.canWrite())
+            } ?: false
         }
     }
 
