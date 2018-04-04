@@ -122,9 +122,8 @@ class JobLogsActivity : BaseActivity() {
         tvJobTitle.isEnabled = false // prevent use click when loading job list
 
         val selected = arrayOf(0)
-        SingletonInstances.getJobManager()
-                .getJob(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
-                .take(1)
+        SingletonInstances.getJobRepository()
+                .getJobsByStatus(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { tvJobTitle.isEnabled = true }
                 .subscribe ({ jobList ->

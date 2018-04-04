@@ -13,7 +13,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
-import com.github.khangnt.mcp.*
+import com.github.khangnt.mcp.BuildConfig
+import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
+import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
@@ -22,7 +25,7 @@ import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
 import com.github.khangnt.mcp.util.viewChangelog
-import com.github.khangnt.mcp.worker.ACTION_JOB_STATUS_CHANGED
+import com.github.khangnt.mcp.worker.ACTION_JOB_DONE
 import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
 import kotlinx.android.synthetic.main.activity_main.*
@@ -113,7 +116,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(jobStatusChangedReceiver, IntentFilter(ACTION_JOB_STATUS_CHANGED))
+        registerReceiver(jobStatusChangedReceiver, IntentFilter(ACTION_JOB_DONE))
     }
 
     override fun onPause() {
@@ -174,8 +177,8 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
                 .show()
     }
 
-    private fun onJobStatusChanged(jobId: Long, @JobStatus jobStatus: Int) {
-        Timber.d("onJobStatusChanged called($jobId, $jobStatus)")
+    private fun onJobDone(jobId: Long, @JobStatus jobStatus: Int) {
+        Timber.d("onJobDone called($jobId, $jobStatus)")
         val sharedPrefs = SingletonInstances.getSharedPrefs()
         if (jobStatus == JobStatus.COMPLETED
                 && !sharedPrefs.isRated
@@ -187,9 +190,9 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
 
     inner class JobStatusChangedReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val jobId = intent.getLongExtra(EXTRA_JOB_ID, ID_UNSET)
+            val jobId = intent.getLongExtra(EXTRA_JOB_ID, 0)
             val jobStatus = intent.getIntExtra(EXTRA_JOB_STATUS, -1)
-            onJobStatusChanged(jobId, jobStatus)
+            onJobDone(jobId, jobStatus)
         }
     }
 }
