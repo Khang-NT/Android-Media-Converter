@@ -1,38 +1,50 @@
 package com.github.khangnt.mcp.ui.common
 
-import android.os.Looper
+import android.support.annotation.LayoutRes
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import com.github.khangnt.mcp.util.checkMainThread
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
-import java.util.*
-import kotlin.collections.ArrayList
-
-
-typealias ViewHolderFactory = (inflater: LayoutInflater, parent: ViewGroup) -> CustomViewHolder<*>
 
 /**
- * Created by Khang NT on 1/29/18.
+ * Created by Khang NT on 3/23/18.
  * Email: khang.neon.1997@gmail.com
  */
 
+interface ViewHolderFactory {
+    @get:LayoutRes val layoutRes: Int
+    fun create(itemView: View): CustomViewHolder<*>
+}
+
+data class ItemType(
+        val viewType: Int,
+        val viewHolderFactory: ViewHolderFactory
+)
+
 class MixAdapter(
-        private val idGenerator: IdGenerator,
-        private val itemTypes: Map<Class<out AdapterModel>, Int>,
-        private val viewHolderFactories: Map<Int, ViewHolderFactory>
+        private val mapModelClassItemType: Map<Class<out AdapterModel>, ItemType>
 ) : RecyclerView.Adapter<CustomViewHolder<*>>() {
 
+    private var layoutInflater: LayoutInflater? = null
     private val itemDataList = mutableListOf<AdapterModel>()
+    private val mapViewTypeItemType: SparseArray<ItemType>
 
     init {
         // has stable ids as default
         setHasStableIds(true)
+        mapViewTypeItemType = SparseArray()
+        mapModelClassItemType.forEach { entry ->
+            mapViewTypeItemType.put(entry.value.viewType, entry.value)
+        }
     }
 
     fun setData(items: List<AdapterModel>, diffResult: DiffUtil.DiffResult? = null) {
-        check(Looper.myLooper() == Looper.getMainLooper(), { "Must call on main thread" })
+        checkMainThread("setData")
         itemDataList.clear()
         itemDataList.addAll(items)
         if (diffResult !== null) {
@@ -42,57 +54,60 @@ class MixAdapter(
         }
     }
 
-    fun getDataSnapshot(): ArrayList<AdapterModel> = ArrayList(itemDataList)
+    fun getItemDataList(): List<AdapterModel> = itemDataList.toList() // make a copy
 
-    override fun getItemCount(): Int = itemDataList.size
+    fun getItemData(position: Int) = itemDataList.get(position)
+
+    override fun getItemCount() = itemDataList.size
 
     override fun getItemViewType(position: Int): Int {
-        val dataClass = getData(position).javaClass
-        return itemTypes[dataClass]
+        val dataClass = itemDataList[position].javaClass
+        return mapModelClassItemType[dataClass]?.viewType
                 ?: throw IllegalStateException("Unknown item view type for $dataClass")
     }
 
     override fun getItemId(position: Int): Long {
-        val data = getData(position)
-        return (data as? HasIdLong)?.idLong
-                ?: (data as? HasIdString)?.run { idGenerator.idFor(idString).toLong() }
-                ?: super.getItemId(position)
+        val data = itemDataList[position]
+        return (data as? HasIdLong)?.idLong ?: super.getItemId(position)
     }
 
-    fun getData(pos: Int): AdapterModel = itemDataList[pos]
-
-    fun indexOf(model: AdapterModel): Int = itemDataList.indexOf(model)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder<*> {
-        return viewHolderFactories[viewType]?.invoke(LayoutInflater.from(parent.context), parent)
+        if (layoutInflater === null) {
+            layoutInflater = LayoutInflater.from(parent.context)
+        }
+        val itemType = mapViewTypeItemType.get(viewType)
                 ?: throw IllegalArgumentException("Unknown view type $viewType")
+        val layoutRes = itemType.viewHolderFactory.layoutRes
+        val itemView = layoutInflater!!.inflate(layoutRes, parent, false)
+        return itemType.viewHolderFactory.create(itemView)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: CustomViewHolder<*>, position: Int) {
-        val data = getData(position)
-        (holder as CustomViewHolder<AdapterModel>).bind(data, position)
+        (holder as CustomViewHolder<AdapterModel>).bind(itemDataList[position], position)
     }
 
-    class Builder(
-            idGeneratorScope: String = IdGenerator.SCOPE_GLOBAL,
-            idGeneratorInit: Int = IdGenerator.DEFAULT_INIT_VALUE
-    ) {
-        private val idGenerator = IdGenerator.scope(idGeneratorScope, idGeneratorInit)
-        private var itemTypeCounter = 0
-        private val itemTypes = mutableMapOf<Class<out AdapterModel>, Int>()
-        private val viewHolderFactories = mutableMapOf<Int, ViewHolderFactory>()
+    override fun onViewAttachedToWindow(holder: CustomViewHolder<*>) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAttachedToWindow()
+    }
 
-        fun register(dataClass: Class<out AdapterModel>, viewHolderFactory: ViewHolderFactory): Builder {
-            val itemTypeId = itemTypeCounter++
-            itemTypes[dataClass] = itemTypeId
-            viewHolderFactories[itemTypeId] = viewHolderFactory
-            return this
+    override fun onViewDetachedFromWindow(holder: CustomViewHolder<*>) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDetachedFromWindow()
+    }
+
+    class Builder(block: Builder.() -> Unit) {
+        val itemTypes = mutableMapOf<Class<out AdapterModel>, ItemType>()
+
+        init {
+            block()
         }
 
-        fun build(): MixAdapter = MixAdapter(idGenerator,
-                Collections.unmodifiableMap(itemTypes.toMutableMap()),
-                Collections.unmodifiableMap(viewHolderFactories.toMutableMap()))
+        inline fun <reified T : AdapterModel> withModel(block: () -> ViewHolderFactory) {
+            itemTypes[T::class.java] = ItemType(itemTypes.size, block())
+        }
+
+        fun build(): MixAdapter = MixAdapter(itemTypes.toMap())
     }
 }
-

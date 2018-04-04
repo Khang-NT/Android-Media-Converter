@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Looper
 import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
@@ -164,4 +165,8 @@ fun viewChangelog(context: Context) {
     (webView.layoutParams as ViewGroup.MarginLayoutParams)
             .setMargins(margin, 0, margin, 0)
     webView.loadUrl(CHANGELOG_URL)
+}
+
+fun checkMainThread(method: String) {
+    check(Looper.myLooper() == Looper.getMainLooper()) { "Must call $method on main thread" }
 }

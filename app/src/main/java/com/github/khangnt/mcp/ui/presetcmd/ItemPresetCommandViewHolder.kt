@@ -4,9 +4,11 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.ImageView
 import com.github.khangnt.mcp.PresetCommand
+import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdLong
+import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import kotlinx.android.synthetic.main.item_preset_command.view.*
 
 /**
@@ -45,6 +47,19 @@ class ItemPresetCommandViewHolder(
             tvShortName.text = shortName
             tvTitle.setText(titleRes)
             tvDescription.setText(descriptionRes)
+        }
+    }
+
+    class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
+        override val layoutRes: Int = R.layout.item_preset_command
+        lateinit var onClickListener: (PresetCommand) -> Unit
+
+        init {
+            init()
+        }
+
+        override fun create(itemView: View): CustomViewHolder<*> {
+            return ItemPresetCommandViewHolder(itemView, onClickListener)
         }
     }
 

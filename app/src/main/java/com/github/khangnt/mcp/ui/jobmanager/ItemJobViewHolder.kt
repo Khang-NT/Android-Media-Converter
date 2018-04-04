@@ -15,14 +15,13 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.util.SparseArray
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.annotation.JobStatus.*
-import com.github.khangnt.mcp.job.Job
+import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdLong
@@ -75,9 +74,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         }
     }
 
-    object Factory : ViewHolderFactory {
-        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
-                ItemJobViewHolder(inflater.inflate(R.layout.item_job, parent, false))
+    class Factory : ViewHolderFactory {
+        override val layoutRes: Int = R.layout.item_job
+        override fun create(itemView: View): CustomViewHolder<*> = ItemJobViewHolder(itemView)
     }
 
     private val context = itemView.context
@@ -246,7 +245,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     }
 
     private fun cancelJob(context: Context, job: Job, deleteFile: Boolean) {
-        ConverterService.cancelJob(context, jobId = job.id)
+        SingletonInstances.getJobWorkerMangager().cancelJob(job.id)
         val outputUri = Uri.parse(job.command.output)
         if (deleteFile) {
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
