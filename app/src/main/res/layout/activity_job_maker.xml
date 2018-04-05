@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <com.github.khangnt.mcp.ui.filepicker.PathIndicatorView
+            android:id="@+id/pathIndicatorView"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:paddingEnd="@dimen/margin_tiny"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_tiny"
+            android:paddingStart="@dimen/margin_normal" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/fileBrowserContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingBottom="?actionBarSize"/>
+
+    <!-- Bottom Sheet -->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottomSheetArea"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="?actionBarSize"
+        app:behavior_skipCollapsed="true"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/peekToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorAccent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:navigationIcon="@drawable/ic_expand_more_black_24dp"
+            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:title="0 files selected"
+            app:titleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?android:colorBackground"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/peekToolbar"
+            android:text="Config here" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.design.widget.CoordinatorLayout>

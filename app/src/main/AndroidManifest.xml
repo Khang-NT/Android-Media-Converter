@@ -60,6 +60,11 @@
             android:name=".ui.presetcmd.ConvertActivity"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"/>
 
+        <!--todo: export label to string res-->
+        <activity android:name=".ui.jobmaker.JobMakerActivity"
+            android:label="New job"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
             android:theme="@style/CustomActivityOnCrashTheme"

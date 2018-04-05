@@ -38,7 +38,7 @@
             android:paddingRight="@dimen/margin_huge"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/text_size_subtitle"
-            tools:text="Song list is empty" />
+            tools:text="List is empty" />
 
         <Button
             android:id="@+id/reloadButton"

@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.ui.jobmanager
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
+import com.github.khangnt.mcp.ui.jobmaker.JobMakerActivity
 import com.github.khangnt.mcp.util.getSpanCount
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 
@@ -77,6 +79,10 @@ class JobManagerFragment : BaseFragment() {
         }
         viewModel.getStatus().observe { status ->
             recyclerViewContainer.setStatus(status)
+        }
+
+        createJobFab.setOnClickListener {
+            startActivity(Intent(requireContext(), JobMakerActivity::class.java))
         }
     }
 
