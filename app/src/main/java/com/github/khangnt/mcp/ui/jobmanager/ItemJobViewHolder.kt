@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
+import android.support.v4.provider.DocumentFile
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.util.SparseArray
@@ -248,7 +249,12 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         val outputUri = Uri.parse(job.command.output)
         if (deleteFile) {
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
-                catchAll { context.contentResolver.delete(outputUri, null, null) }
+                catchAll {
+                    if (DocumentFile.isDocumentUri(context, outputUri)) {
+                        DocumentFile.fromSingleUri(context, outputUri)?.delete()
+                    }
+                    context.contentResolver.delete(outputUri, null, null)
+                }
             } else if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
                 catchAll { File(outputUri.path).delete() }
             }
