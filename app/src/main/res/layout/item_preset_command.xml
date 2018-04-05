@@ -32,7 +32,7 @@
             android:gravity="center"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_huge"
+            android:textSize="@dimen/text_size_heading"
             android:textStyle="bold"
             tools:text="MP3"/>
 
@@ -48,7 +48,7 @@
         android:lines="1"
         android:maxLines="1"
         android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/text_huge"
+        android:textSize="@dimen/text_size_heading"
         app:layout_constraintLeft_toRightOf="@+id/cvIcon"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="Convert MP3"/>
@@ -63,7 +63,7 @@
         android:lines="2"
         android:maxLines="2"
         android:textColor="?android:textColorSecondary"
-        android:textSize="@dimen/text_big"
+        android:textSize="@dimen/text_size_title"
         app:layout_constraintLeft_toRightOf="@+id/cvIcon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"

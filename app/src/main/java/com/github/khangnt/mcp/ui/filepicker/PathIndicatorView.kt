@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import timber.log.Timber
 import java.io.File
@@ -20,18 +19,19 @@ class PathIndicatorView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
+    lateinit var onPathClick: (PathIndicatorView, File) -> Unit
+
     private var currentPath: File? = null
 
-    var onPathClick: ((PathIndicatorView, File) -> Unit)? = null
-
-    private val pathIndicatorAdapter: MixAdapter = MixAdapter.Builder()
-            .register(PathIndicatorModel::class.java, { inflater, parent ->
-                val itemView = inflater.inflate(R.layout.item_path_indicator, parent, false)
-                return@register PathIndicatorViewHolder(itemView, {
-                    onPathClick?.invoke(this, it.path)
-                })
-            })
-            .build()
+    private val pathIndicatorAdapter: MixAdapter = MixAdapter.Builder {
+        withModel<PathIndicatorModel> {
+            PathIndicatorViewHolder.Factory {
+                onClick = {
+                    onPathClick.invoke(this@PathIndicatorView, it.path)
+                }
+            }
+        }
+    }.build()
 
     init {
         super.setAdapter(pathIndicatorAdapter)
@@ -80,8 +80,4 @@ class PathIndicatorView @JvmOverloads constructor(
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        super.setAdapter(null)
-    }
 }

@@ -22,6 +22,7 @@ class PublishPlugin implements Plugin<Project> {
     void apply(Project project) {
         def config = project.extensions.create('publishConfig', PublishConfigExtension, project)
         project.tasks.create('publishApks', PublishTask) {
+            dependsOn 'assembleRelease'
             group = "Publishing"
             publishConfig = config
         }

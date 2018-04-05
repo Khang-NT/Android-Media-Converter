@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.job
+package com.github.khangnt.mcp.db.job
 
 import com.github.khangnt.mcp.annotation.MediaFormat
 import com.github.khangnt.mcp.util.toListString

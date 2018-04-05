@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
+import com.github.khangnt.mcp.db.job.Command
+import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment
 import com.github.khangnt.mcp.util.onSeekBarChanged
-import com.github.khangnt.mcp.worker.ConverterService
 import kotlinx.android.synthetic.main.fragment_convert_flac.*
 import timber.log.Timber
 
@@ -54,14 +56,17 @@ class ConvertFlacFragment : ConvertFragment() {
             cmdArgsBuilder.append("-hide_banner -map 0:a -map_metadata 0:g -codec:a flac ")
                     .append("-compression_level ${sbCompressionLevel.progress} ")
 
-            ConverterService.newJob(
-                    context!!,
+            val job = Job(
                     title = inputOutputData.title,
-                    inputs = listOf(inputOutputData.inputUri),
-                    args = cmdArgsBuilder.toString(),
-                    outputUri = inputOutputData.outputUri,
-                    outputFormat = "flac"
+                    command = Command(
+                            inputs = listOf(inputOutputData.inputUri),
+                            output = inputOutputData.outputUri,
+                            outputFormat = "flac",
+                            args = cmdArgsBuilder.toString(),
+                            environmentVars = emptyMap()
+                    )
             )
+            SingletonInstances.getJobWorkerMangager().addJob(job)
 
             (activity as? OnSubmittedListener)?.onSubmitted(this)
                     ?: Timber.w("Host activity does not implement OnSubmittedListener")

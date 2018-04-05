@@ -1,11 +1,16 @@
 package com.github.khangnt.mcp
 
+import android.annotation.SuppressLint
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.persistence.room.Room
 import android.content.Context
-import com.github.khangnt.mcp.db.JobDb
-import com.github.khangnt.mcp.db.MainSqliteOpenHelper
-import com.github.khangnt.mcp.job.DefaultJobManager
-import com.github.khangnt.mcp.job.JobManager
+import com.github.khangnt.mcp.db.DB_NAME
+import com.github.khangnt.mcp.db.MainDatabase
+import com.github.khangnt.mcp.db.Migration1To2
+import com.github.khangnt.mcp.db.job.DefaultJobRepository
+import com.github.khangnt.mcp.db.job.JobRepository
 import com.github.khangnt.mcp.ui.prefs.SharedPrefs
+import com.github.khangnt.mcp.worker.JobWorkerManager
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,6 +28,7 @@ class SingletonInstances private constructor(appContext: Context) {
     companion object {
         private const val CACHE_SIZE = 20 * 1024 * 1024L     //20MB
 
+        @SuppressLint("StaticFieldLeak")
         private lateinit var INSTANCE: SingletonInstances
         private var initialized = false
 
@@ -36,9 +42,13 @@ class SingletonInstances private constructor(appContext: Context) {
 
         fun getOkHttpClient(): OkHttpClient = INSTANCE.okHttpClientLazy
 
-        fun getJobManager(): JobManager = INSTANCE.jobManagerLazy
+        fun getJobRepository(): JobRepository = INSTANCE.jobRepositoryLazy
 
         fun getSharedPrefs(): SharedPrefs = INSTANCE.sharedPrefsLazy
+
+        fun getViewModelFactory(): ViewModelProvider.Factory = INSTANCE.viewModelFactory
+
+        fun getJobWorkerMangager(): JobWorkerManager = INSTANCE.jobWorkerManagerLazy
 
     }
 
@@ -63,11 +73,18 @@ class SingletonInstances private constructor(appContext: Context) {
                 .build()
     }
 
-    private val mainSqliteOpenHelperLazy by lazy { MainSqliteOpenHelper(appContext) }
+    private val mainDatabase = Room.databaseBuilder(appContext, MainDatabase::class.java, DB_NAME)
+            .apply { if (!BuildConfig.DEBUG) fallbackToDestructiveMigration() }
+            .addMigrations(Migration1To2())
+            .build()
 
-    private val jobDatabaseLazy by lazy { JobDb(mainSqliteOpenHelperLazy) }
-
-    private val jobManagerLazy by lazy { DefaultJobManager(jobDatabaseLazy) }
+    private val jobRepositoryLazy by lazy { DefaultJobRepository(mainDatabase.getJobDao()) }
 
     private val sharedPrefsLazy by lazy { SharedPrefs(appContext) }
+
+    private val viewModelFactory = ViewModelFactory(appContext)
+
+    private val jobWorkerManagerLazy: JobWorkerManager
+            by lazy { JobWorkerManager(appContext, jobRepositoryLazy, sharedPrefsLazy) }
+
 }

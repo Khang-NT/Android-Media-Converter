@@ -1,9 +1,8 @@
 package com.github.khangnt.mcp.ui.filepicker
 
 import android.view.View
-import com.github.khangnt.mcp.ui.common.AdapterModel
-import com.github.khangnt.mcp.ui.common.CustomViewHolder
-import com.github.khangnt.mcp.ui.common.HasIdString
+import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.ui.common.*
 import kotlinx.android.synthetic.main.item_path_indicator.view.*
 import java.io.File
 
@@ -14,8 +13,8 @@ import java.io.File
 
 data class PathIndicatorModel(
         val path: File
-) : AdapterModel, HasIdString {
-    override val idString: String = path.absolutePath
+) : AdapterModel, HasIdLong {
+    override val idLong: Long by lazy { IdGenerator.idFor(path.toString()) }
 }
 
 class PathIndicatorViewHolder(
@@ -32,5 +31,18 @@ class PathIndicatorViewHolder(
     override fun bind(model: PathIndicatorModel, pos: Int) {
         this.model = model
         tvPathIndicator.text = if (model.path.name.isNotEmpty()) model.path.name else "/"
+    }
+
+    class Factory(init: Factory.() -> Unit): ViewHolderFactory {
+        override val layoutRes: Int = R.layout.item_path_indicator
+        lateinit var onClick: (model: PathIndicatorModel) -> Unit
+
+        init {
+            init()
+        }
+
+        override fun create(itemView: View): CustomViewHolder<*> {
+            return PathIndicatorViewHolder(itemView, onClick)
+        }
     }
 }

@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
+import com.github.khangnt.mcp.db.job.Command
+import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.presetcmd.ConvertFragment
 import com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment
 import com.github.khangnt.mcp.util.onItemSelected
 import com.github.khangnt.mcp.util.onSeekBarChanged
-import com.github.khangnt.mcp.worker.ConverterService
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
 import timber.log.Timber
 
@@ -94,14 +96,17 @@ class ConvertMp3Fragment : ConvertFragment() {
                 cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
             }
 
-            ConverterService.newJob(
-                    context!!,
+            val job = Job(
                     title = inputOutputData.title,
-                    inputs = listOf(inputOutputData.inputUri),
-                    args = cmdArgsBuilder.toString(),
-                    outputUri = inputOutputData.outputUri,
-                    outputFormat = "mp3"
+                    command = Command(
+                            inputs = listOf(inputOutputData.inputUri),
+                            output = inputOutputData.outputUri,
+                            outputFormat = "mp3",
+                            args = cmdArgsBuilder.toString(),
+                            environmentVars = emptyMap()
+                    )
             )
+            SingletonInstances.getJobWorkerMangager().addJob(job)
 
             (activity as? OnSubmittedListener)?.onSubmitted(this)
                     ?: Timber.w("Host activity does not implement OnSubmittedListener")

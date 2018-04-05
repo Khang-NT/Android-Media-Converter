@@ -18,7 +18,6 @@ const val FFMPEG_FILE = "ffmpeg"
 const val FFMPEG_SIZE_FILE = "ffmpeg_size.txt"
 const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_out.temp"
 
-const val ID_UNSET = -1L
 
 const val CONVERTER_NOTIFICATION_ID = 1000
 const val CONVERTER_NOTIFICATION_CHANNEL = "ConverterChannel"
