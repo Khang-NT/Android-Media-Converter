@@ -8,15 +8,15 @@
     <com.github.khangnt.mcp.view.StepIndicator
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
+        app:indicatorSize="8dp"
+        app:indicatorSpace="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
-        app:indicatorSize="8dp"
-        app:indicatorSpace="4dp"
-        app:stepCount="5"
         app:step="3"
-        />
+        app:stepCount="5" />
 
     <ImageView
         android:id="@+id/ivBack"
