@@ -34,11 +34,11 @@ class FileListViewHolder(
     private val ivFileIcon = itemView.ivFileIcon
     private val tvFileName = itemView.tvFileName
 
+    private var selected: Boolean? = null
     private var model: FileListModel? = null
     private var pos: Int? = null
 
     init {
-        itemView.isSelected = true
         itemView.setOnClickListener {
             onClickListener(model!!, pos!!)
             setSelected(model!!.selected)
@@ -70,7 +70,8 @@ class FileListViewHolder(
     }
 
     private fun setSelected(selected: Boolean) {
-        if (selected != tvFileName.isSelected) {
+        if (selected != this.selected) {
+            this.selected = selected
             tvFileName.isSelected = selected
             val drawable: Drawable? = if (selected) {
                 tvFileName.ellipsize = TextUtils.TruncateAt.MARQUEE
