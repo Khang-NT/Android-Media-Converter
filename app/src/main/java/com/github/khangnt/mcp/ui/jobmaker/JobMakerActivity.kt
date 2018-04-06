@@ -1,17 +1,21 @@
 package com.github.khangnt.mcp.ui.jobmaker
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Environment.getExternalStorageDirectory
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.doOnPreDraw
 import kotlinx.android.synthetic.main.activity_job_maker.*
 import timber.log.Timber
 import java.io.File
@@ -24,9 +28,17 @@ import java.util.*
 
 class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
 
-    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(bottomSheetArea) }
+    private val bottomSheetBehavior by lazy { catchAll { BottomSheetBehavior.from(bottomSheetArea) } }
     private val fileBrowserFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.fileBrowserContainer) as FileBrowserFragment
+    }
+    private val jobMakerFragment by  lazy {
+        supportFragmentManager.findFragmentById(R.id.configurationContainer) as JobMakerFragment
+    }
+
+    private val jobMakerViewModel by lazy {
+        ViewModelProviders.of(this, SingletonInstances.getViewModelFactory())
+                .get(JobMakerViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +50,12 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
         supportActionBar?.setHomeButtonEnabled(true)
 
         if (savedInstanceState == null) {
-            val fragment = FileBrowserFragment.newInstance(Environment.getExternalStorageDirectory(),
+            val fileBrowser = FileBrowserFragment.newInstance(getExternalStorageDirectory(),
                     limitSelectCount = Int.MAX_VALUE)
+            val jobMaker = JobMakerFragment()
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.fileBrowserContainer, fragment)
+                    .replace(R.id.fileBrowserContainer, fileBrowser)
+                    .replace(R.id.configurationContainer, jobMaker)
                     .commit()
         }
 
@@ -49,17 +63,15 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
             fileBrowserFragment.goto(path)
         }
 
-        peekToolbar.setOnClickListener {
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior?.let {
+            bottomSheetArea?.doOnPreDraw {
+                it.peekHeight += resources.getDimensionPixelOffset(R.dimen.margin_small)
             }
         }
     }
 
     override fun onSelectFilesChanged(files: List<File>) {
-        peekToolbar.title = "${files.size} file(s) selected"
+        jobMakerViewModel.setSelectedFiles(files)
     }
 
     override fun onCurrentDirectoryChanged(directory: File) {

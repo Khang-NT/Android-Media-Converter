@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.*
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 
@@ -130,4 +131,14 @@ fun getSpanCount(minWidth: Int, columnSpace: Int = 0): Int {
         spanCount++
     }
     return spanCount
+}
+
+fun View.doOnPreDraw(action: () -> Unit) {
+    viewTreeObserver.addOnPreDrawListener(object: ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            action()
+            viewTreeObserver.removeOnPreDrawListener(this)
+            return true
+        }
+    })
 }

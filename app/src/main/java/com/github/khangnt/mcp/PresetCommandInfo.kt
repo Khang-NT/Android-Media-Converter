@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp
 
+import android.support.annotation.IntRange
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import com.github.khangnt.mcp.ui.presetcmd.aac.ConvertAacFragment
@@ -47,5 +48,16 @@ enum class PresetCommand(
             convertFragmentFactory = ::ConvertMp4Fragment
     )
     ;
+}
+
+// todo: replace PresetCommand after refactored
+enum class PresetCommand2(
+        val type: Int,
+        @IntRange(from = 1) val minInputCount: Int,
+        @IntRange(from = 1) val maxInputCount: Int,
+        @StringRes val shortName: Int,
+        val colors: IntArray
+) {
+
 }
 
