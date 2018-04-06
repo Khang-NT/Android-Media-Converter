@@ -9,4 +9,20 @@
         <attr name="rv_paddingHorizontal" format="dimension"/>
         <attr name="rv_clipToPadding" format="boolean|reference" />
     </declare-styleable>
+
+    <declare-styleable name="StepIndicator">
+        <attr name="stepCount" format="integer|reference" />
+        <attr name="step" format="integer|reference" />
+        <attr name="indicatorSize" format="dimension|reference" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="indicatorSpace" format="dimension|reference" />
+    </declare-styleable>
+
+    <style name="StepIndicatorDefault">
+        <item name="stepCount">3</item>
+        <item name="step">1</item>
+        <item name="indicatorSize">8dp</item>
+        <item name="indicatorColor">?colorAccent</item>
+        <item name="indicatorSpace">4dp</item>
+    </style>
 </resources>

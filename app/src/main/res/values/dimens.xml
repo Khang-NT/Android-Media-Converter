@@ -15,6 +15,8 @@
     <dimen name="text_size_body">14sp</dimen>
     <dimen name="text_size_small">13sp</dimen>
 
+    <dimen name="dp">1dp</dimen>
+
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="progress_bar_size">60dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
