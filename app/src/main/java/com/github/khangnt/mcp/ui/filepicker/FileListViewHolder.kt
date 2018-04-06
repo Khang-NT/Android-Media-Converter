@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.filepicker
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.text.TextUtils
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
@@ -72,8 +73,12 @@ class FileListViewHolder(
         if (selected != tvFileName.isSelected) {
             tvFileName.isSelected = selected
             val drawable: Drawable? = if (selected) {
+                tvFileName.ellipsize = TextUtils.TruncateAt.MARQUEE
                 ContextCompat.getDrawable(itemView.context, R.drawable.ic_tick_green_24dp)
-            } else null
+            } else {
+                tvFileName.ellipsize = TextUtils.TruncateAt.MIDDLE
+                null
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 tvFileName.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
