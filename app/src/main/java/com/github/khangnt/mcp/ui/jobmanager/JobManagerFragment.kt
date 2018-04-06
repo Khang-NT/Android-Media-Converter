@@ -10,6 +10,7 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
@@ -25,13 +26,17 @@ import kotlinx.android.synthetic.main.fragment_job_manager.*
 class JobManagerFragment : BaseFragment() {
 
     private val viewModel by lazy { getViewModel<JobManagerViewModel>() }
-    private lateinit var adapter: MixAdapter
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
+            withModel<LiveHeaderModel> { ItemLiveHeaderViewHolder.Factory() }
+            withModel<HeaderModel> { ItemHeaderViewHolder.Factory() }
+            withModel<JobModel> { ItemJobViewHolder.Factory() }
+        }.build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SingletonInstances.getJobWorkerMangager().maybeLaunchWorker()
-
-        adapter = viewModel.createNewAdapter()
 
         val latestStatus = viewModel.getStatus().value
         val latestJobs = viewModel.getAdapterModel().value.orEmpty()

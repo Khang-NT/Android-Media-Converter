@@ -9,7 +9,9 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.misc.RunningJobStatus
-import com.github.khangnt.mcp.ui.common.*
+import com.github.khangnt.mcp.ui.common.AdapterModel
+import com.github.khangnt.mcp.ui.common.HeaderModel
+import com.github.khangnt.mcp.ui.common.Status
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -33,13 +35,6 @@ class JobManagerViewModel(appContext: Context) : ViewModel() {
     private val jobLoadStatus = MutableLiveData<Status>()
     private var disposable: Disposable? = null
 
-    fun createNewAdapter(): MixAdapter {
-        return MixAdapter.Builder {
-            withModel<LiveHeaderModel> { ItemLiveHeaderViewHolder.Factory() }
-            withModel<HeaderModel> { ItemHeaderViewHolder.Factory() }
-            withModel<JobModel> { ItemJobViewHolder.Factory() }
-        }.build()
-    }
 
     fun reload() {
         adapterModelLiveData.value = emptyList()

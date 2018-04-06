@@ -31,21 +31,19 @@ private const val RC_CONVERT_ACTIVITY = 9
 
 class PresetCommandFragment : BaseFragment() {
 
-    private lateinit var adapter: MixAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        adapter = MixAdapter.Builder {
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
             withModel<HeaderModel> { ItemHeaderViewHolder.Factory() }
             withModel<PresetCommandModel> {
                 ItemPresetCommandViewHolder.Factory {
-                    onClickListener = { presetCommand ->
-                        val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
-                        startActivityForResult(intent, RC_CONVERT_ACTIVITY)
-                    }
+                    onClickListener = this@PresetCommandFragment::onPresetClick
                 }
             }
         }.build()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val audioEncodingHeader = HeaderModel(getString(R.string.header_audio_encoding))
         val videoEncodingHeader = HeaderModel(getString(R.string.header_video_encoding))
@@ -87,6 +85,11 @@ class PresetCommandFragment : BaseFragment() {
 
         recyclerView.layoutManager = lm
         recyclerView.adapter = adapter
+    }
+
+    private fun onPresetClick(presetCommand: PresetCommand) {
+        val intent = ConvertActivity.launchIntent(context!!, presetCommand.ordinal)
+        startActivityForResult(intent, RC_CONVERT_ACTIVITY)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

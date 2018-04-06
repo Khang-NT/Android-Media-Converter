@@ -20,7 +20,7 @@ private const val KEY_LIMIT_SELECT_COUNT = "FileBrowserFragment:limit_select_cou
 private const val KET_START_UP_DIR = "FileBrowserFragment:start_up_directory"
 
 
-class FileBrowserFragment : BaseFragment(){
+class FileBrowserFragment : BaseFragment() {
 
     interface Callbacks {
         fun onSelectFilesChanged(files: List<File>)
@@ -43,45 +43,22 @@ class FileBrowserFragment : BaseFragment(){
     private val startUpDirectory by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
 
     private val viewModel by lazy { getViewModel<FileBrowserViewModel>() }
-    private lateinit var adapter: MixAdapter
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
+            withModel<FileListModel> {
+                FileListViewHolder.Factory {
+                    onClickListener = { model, _ -> onFileClick(model) }
+                }
+            }
+        }.build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (viewModel.getCurrentDirectory() == null) {
             viewModel.setCurrentDirectory(startUpDirectory)
             getCallbacks()?.onCurrentDirectoryChanged(startUpDirectory)
         }
-
-        adapter = MixAdapter.Builder {
-            withModel<FileListModel> {
-                FileListViewHolder.Factory {
-                    onClickListener = { model, _ ->
-                        if (model.type == TYPE_FOLDER) {
-                            viewModel.setCurrentDirectory(model.path)
-                            getCallbacks()?.onCurrentDirectoryChanged(model.path)
-                        } else if (model.type == TYPE_CREATE_FOLDER) {
-                            showCreateFolderDialog()
-                        } else if (model.selected) {
-                            // unselected it
-                            viewModel.unselectedFile(model.path)
-                            getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
-                        } else {
-                            val isFull = viewModel.getSelectedFiles().size == limitSelectCount
-                            if (isFull && limitSelectCount != 1) {
-                                toast(getString(R.string.hint_limit_file_select_count, limitSelectCount))
-                            } else {
-                                if (isFull && limitSelectCount == 1) {
-                                    viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
-                                }
-                                viewModel.selectFile(model.path)
-                                getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
-                            }
-                        }
-                    }
-                }
-            }
-        }.build()
     }
 
     override fun onCreateView(
@@ -106,6 +83,30 @@ class FileBrowserFragment : BaseFragment(){
         }
     }
 
+    private fun onFileClick(model: FileListModel) {
+        if (model.type == TYPE_FOLDER) {
+            viewModel.setCurrentDirectory(model.path)
+            getCallbacks()?.onCurrentDirectoryChanged(model.path)
+        } else if (model.type == TYPE_CREATE_FOLDER) {
+            showCreateFolderDialog()
+        } else if (model.selected) {
+            // unselected it
+            viewModel.unselectedFile(model.path)
+            getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+        } else {
+            val isFull = viewModel.getSelectedFiles().size == limitSelectCount
+            if (isFull && limitSelectCount != 1) {
+                toast(getString(R.string.hint_limit_file_select_count, limitSelectCount))
+            } else {
+                if (isFull && limitSelectCount == 1) {
+                    viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
+                }
+                viewModel.selectFile(model.path)
+                getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+            }
+        }
+    }
+
     fun goto(dir: File) {
         if (dir.isFile) {
             goto(dir.parentFile)
@@ -114,7 +115,6 @@ class FileBrowserFragment : BaseFragment(){
             getCallbacks()?.onCurrentDirectoryChanged(dir)
         }
     }
-
 
     fun getCurrentDirectory(): File = viewModel.getCurrentDirectory() ?: startUpDirectory
 
