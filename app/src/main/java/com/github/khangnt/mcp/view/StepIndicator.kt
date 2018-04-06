@@ -32,11 +32,11 @@ class StepIndicator @JvmOverloads constructor(
         val ta = context.theme.obtainStyledAttributes(attrs, R.styleable.StepIndicator,
                 0, R.style.StepIndicatorDefault)
         try {
-            indicatorColor = ta.getColor(R.styleable.StepIndicator_indicatorColor, 0)
-            indicatorSize = ta.getDimensionPixelOffset(R.styleable.StepIndicator_indicatorSize, 0)
-            indicatorSpace = ta.getDimensionPixelOffset(R.styleable.StepIndicator_indicatorSpace, 0)
-            stepCount = ta.getInt(R.styleable.StepIndicator_stepCount, 3)
-            step = ta.getInt(R.styleable.StepIndicator_step, 1)
+            indicatorColor = ta.getColor(R.styleable.StepIndicator_indicator_color, 0)
+            indicatorSize = ta.getDimensionPixelOffset(R.styleable.StepIndicator_indicator_size, 0)
+            indicatorSpace = ta.getDimensionPixelOffset(R.styleable.StepIndicator_indicator_space, 0)
+            stepCount = ta.getInt(R.styleable.StepIndicator_indicator_stepCount, 3)
+            step = ta.getInt(R.styleable.StepIndicator_indicator_step, 1)
         } finally {
             ta.recycle()
         }

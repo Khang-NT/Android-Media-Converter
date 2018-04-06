@@ -5,19 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.github.khangnt.mcp.view.StepIndicator
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_tiny"
-        app:indicatorSize="8dp"
-        app:indicatorSpace="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:step="3"
-        app:stepCount="5" />
-
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
@@ -44,18 +31,35 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.github.khangnt.mcp.view.StepIndicator
+        android:id="@+id/stepIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicator_size="8dp"
+        app:indicator_space="4dp"
+        app:indicator_step="3"
+        app:indicator_stepCount="5"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+        app:layout_constraintLeft_toRightOf="@+id/ivBack"
+        app:layout_constraintRight_toLeftOf="@+id/ivNext"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:layout_editor_absoluteX="164dp" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
         android:gravity="center"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="?colorAccent"
-        app:layout_constraintBottom_toTopOf="@id/guidelinePeek"
-        app:layout_constraintEnd_toStartOf="@id/ivNext"
-        app:layout_constraintStart_toEndOf="@id/ivBack"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainer"
+        app:layout_constraintLeft_toRightOf="@+id/ivBack"
+        app:layout_constraintRight_toLeftOf="@+id/ivNext"
+        app:layout_constraintTop_toBottomOf="@+id/stepIndicator"
+        tools:layout_editor_absoluteX="40dp"
         tools:text="Select file(s)" />
 
     <Space
