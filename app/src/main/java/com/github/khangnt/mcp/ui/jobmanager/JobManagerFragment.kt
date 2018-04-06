@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui.jobmanager
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -25,15 +24,13 @@ import kotlinx.android.synthetic.main.fragment_job_manager.*
 
 class JobManagerFragment : BaseFragment() {
 
-    private lateinit var viewModel: JobManagerViewModel
+    private val viewModel by lazy { getViewModel<JobManagerViewModel>() }
     private lateinit var adapter: MixAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SingletonInstances.getJobWorkerMangager().maybeLaunchWorker()
 
-        viewModel = ViewModelProviders.of(this, SingletonInstances.getViewModelFactory())
-                .get(JobManagerViewModel::class.java)
         adapter = viewModel.createNewAdapter()
 
         val latestStatus = viewModel.getStatus().value

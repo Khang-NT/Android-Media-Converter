@@ -1,8 +1,11 @@
 package com.github.khangnt.mcp.ui
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.View
+import com.github.khangnt.mcp.SingletonInstances
 import timber.log.Timber
 import java.util.Collections.emptyList
 
@@ -36,6 +39,12 @@ abstract class BaseActivity: RxAppCompatActivity() {
     fun showSnackBar(message: String, container: View? = null) {
         (container ?: getSnackBarContainer())?.let { view ->
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    protected inline fun <reified T : ViewModel> getViewModel(key: String? = null): T {
+        return ViewModelProviders.of(this, SingletonInstances.getViewModelFactory()).run {
+            key?.let { get(it, T::class.java) } ?: get(T::class.java)
         }
     }
 

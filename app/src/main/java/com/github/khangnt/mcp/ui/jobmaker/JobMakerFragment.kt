@@ -1,12 +1,10 @@
 package com.github.khangnt.mcp.ui.jobmaker
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.SingletonInstances.Companion.getViewModelFactory
 import com.github.khangnt.mcp.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_job_maker.*
 
@@ -17,13 +15,7 @@ import kotlinx.android.synthetic.main.fragment_job_maker.*
 
 class JobMakerFragment : BaseFragment() {
 
-    private lateinit var jobMakerViewModel: JobMakerViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        jobMakerViewModel = ViewModelProviders.of(requireActivity(), getViewModelFactory())
-                .get(JobMakerViewModel::class.java)
-    }
+    private val jobMakerViewModel by lazy { getViewModel<JobMakerViewModel>() }
 
     override fun onCreateView(
             inflater: LayoutInflater,

@@ -3,9 +3,12 @@ package com.github.khangnt.mcp.ui
 import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import com.github.khangnt.mcp.SingletonInstances
 import timber.log.Timber
 
 
@@ -42,6 +45,12 @@ abstract class BaseFragment : RxFragment() {
 
     protected fun <T> LiveData<T>.observe(action: (T) -> Unit) {
         observe(this@BaseFragment, Observer { it?.let(action) })
+    }
+
+    protected inline fun <reified T : ViewModel> getViewModel(key: String? = null): T {
+        return ViewModelProviders.of(this, SingletonInstances.getViewModelFactory()).run {
+            key?.let { get(it, T::class.java) } ?: get(T::class.java)
+        }
     }
 
 }

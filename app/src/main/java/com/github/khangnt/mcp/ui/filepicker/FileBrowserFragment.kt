@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui.filepicker
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.util.onTextSizeChanged
@@ -44,14 +42,12 @@ class FileBrowserFragment : BaseFragment(){
     private val limitSelectCount: Int by lazy { arguments!!.getInt(KEY_LIMIT_SELECT_COUNT) }
     private val startUpDirectory by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
 
-    private lateinit var viewModel: FileBrowserViewModel
+    private val viewModel by lazy { getViewModel<FileBrowserViewModel>() }
     private lateinit var adapter: MixAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, SingletonInstances.getViewModelFactory())
-                .get(FileBrowserViewModel::class.java)
         if (viewModel.getCurrentDirectory() == null) {
             viewModel.setCurrentDirectory(startUpDirectory)
             getCallbacks()?.onCurrentDirectoryChanged(startUpDirectory)

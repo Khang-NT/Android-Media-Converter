@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui.jobmaker
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -11,7 +10,6 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
 import com.github.khangnt.mcp.util.catchAll
@@ -36,10 +34,7 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
         supportFragmentManager.findFragmentById(R.id.configurationContainer) as JobMakerFragment
     }
 
-    private val jobMakerViewModel by lazy {
-        ViewModelProviders.of(this, SingletonInstances.getViewModelFactory())
-                .get(JobMakerViewModel::class.java)
-    }
+    private val jobMakerViewModel by lazy { getViewModel<JobMakerViewModel>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
