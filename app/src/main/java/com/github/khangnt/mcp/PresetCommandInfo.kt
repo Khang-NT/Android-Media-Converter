@@ -3,6 +3,9 @@ package com.github.khangnt.mcp
 import android.support.annotation.IntRange
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import com.github.khangnt.mcp.annotation.ConvertType
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.Mp3CmdBuilderFragment
 import com.github.khangnt.mcp.ui.presetcmd.aac.ConvertAacFragment
 import com.github.khangnt.mcp.ui.presetcmd.flac.ConvertFlacFragment
 import com.github.khangnt.mcp.ui.presetcmd.mp3.ConvertMp3Fragment
@@ -15,6 +18,7 @@ private fun colorArrayOf(vararg longValues: Long): IntArray {
     return IntArray(longValues.size, { longValues[it].toInt() })
 }
 
+// todo: remove PresetCommand after refactor
 enum class PresetCommand(
         val type: Int,
         val shortName: String,
@@ -50,14 +54,21 @@ enum class PresetCommand(
     ;
 }
 
-// todo: replace PresetCommand after refactored
-enum class PresetCommand2(
-        val type: Int,
+
+enum class ConvertCommand(
+        @ConvertType val type: Int, @StringRes val shortName: Int,
+        val colors: IntArray,
         @IntRange(from = 1) val minInputCount: Int,
         @IntRange(from = 1) val maxInputCount: Int,
-        @StringRes val shortName: Int,
-        val colors: IntArray
+        val fragmentFactory: () -> CommandBuilderFragment
+
 ) {
+    CONVERT_MP3(
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_mp3,
+            colors = colorArrayOf(0xffFC5C7D, 0xff6A82FB), // SublimeLight
+            minInputCount = 1, maxInputCount = Int.MAX_VALUE,
+            fragmentFactory = ::Mp3CmdBuilderFragment
+    );
 
 }
 

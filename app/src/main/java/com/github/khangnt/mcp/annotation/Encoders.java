@@ -2,6 +2,9 @@ package com.github.khangnt.mcp.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static com.github.khangnt.mcp.annotation.Encoders.AAC;
 import static com.github.khangnt.mcp.annotation.Encoders.DNXHD;
 import static com.github.khangnt.mcp.annotation.Encoders.FLAC;
@@ -53,6 +56,7 @@ import static com.github.khangnt.mcp.annotation.Encoders.WEBVTT;
 @SuppressWarnings("SpellCheckingInspection")
 @StringDef({DNXHD, FLV, GIF, H263, MJPEG, MPEG4, PNG, AAC, FLAC, LIBMP3LAME, LIBSHINE,
         LIBOPUS, LIBVORBIS, SRT, SUBRIP, WEBVTT})
+@Retention(RetentionPolicy.SOURCE)
 public @interface Encoders {
     String DNXHD = "dnxhd";
     String FLV = "flv";

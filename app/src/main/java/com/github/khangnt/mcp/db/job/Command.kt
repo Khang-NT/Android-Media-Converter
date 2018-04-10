@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.db.job
 
-import com.github.khangnt.mcp.annotation.MediaFormat
+import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.util.toListString
 import com.github.khangnt.mcp.util.toMapString
 import org.json.JSONArray
@@ -14,7 +14,7 @@ import org.json.JSONObject
 data class Command(
         val inputs: List<String>,
         val output: String,
-        @MediaFormat
+        @Muxer
         val outputFormat: String,
         val args: String,
         val environmentVars: Map<String, String>

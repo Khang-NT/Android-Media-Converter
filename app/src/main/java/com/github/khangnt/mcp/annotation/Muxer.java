@@ -2,6 +2,9 @@ package com.github.khangnt.mcp.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static com.github.khangnt.mcp.annotation.Muxer.DNXHD;
 import static com.github.khangnt.mcp.annotation.Muxer.FLAC;
 import static com.github.khangnt.mcp.annotation.Muxer.FLV;
@@ -61,6 +64,7 @@ import static com.github.khangnt.mcp.annotation.Muxer.WEBVTT;
 @SuppressWarnings("SpellCheckingInspection")
 @StringDef({DNXHD, FLAC, FLV, GIF, IMAGE2, IMAGE2PIPE, IPOD, MATROSKA, MJPEG, MOV,
         MP3, MP4, OGG, OPUS, SRT, WAV, WEBM, WEBVTT})
+@Retention(RetentionPolicy.SOURCE)
 public @interface Muxer {
     String DNXHD = "dnxhd";
     String FLAC = "flac";

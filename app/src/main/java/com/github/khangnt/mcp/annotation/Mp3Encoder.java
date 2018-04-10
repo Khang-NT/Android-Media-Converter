@@ -2,6 +2,9 @@ package com.github.khangnt.mcp.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static com.github.khangnt.mcp.annotation.Encoders.LIBMP3LAME;
 import static com.github.khangnt.mcp.annotation.Encoders.LIBSHINE;
 
@@ -12,5 +15,6 @@ import static com.github.khangnt.mcp.annotation.Encoders.LIBSHINE;
  */
 @SuppressWarnings("SpellCheckingInspection")
 @StringDef({LIBMP3LAME, LIBSHINE})
+@Retention(RetentionPolicy.SOURCE)
 public @interface Mp3Encoder {
 }
