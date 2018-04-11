@@ -16,6 +16,7 @@ import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerActivity
 import com.github.khangnt.mcp.util.getSpanCount
+import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 
 /**
