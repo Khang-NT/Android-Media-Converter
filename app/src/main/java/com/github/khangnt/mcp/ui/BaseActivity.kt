@@ -1,5 +1,7 @@
 package com.github.khangnt.mcp.ui
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.support.design.widget.Snackbar
@@ -30,9 +32,13 @@ abstract class BaseActivity: RxAppCompatActivity() {
             return
         }
 
-        super.onBackPressed()
-        finish()
+        if (!consumeBackPress()) {
+            super.onBackPressed()
+            finish()
+        }
     }
+
+    open fun consumeBackPress(): Boolean = false
 
     open fun getSnackBarContainer(): View? = null
 
@@ -48,4 +54,7 @@ abstract class BaseActivity: RxAppCompatActivity() {
         }
     }
 
+    protected fun <T> LiveData<T>.observe(action: (T) -> Unit) {
+        observe(this@BaseActivity, Observer { it?.let(action) })
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.EditText
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.onTextSizeChanged
 import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_file_browser.*
@@ -25,6 +26,7 @@ class FileBrowserFragment : BaseFragment() {
     interface Callbacks {
         fun onSelectFilesChanged(files: List<File>)
         fun onCurrentDirectoryChanged(directory: File)
+        fun allowChangeSelectedFile(): Boolean
     }
 
     companion object {
@@ -89,21 +91,25 @@ class FileBrowserFragment : BaseFragment() {
             getCallbacks()?.onCurrentDirectoryChanged(model.path)
         } else if (model.type == TYPE_CREATE_FOLDER) {
             showCreateFolderDialog()
-        } else if (model.selected) {
-            // unselected it
-            viewModel.unselectedFile(model.path)
-            getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
-        } else {
-            val isFull = viewModel.getSelectedFiles().size == limitSelectCount
-            if (isFull && limitSelectCount != 1) {
-                toast(getString(R.string.hint_limit_file_select_count, limitSelectCount))
-            } else {
-                if (isFull && limitSelectCount == 1) {
-                    viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
-                }
-                viewModel.selectFile(model.path)
+        } else if (getCallbacks()?.allowChangeSelectedFile() != false) {
+            if (model.selected) {
+                // unselected it
+                viewModel.unselectedFile(model.path)
                 getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+            } else {
+                val isFull = viewModel.getSelectedFiles().size == limitSelectCount
+                if (isFull && limitSelectCount != 1) {
+                    toast(getString(R.string.hint_limit_file_select_count, limitSelectCount))
+                } else {
+                    if (isFull && limitSelectCount == 1) {
+                        viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
+                    }
+                    viewModel.selectFile(model.path)
+                    getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+                }
             }
+        } else {
+            toast(R.string.message_disallow_change_selected_files)
         }
     }
 
@@ -114,6 +120,11 @@ class FileBrowserFragment : BaseFragment() {
             viewModel.setCurrentDirectory(dir)
             getCallbacks()?.onCurrentDirectoryChanged(dir)
         }
+    }
+
+    fun reset() {
+        viewModel.discardSelectedFiles()
+        getCallbacks()?.onSelectFilesChanged(emptyList())
     }
 
     fun getCurrentDirectory(): File = viewModel.getCurrentDirectory() ?: startUpDirectory

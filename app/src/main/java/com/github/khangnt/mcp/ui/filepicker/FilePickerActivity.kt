@@ -142,6 +142,8 @@ class FilePickerActivity : SingleFragmentActivity(), FileBrowserFragment.Callbac
         }
     }
 
+    override fun allowChangeSelectedFile(): Boolean = true
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(KEY_BTN_SELECT_ENABLED, btnSelect.isEnabled)
