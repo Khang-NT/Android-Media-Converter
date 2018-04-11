@@ -142,3 +142,8 @@ fun View.doOnPreDraw(action: () -> Unit) {
         }
     })
 }
+
+fun View.disableInHalfSecond() {
+    isEnabled = false
+    postDelayed({ isEnabled = true }, 500)
+}
