@@ -6,18 +6,18 @@ import android.os.Environment
 import android.os.Environment.getExternalStorageDirectory
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
+import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOSE_COMMAND
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.doOnPreDraw
+import com.github.khangnt.mcp.util.getSdCardPaths
 import kotlinx.android.synthetic.main.activity_job_maker.*
 import timber.log.Timber
 import java.io.File
-import java.util.*
 
 /**
  * Created by Khang NT on 4/5/18.
@@ -29,9 +29,6 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
     private val bottomSheetBehavior by lazy { catchAll { BottomSheetBehavior.from(bottomSheetArea) } }
     private val fileBrowserFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.fileBrowserContainer) as FileBrowserFragment
-    }
-    private val jobMakerFragment by  lazy {
-        supportFragmentManager.findFragmentById(R.id.configurationContainer) as JobMakerFragment
     }
 
     private val jobMakerViewModel by lazy { getViewModel<JobMakerViewModel>() }
@@ -47,30 +44,41 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
         if (savedInstanceState == null) {
             val fileBrowser = FileBrowserFragment.newInstance(getExternalStorageDirectory(),
                     limitSelectCount = Int.MAX_VALUE)
-            val jobMaker = JobMakerFragment()
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fileBrowserContainer, fileBrowser)
-                    .replace(R.id.configurationContainer, jobMaker)
+                    .replace(R.id.configurationContainer, JobMakerFragment())
                     .commit()
         }
 
-        pathIndicatorView.onPathClick = { _, path ->
-            fileBrowserFragment.goto(path)
-        }
+        pathIndicatorView.onPathClick = { _, path -> fileBrowserFragment.goto(path) }
 
         bottomSheetBehavior?.let {
             bottomSheetArea?.doOnPreDraw {
                 it.peekHeight += resources.getDimensionPixelOffset(R.dimen.margin_small)
             }
         }
+
+        jobMakerViewModel.onResetEvent().observe {
+            fileBrowserFragment.reset()
+        }
+
+        jobMakerViewModel.onRequestVisible().observe {
+            // expand bottom sheet to show job maker fragment
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     override fun onSelectFilesChanged(files: List<File>) {
-        jobMakerViewModel.setSelectedFiles(files)
+        jobMakerViewModel.setSelectedFiles(files.map { it.absolutePath })
     }
 
     override fun onCurrentDirectoryChanged(directory: File) {
         pathIndicatorView.setPath(directory)
+    }
+
+    override fun allowChangeSelectedFile(): Boolean {
+        // block user to change selected file after STEP_CHOOSE_COMMAND
+        return checkNotNull(jobMakerViewModel.getCurrentStep().value) <= STEP_CHOOSE_COMMAND
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -91,15 +99,15 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
                     fileBrowserFragment.goto(sdCardPath[0])
                 } else {
                     val options = sdCardPath.map { it.absolutePath }.toTypedArray()
-                    val selected = arrayOf(-1)
+                    var selected = -1
                     AlertDialog.Builder(this)
                             .setTitle("Select external path")
                             .setSingleChoiceItems(options, -1, { _, which ->
-                                selected[0] = which
+                                selected = which
                             })
                             .setPositiveButton(R.string.action_ok, { _, _ ->
-                                if (selected[0] > -1) {
-                                    fileBrowserFragment.goto(sdCardPath[selected[0]])
+                                if (selected > -1) {
+                                    fileBrowserFragment.goto(sdCardPath[selected])
                                 }
                             })
                             .setNegativeButton(R.string.action_cancel, null)
@@ -114,35 +122,20 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
     private val sdCardPath: Array<File> by lazy {
         // try to find sd card path if any
         return@lazy try {
-            getStorageDirectories().map { File(it) }.toTypedArray()
+            getSdCardPaths(this).map { File(it) }.toTypedArray()
         } catch (error: Throwable) {
             Timber.d(error, "Failed to detect SD card")
             emptyArray<File>()
         }
     }
 
-    private fun getStorageDirectories(): List<String> {
-        val rawSecondaryStorage = catchAll { System.getenv("SECONDARY_STORAGE") } ?: ""
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val results = ArrayList<String>()
-            val externalDirs = applicationContext.getExternalFilesDirs(null) ?: emptyArray()
-            for (file in externalDirs) {
-                if (!file.path.contains("/Android")) continue
-                val path = file.path.split("/Android")[0]
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Environment.isExternalStorageRemovable(file)
-                        || rawSecondaryStorage.contains(path)) {
-                    results.add(path)
-                }
-            }
-            return results
-        } else {
-            if (!TextUtils.isEmpty(rawSecondaryStorage)) {
-                return rawSecondaryStorage.split(":")
-                        .filter { it.isNotEmpty() }
-            }
-        }
-        return emptyList()
+    override fun consumeBackPress(): Boolean {
+        super.consumeBackPress()
+        // hide bottom sheet
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        // always consume back press event
+        // if user want to exit, they must use back button in toolbar instead
+        return true
     }
 
 }
