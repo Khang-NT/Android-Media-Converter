@@ -28,9 +28,9 @@ class SelectedFilesFragment : StepFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textView.text = """- Show list selected file
-- Have icon button (X) to unselected
-- Allow going to next step if select at least one file"""
+//        textView.text = """- Show list selected file
+//- Have icon button (X) to unselected
+//- Allow going to next step if select at least one file"""
     }
 
     override fun onGoToNextStep() {
