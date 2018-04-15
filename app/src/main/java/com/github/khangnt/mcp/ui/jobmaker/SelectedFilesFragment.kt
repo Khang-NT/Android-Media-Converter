@@ -23,7 +23,7 @@ class SelectedFilesFragment : StepFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_todo, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_selected_files, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
