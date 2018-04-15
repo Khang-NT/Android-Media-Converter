@@ -14,7 +14,7 @@
         android:layout_height="48dp"
         android:padding="@dimen/margin_small"
         app:tint="?android:textColorSecondary"
-        tools:src="@drawable/ic_remove_black_24dp" />
+        tools:src="@drawable/ic_close_black_24dp" />
 
     <TextView
         android:id="@+id/tvFileName"
