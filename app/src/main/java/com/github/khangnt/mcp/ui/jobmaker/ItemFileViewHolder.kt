@@ -22,7 +22,6 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
 
     class Factory : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_selected_file
-
         override fun create(itemView: View): CustomViewHolder<*> = ItemFileViewHolder(itemView)
     }
 
@@ -52,5 +51,6 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
 
     private fun removeFile(file: File) {
         // deselect file
+
     }
 }
