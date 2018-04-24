@@ -12,7 +12,7 @@
         android:id="@+id/ivRemove"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:padding="@dimen/margin_small"
+        android:padding="@dimen/margin_huge_half"
         app:tint="?android:textColorSecondary"
         tools:src="@drawable/ic_close_black_24dp" />
 
