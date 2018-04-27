@@ -28,6 +28,7 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
     private val context = itemView.context
     private val ivRemoveFile = itemView.ivRemove
     private val tvFileName = itemView.tvFileName
+    private val tvFileId = itemView.tvFileId
 
     private var currentFile: File? = null
 
@@ -39,13 +40,18 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
         tvFileName.setOnClickListener {
             // do something
         }
+
+        tvFileId.setOnClickListener {
+
+        }
     }
 
     override fun bind(model: FileModel, pos: Int) {
         currentFile = model.file
 
         model.file.apply {
-            tvFileName.text = this.name
+            tvFileName.text = model.path
+            tvFileId.text = pos.toString()
         }
     }
 

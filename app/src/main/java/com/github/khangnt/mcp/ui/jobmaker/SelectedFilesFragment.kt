@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.ui.common.AdapterModel
+import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
-import kotlinx.android.synthetic.main.fragment_todo.*
+import kotlinx.android.synthetic.main.fragment_selected_files.*
+import java.io.File
 
 /**
  * Created by Khang NT on 4/6/18.
@@ -18,6 +21,11 @@ class SelectedFilesFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
+            withModel<FileModel> { ItemFileViewHolder.Factory() }
+        }.build()
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -31,6 +39,14 @@ class SelectedFilesFragment : StepFragment() {
 //        textView.text = """- Show list selected file
 //- Have icon button (X) to unselected
 //- Allow going to next step if select at least one file"""
+        jobMakerViewModel.getSelectedFiles().observe {
+            val listModels = mutableListOf<AdapterModel>()
+            it.forEach { item ->
+                listModels.add(FileModel(File(item)))
+            }
+            adapter.setData(listModels)
+            fileList.adapter = adapter
+        }
     }
 
     override fun onGoToNextStep() {
