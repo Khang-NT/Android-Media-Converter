@@ -33,6 +33,9 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
     private var currentFile: File? = null
 
     init {
+        // fixme: file list not showing correctly
+        this.setIsRecyclable(false)
+
         ivRemoveFile.setOnClickListener {
             removeFile(currentFile!!)
         }
@@ -48,10 +51,15 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
 
     override fun bind(model: FileModel, pos: Int) {
         currentFile = model.file
+        val displayId = pos + 1
 
         model.file.apply {
-            tvFileName.text = model.path
-            tvFileId.text = pos.toString()
+            tvFileName.text = this.name
+            if (displayId < 10) {
+                tvFileId.text = "0$displayId"
+            } else {
+                tvFileId.text = displayId.toString()
+            }
         }
     }
 
