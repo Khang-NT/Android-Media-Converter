@@ -140,6 +140,9 @@
 
     <string name="hint_limit_file_select_count">You can\'t select more than %d files</string>
     <string name="short_name_mp3">MP3</string>
+    <string name="short_name_aac">AAC</string>
+    <string name="short_name_flac">FLAC</string>
+    <string name="short_name_mp4">MP4</string>
 
     <string name="message_disallow_change_selected_files">You can\'t change selected files</string>
 </resources>
