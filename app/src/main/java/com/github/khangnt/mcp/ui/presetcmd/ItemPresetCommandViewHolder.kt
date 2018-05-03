@@ -3,7 +3,7 @@ package com.github.khangnt.mcp.ui.presetcmd
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.ImageView
-import com.github.khangnt.mcp.PresetCommand
+import com.github.khangnt.mcp.ConvertCommand
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
@@ -17,19 +17,19 @@ import kotlinx.android.synthetic.main.item_preset_command.view.*
  */
 
 data class PresetCommandModel(
-        val presetCommand: PresetCommand
+        val presetCommand: ConvertCommand
 ) : AdapterModel, HasIdLong {
     override val idLong: Long = presetCommand.ordinal.toLong()
 }
 
 class ItemPresetCommandViewHolder(
         itemView: View,
-        onClickListener: (PresetCommand) -> Unit
+        onClickListener: (ConvertCommand) -> Unit
 ) : CustomViewHolder<PresetCommandModel>(itemView) {
     private val ivIcon: ImageView = itemView.ivIcon
     private val tvShortName = itemView.tvShortName
-    private val tvTitle = itemView.tvTitle
-    private val tvDescription = itemView.tvDescription
+//    private val tvTitle = itemView.tvTitle
+//    private val tvDescription = itemView.tvDescription
 
     private var model: PresetCommandModel? = null
 
@@ -44,15 +44,15 @@ class ItemPresetCommandViewHolder(
         this.model = model
         with(model.presetCommand) {
             ivIcon.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.TL_BR, colors))
-            tvShortName.text = shortName
-            tvTitle.setText(titleRes)
-            tvDescription.setText(descriptionRes)
+            tvShortName.setText(shortName)
+//            tvTitle.setText(titleRes)
+//            tvDescription.setText(descriptionRes)
         }
     }
 
     class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_preset_command
-        lateinit var onClickListener: (PresetCommand) -> Unit
+        lateinit var onClickListener: (ConvertCommand) -> Unit
 
         init {
             init()

@@ -144,7 +144,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         drawerLayout.closeDrawer(Gravity.START)
         when (item.itemId) {
-            R.id.item_nav_job_manager, R.id.item_nav_preset_command -> {
+            R.id.item_nav_job_manager -> {
                 if (!item.isChecked) replaceFragment(createSelectedFragment(item.itemId))
             }
             R.id.item_nav_about -> AboutActivity.launch(this)
