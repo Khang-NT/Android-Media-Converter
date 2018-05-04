@@ -131,6 +131,8 @@ class FileBrowserFragment : BaseFragment() {
 
     fun getSelectedFiles() = viewModel.getSelectedFiles()
 
+    fun setSelectedFiles(files: List<File>) = viewModel.setSelectedFiles(files)
+
     private fun getCallbacks(): Callbacks? {
         return (activity as? Callbacks) ?: (parentFragment as Callbacks)
     }

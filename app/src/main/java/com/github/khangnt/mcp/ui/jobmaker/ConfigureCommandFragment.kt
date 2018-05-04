@@ -10,6 +10,7 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOS
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment.Companion.ARG_INPUT_FILES
 import com.github.khangnt.mcp.util.getViewModel
+import java.io.File
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -38,13 +39,13 @@ class ConfigureCommandFragment : StepFragment() {
 
     private fun createCommandBuilderGui(
             selectedCommand: ConvertCommand,
-            selectedFiles: List<String>
+            selectedFiles: List<File>
     ): CommandBuilderFragment {
         val tag = "${selectedCommand.ordinal} - ${selectedCommand.name}"
         return (childFragmentManager.findFragmentByTag(tag) as? CommandBuilderFragment)
                 ?: selectedCommand.fragmentFactory().apply {
                     arguments = Bundle().apply {
-                        putStringArrayList(ARG_INPUT_FILES, ArrayList(selectedFiles))
+                        putStringArrayList(ARG_INPUT_FILES, ArrayList(selectedFiles.map { it.absolutePath }))
                     }
                     this@ConfigureCommandFragment.childFragmentManager.beginTransaction()
                             .replace(R.id.fragmentContainer, this, tag)

@@ -129,6 +129,12 @@ class FileBrowserViewModel : ViewModel() {
 
     fun getSelectedFiles(): List<File> = selectedFilesReadOnly
 
+    fun setSelectedFiles(files: List<File>) {
+        selectedFiles.clear()
+        selectedFiles.addAll(files)
+        selectedFileSubject.onNext(Unit)
+    }
+
     private val fileListComparator: Comparator<FileListModel> = Comparator { f1, f2 ->
         when {
             f1.type == f2.type -> f1.path.name.compareTo(f2.path.name, ignoreCase = true)
