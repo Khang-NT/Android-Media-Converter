@@ -30,19 +30,19 @@ enum class ConvertCommand(
             fragmentFactory = ::Mp3CmdBuilderFragment
     ),
     CONVERT_AAC(
-            type = TYPE_AUDIO, shortName = R.string.short_name_aac,
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_aac,
             colors = colorArrayOf(0xff11998e, 0xff38ef7d), // Quepal
             minInputCount = 1, maxInputCount = Int.MAX_VALUE,
             fragmentFactory = ::Mp3CmdBuilderFragment
     ),
     CONVERT_FLAC(
-            type = TYPE_AUDIO, shortName = R.string.short_name_flac,
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_flac,
             colors = colorArrayOf(0xff74ebd5, 0xffACB6E5), // DigitalWater
             minInputCount = 1, maxInputCount = Int.MAX_VALUE,
             fragmentFactory = ::Mp3CmdBuilderFragment
     ),
     CONVERT_MP4(
-            type = TYPE_VIDEO, shortName = R.string.short_name_mp4,
+            type = ConvertType.TYPE_ENCODE_VIDEO, shortName = R.string.short_name_mp4,
             colors = colorArrayOf(0xff2980b9, 0xff2c3e50), // Nighthawk
             minInputCount = 1, maxInputCount = Int.MAX_VALUE,
             fragmentFactory = ::Mp3CmdBuilderFragment
