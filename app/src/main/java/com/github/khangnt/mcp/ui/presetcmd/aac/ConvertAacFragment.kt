@@ -40,7 +40,7 @@ class ConvertAacFragment : ConvertFragment() {
         sbQuality.max = CBR_MAX - CBR_MIN
         sbQuality.progress = CBR_RECOMMEND - CBR_MIN
         sbQuality.onSeekBarChanged { updateQualityText() }
-        btnStartConversion.setOnClickListener { validateAndStartConversion() }
+//        btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

@@ -3,6 +3,7 @@ package com.github.khangnt.mcp
 import android.support.annotation.IntRange
 import android.support.annotation.StringRes
 import com.github.khangnt.mcp.annotation.ConvertType
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.AacCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.Mp3CmdBuilderFragment
 
@@ -33,7 +34,7 @@ enum class ConvertCommand(
             type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_aac,
             colors = colorArrayOf(0xff11998e, 0xff38ef7d), // Quepal
             minInputCount = 1, maxInputCount = Int.MAX_VALUE,
-            fragmentFactory = ::Mp3CmdBuilderFragment
+            fragmentFactory = ::AacCmdBuilderFragment
     ),
     CONVERT_FLAC(
             type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_flac,
