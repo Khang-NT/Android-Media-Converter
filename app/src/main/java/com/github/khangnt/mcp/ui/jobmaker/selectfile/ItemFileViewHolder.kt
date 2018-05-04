@@ -1,11 +1,8 @@
-package com.github.khangnt.mcp.ui.jobmaker
+package com.github.khangnt.mcp.ui.jobmaker.selectfile
 
 import android.view.View
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.ui.common.AdapterModel
-import com.github.khangnt.mcp.ui.common.CustomViewHolder
-import com.github.khangnt.mcp.ui.common.ViewHolderFactory
-import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.ui.common.*
 import kotlinx.android.synthetic.main.item_selected_file.view.*
 import java.io.File
 
@@ -14,8 +11,8 @@ import java.io.File
  * Email: simonpham.dn@gmail.com
  */
 
-data class FileModel(val file: File) : AdapterModel {
-    val path: String = file.absolutePath
+data class FileModel(val file: File) : AdapterModel, HasIdLong {
+    override val idLong: Long = IdGenerator.idFor(file.absolutePath)
 }
 
 class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView) {
@@ -25,7 +22,6 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
         override fun create(itemView: View): CustomViewHolder<*> = ItemFileViewHolder(itemView)
     }
 
-    private val context = itemView.context
     private val ivRemoveFile = itemView.ivRemove
     private val tvFileName = itemView.tvFileName
     private val tvFileId = itemView.tvFileId
@@ -33,20 +29,17 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
     private var currentFile: File? = null
 
     init {
-        // fixme: file list not showing correctly
-        this.setIsRecyclable(false)
-
-        ivRemoveFile.setOnClickListener {
-            removeFile(currentFile!!)
-        }
-
-        tvFileName.setOnClickListener {
-            // do something
-        }
-
-        tvFileId.setOnClickListener {
-
-        }
+//        ivRemoveFile.setOnClickListener {
+//            removeFile(currentFile!!)
+//        }
+//
+//        tvFileName.setOnClickListener {
+//            // do something
+//        }
+//
+//        tvFileId.setOnClickListener {
+//
+//        }
     }
 
     override fun bind(model: FileModel, pos: Int) {
@@ -55,11 +48,7 @@ class ItemFileViewHolder(itemView: View) : CustomViewHolder<FileModel>(itemView)
 
         model.file.apply {
             tvFileName.text = this.name
-            if (displayId < 10) {
-                tvFileId.text = "0$displayId"
-            } else {
-                tvFileId.text = displayId.toString()
-            }
+            tvFileId.text = displayId.toString()
         }
     }
 

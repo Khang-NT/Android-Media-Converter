@@ -9,6 +9,7 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVERTISEMENT
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_SELECT_FILES
+import com.github.khangnt.mcp.ui.jobmaker.selectfile.SelectedFilesFragment
 import com.github.khangnt.mcp.util.disableInHalfSecond
 import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_job_maker.*
