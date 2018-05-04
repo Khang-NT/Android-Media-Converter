@@ -21,7 +21,7 @@
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput" />
+            app:layout_constraintTop_toBottomOf="parent" />
 
         <Spinner
             android:id="@+id/spinnerEncoder"
