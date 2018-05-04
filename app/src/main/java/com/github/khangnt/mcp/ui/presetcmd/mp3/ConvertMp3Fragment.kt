@@ -65,7 +65,7 @@ class ConvertMp3Fragment : ConvertFragment() {
             }
         }
 
-        btnStartConversion.setOnClickListener { validateAndStartConversion() }
+//        btnStartConversion.setOnClickListener { validateAndStartConversion() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
