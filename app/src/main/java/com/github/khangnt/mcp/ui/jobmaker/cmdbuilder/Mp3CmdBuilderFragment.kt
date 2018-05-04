@@ -73,6 +73,11 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         }
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        updateQualityText()
+    }
+
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
         if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
@@ -124,7 +129,7 @@ class Mp3CmdConfig(
 
     override fun makeJobs(finalOutputs: List<Output>): List<Job> {
         check(finalOutputs.size == getNumberOfOutput())
-        val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g -codec:a ")
+        val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a $encoder ")
                 .append(when (qualityType) {
                     QualityType.CBR -> "-b:a ${quality}k "
