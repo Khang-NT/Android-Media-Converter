@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.Muxer
-import com.github.khangnt.mcp.annotation.QualityType
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.util.onSeekBarChanged
@@ -29,12 +28,6 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
                 putStringArrayList(ARG_INPUT_FILES, ArrayList(inputFiles))
             }
         }
-
-        // https://trac.ffmpeg.org/wiki/Encode/MP3
-        private val libMp3LameQuality = arrayOf(
-                "220-260", "190-250", "170-210", "150-195", "140-185",
-                "120-150", "100-130", "80-120", "70-105", "45-85"
-        )
 
         private const val CBR_MIN = 45  // 45 kbps
         private const val CBR_MAX = 320 // 320 kbps
@@ -65,13 +58,12 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(AacCmdConfig(inputFiles, QualityType.CBR, CBR_MIN + sbQuality.progress))
+        onSuccess(AacCmdConfig(inputFiles, CBR_MIN + sbQuality.progress))
     }
 }
 
 class AacCmdConfig(
         inputFiles: List<String>,
-        @QualityType private val qualityType: Int,
         private val quality: Int
 ) : CommandConfig(inputFiles) {
 
