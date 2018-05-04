@@ -13,10 +13,8 @@ import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
 import com.github.khangnt.mcp.ui.common.MixAdapter
-import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.presetcmd.ItemPresetCommandViewHolder
 import com.github.khangnt.mcp.ui.presetcmd.PresetCommandModel
-import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_preset_command.*
@@ -100,7 +98,7 @@ class ChooseCommandFragment : StepFragment() {
     }
 
     private fun onPresetClick(convertCommand: ConvertCommand) {
-        jobMakerViewModel.setSelectedCommand(ConvertCommand.CONVERT_MP3)
+        jobMakerViewModel.setSelectedCommand(convertCommand)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_CONFIGURE_COMMAND)
     }
 

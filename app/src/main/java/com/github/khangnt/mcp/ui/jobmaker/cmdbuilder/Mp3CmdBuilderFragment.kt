@@ -53,7 +53,6 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        textView.text = """- Create UI to configure command""".trimIndent()
         sbQuality.onSeekBarChanged { updateQualityText() }
         spinnerEncoder.onItemSelected { position ->
             when (position) {
