@@ -17,7 +17,6 @@ import com.github.khangnt.mcp.util.onSeekBarChanged
 import com.github.khangnt.mcp.util.parseFileName
 import com.github.khangnt.mcp.util.parseInputUri
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
-import kotlinx.android.synthetic.main.fragment_todo.*
 import timber.log.Timber
 import java.lang.IllegalStateException
 
@@ -85,12 +84,15 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-//        if (spinnerEncoder.selectedItemPosition == 0) {
-//            cmdArgsBuilder.append("libmp3lame -q:a ${9 - sbQuality.progress} ")
-//        } else {
-//            cmdArgsBuilder.append("libshine -b:a ${CBR_MIN + sbQuality.progress}k ")
-//        }
-        onSuccess(Mp3CmdConfig(inputFiles, Encoders.LIBMP3LAME, QualityType.CBR, 320))
+        if (spinnerEncoder.selectedItemPosition == 0) {
+            val encoder = Encoders.LIBMP3LAME
+            val quality = 9 - sbQuality.progress
+            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.VBR, quality))
+        } else {
+            val encoder = Encoders.LIBSHINE
+            val quality = CBR_MIN + sbQuality.progress
+            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.CBR, quality))
+        }
     }
 }
 
