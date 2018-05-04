@@ -80,12 +80,13 @@ class ChooseCommandFragment : StepFragment() {
 //        }
 
 
-        val itemOffsetDecoration = ItemOffsetDecoration(view.context)
-                .setHorizontalSpace(R.dimen.margin_normal)
-                .setVerticalSpace(R.dimen.margin_small)
-                .applyTo(presetList)
-        val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_preset_cmd_min_width)
-        val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
+//        val itemOffsetDecoration = ItemOffsetDecoration(view.context)
+//                .setHorizontalSpace(R.dimen.margin_normal)
+//                .setVerticalSpace(R.dimen.margin_small)
+//                .applyTo(presetList)
+//        val itemMinWidth = resources.getDimensionPixelOffset(R.dimen.item_preset_cmd_min_width)
+//        val spanCount = getSpanCount(itemMinWidth, itemOffsetDecoration.horizontalSpace)
+        val spanCount = resources.getInteger(R.integer.spanCount)
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
