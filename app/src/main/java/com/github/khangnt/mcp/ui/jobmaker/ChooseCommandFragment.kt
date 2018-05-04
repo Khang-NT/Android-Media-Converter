@@ -89,7 +89,7 @@ class ChooseCommandFragment : StepFragment() {
         val lm = GridLayoutManager(view.context, spanCount)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemData(position) is HeaderModel) spanCount else spanCount
+                return if (adapter.getItemData(position) is HeaderModel) spanCount else 1
             }
         }
 
