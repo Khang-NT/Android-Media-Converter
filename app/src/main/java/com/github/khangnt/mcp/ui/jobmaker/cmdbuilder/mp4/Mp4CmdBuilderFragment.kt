@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder
+package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.parseFileName
 import com.github.khangnt.mcp.util.parseInputUri
 import kotlinx.android.synthetic.main.fragment_convert_mp4.*

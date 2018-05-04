@@ -3,7 +3,11 @@ package com.github.khangnt.mcp
 import android.support.annotation.IntRange
 import android.support.annotation.StringRes
 import com.github.khangnt.mcp.annotation.ConvertType
-import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.*
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac.AacCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.flac.FlacCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3.Mp3CmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4.Mp4CmdBuilderFragment
 
 const val TYPE_AUDIO = 0
 const val TYPE_VIDEO = 1
