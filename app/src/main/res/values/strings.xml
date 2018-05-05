@@ -16,6 +16,7 @@
     <string name="nav_feedback">Help &amp; feedback</string>
 
     <string name="empty_job_list">No Job found\nLet create new one via preset command.</string>
+    <string name="empty_selected_files">No files selected</string>
     <string name="loading_job_list">Loading jobs…</string>
 
     <string name="file_list_load_error_message">Load file list failed</string>
@@ -135,14 +136,28 @@
     <string name="header_ready_job">Ready</string>
     <string name="header_pending_job">Pending</string>
     <string name="header_finished_job">Finished</string>
-    <string name="header_audio_encoding">Audio encoding</string>
-    <string name="header_video_encoding">Video encoding</string>
+    <string name="header_convert_to_other_format">Convert to other format</string>
+    <string name="header_other_feature">Other features</string>
 
     <string name="hint_limit_file_select_count">You can\'t select more than %d files</string>
     <string name="short_name_mp3">MP3</string>
     <string name="short_name_aac">AAC</string>
     <string name="short_name_flac">FLAC</string>
     <string name="short_name_mp4">MP4</string>
+    
+    <string name="label_cut_length">Cut video/audio length</string>
+    <string name="label_merge_audio">Merge to single audio file</string>
+    <string name="label_merge_video">Merge to single video file</string>
+    <string name="label_resize_video">Resize video file</string>
+    <string name="label_video_speed">Speeding up/slowing down video</string>
 
     <string name="message_disallow_change_selected_files">You can\'t change selected files</string>
+    <string name="message_please_select_an_option">Please select an option</string>
+
+    <string name="title_convert">Convert %s</string>
+
+    <string name="select_at_least_one">You must select at least %d file to choose this option</string>
+    <string name="select_at_least_n">You must select at least %d files to choose this option</string>
+    <string name="select_at_most_one">You must select at most %d file to choose this option</string>
+    <string name="select_at_most_n">You must select at most %d files to choose this option</string>
 </resources>

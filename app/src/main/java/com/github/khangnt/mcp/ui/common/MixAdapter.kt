@@ -28,7 +28,7 @@ data class ItemType(
 
 class MixAdapter(
         private val mapModelClassItemType: Map<Class<out AdapterModel>, ItemType>
-) : RecyclerView.Adapter<CustomViewHolder<*>>() {
+) : RecyclerView.Adapter<CustomViewHolder<*>>(), ItemTouchHelperAdapter {
 
     private var layoutInflater: LayoutInflater? = null
     private val itemDataList = mutableListOf<AdapterModel>()
@@ -95,6 +95,16 @@ class MixAdapter(
     override fun onViewDetachedFromWindow(holder: CustomViewHolder<*>) {
         super.onViewDetachedFromWindow(holder)
         holder.onDetachedFromWindow()
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        itemDataList.add(toPosition, itemDataList.removeAt(fromPosition))
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        itemDataList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     class Builder(block: Builder.() -> Unit) {

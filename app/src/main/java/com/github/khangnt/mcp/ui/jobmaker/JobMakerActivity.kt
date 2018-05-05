@@ -66,10 +66,16 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
             // expand bottom sheet to show job maker fragment
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
         }
+
+        jobMakerViewModel.getSelectedFiles().observe { selectedFiles ->
+            if (selectedFiles !== fileBrowserFragment.getSelectedFiles()) {
+                fileBrowserFragment.setSelectedFiles(selectedFiles)
+            }
+        }
     }
 
     override fun onSelectFilesChanged(files: List<File>) {
-        jobMakerViewModel.setSelectedFiles(files.map { it.absolutePath })
+        jobMakerViewModel.setSelectedFiles(files)
     }
 
     override fun onCurrentDirectoryChanged(directory: File) {
