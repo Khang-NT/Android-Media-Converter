@@ -45,6 +45,7 @@ class ItemEditCommandViewHolder(
                 ivCardBackground.setImageDrawable(
                         GradientDrawable(GradientDrawable.Orientation.TL_BR, gradientColors))
                 ivIcon.setImageResource(iconRes)
+                tvLabel.alpha = if (model.enabled) 1.0f else 0.5f
                 tvLabel.setText(label)
             }
         }

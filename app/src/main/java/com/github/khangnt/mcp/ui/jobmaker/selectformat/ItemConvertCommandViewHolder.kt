@@ -43,6 +43,7 @@ class ItemConvertCommandViewHolder(
                 val gradientColors = if (model.enabled) colors else disabledColors
                 ivCardBackground.setImageDrawable(
                         GradientDrawable(GradientDrawable.Orientation.TL_BR, gradientColors))
+                tvShortName.alpha = if (model.enabled) 1.0f else 0.5f
                 tvShortName.setText(shortName)
             }
         }
