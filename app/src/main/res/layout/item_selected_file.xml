@@ -6,15 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:paddingBottom="@dimen/margin_small"
-    android:paddingLeft="@dimen/margin_normal"
-    android:paddingRight="@dimen/margin_normal"
-    android:paddingTop="@dimen/margin_small">
+    android:padding="@dimen/margin_small">
 
     <ImageView
         android:id="@+id/vDragHandle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/margin_small"
         android:src="@drawable/ic_drag_handle_black_24dp"
         android:tint="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/margin_small"
         android:src="@drawable/ic_close_black_24dp"
         android:tint="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
