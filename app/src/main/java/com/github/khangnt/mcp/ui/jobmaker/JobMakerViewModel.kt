@@ -3,7 +3,7 @@ package com.github.khangnt.mcp.ui.jobmaker
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.github.khangnt.mcp.ConvertCommand
+import com.github.khangnt.mcp.PresetCommand
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.LiveEvent
 import java.io.File
@@ -24,7 +24,7 @@ class JobMakerViewModel : ViewModel() {
     private val onResetLiveEvent = LiveEvent()
     private val requestVisibleLiveEvent = LiveEvent()
 
-    private lateinit var selectedCommand: ConvertCommand
+    private lateinit var selectedCommand: PresetCommand
     private lateinit var commandConfig: CommandConfig
 
     init {
@@ -57,11 +57,11 @@ class JobMakerViewModel : ViewModel() {
         selectedFilesLiveData.value = newList
     }
 
-    fun setSelectedCommand(command: ConvertCommand) {
+    fun setSelectedCommand(command: PresetCommand) {
         selectedCommand = command
     }
 
-    fun getSelectCommand(): ConvertCommand {
+    fun getSelectCommand(): PresetCommand {
         check(checkNotNull(currentStepLiveData.value) > STEP_CHOOSE_COMMAND) {
             "Can't get selected command at current step: ${currentStepLiveData.value}"
         }
