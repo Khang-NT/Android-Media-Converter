@@ -15,7 +15,7 @@ private fun colorArrayOf(vararg longValues: Long): IntArray {
     return IntArray(longValues.size, { longValues[it].toInt() })
 }
 
-val disabledColors = colorArrayOf(0xff323232, 0xff434343)
+val disabledColors = colorArrayOf(0x80323232, 0x80434343)
 
 interface PresetCommand {
     fun getTag(): String
