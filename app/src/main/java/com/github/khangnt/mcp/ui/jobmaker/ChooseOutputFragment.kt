@@ -22,14 +22,14 @@ class ChooseOutputFragment : StepFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_todo, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_choose_output, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textView.text = """- Pick output folder
-- Show list output file
-- Highlight conflict output file with resolve options (rename, override)
-"""
+//        textView.text = """- Pick output folder
+//- Show list output file
+//- Highlight conflict output file with resolve options (rename, override)
+//"""
     }
 
     override fun onGoToNextStep() {
