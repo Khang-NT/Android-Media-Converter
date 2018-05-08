@@ -39,7 +39,7 @@ class ChooseOutputFragment : StepFragment() {
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
     private val adapter: MixAdapter by lazy {
         MixAdapter.Builder {
-            withModel<FileModel> {
+            withModel<FileName> {
                 ItemOutputFileViewHolder.Factory {
 //                    onStartDrag = { itemTouchHelper.startDrag(it) }
 //                    onRemoveFile = { jobMakerViewModel.removeSelectedFiles(it) }
@@ -79,10 +79,9 @@ class ChooseOutputFragment : StepFragment() {
 
         recyclerView.adapter = adapter
 
-        jobMakerViewModel.getSelectedFiles().observe { selectedFiles ->
-            adapter.setData(selectedFiles.map { FileModel(it) })
-//            tvEmptyMessage.visibility = if (selectedFiles.isEmpty()) View.VISIBLE else View.GONE
-        }
+        val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
+        adapter.setData(outputFileNames.map { FileName(it) })
+
     }
 
     @SuppressLint("NewApi", "SetTextI18n")

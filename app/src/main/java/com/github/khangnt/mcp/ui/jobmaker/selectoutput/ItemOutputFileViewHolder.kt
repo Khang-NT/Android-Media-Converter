@@ -11,18 +11,18 @@ import java.io.File
  * Email: simonpham.dn@gmail.com
  */
 
-data class FileModel(val file: File) : AdapterModel, HasIdLong {
-    override val idLong: Long = IdGenerator.idFor(file.absolutePath)
+data class FileName(val name: String) : AdapterModel, HasIdLong {
+    override val idLong: Long = IdGenerator.idFor(name)
 }
 
 class ItemOutputFileViewHolder(
         itemView: View
-) : CustomViewHolder<FileModel>(itemView) {
+) : CustomViewHolder<FileName>(itemView) {
 
     private val ivEditName = itemView.ivEditName
     private val tvFileName = itemView.tvFileName
     private val tvFileId = itemView.tvFileId
-    private var currentFile: File? = null
+    private var currentFile: String? = null
 
     init {
         ivEditName.setOnClickListener {
@@ -30,12 +30,12 @@ class ItemOutputFileViewHolder(
         }
     }
 
-    override fun bind(model: FileModel, pos: Int) {
-        currentFile = model.file
+    override fun bind(model: FileName, pos: Int) {
+        currentFile = model.name
         val displayId = pos + 1
 
-        model.file.apply {
-            tvFileName.text = this.name
+        model.name.apply {
+            tvFileName.text = this
             tvFileId.text = displayId.toString()
         }
     }
