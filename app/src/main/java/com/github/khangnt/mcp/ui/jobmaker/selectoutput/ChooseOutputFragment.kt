@@ -116,8 +116,16 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     override fun onGoToNextStep() {
+        getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
+
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
 
+    private fun getOutputFolderError(): String? {
+        if (outputFolderUri === null) {
+            return getString(R.string.error_output_folder_empty)
+        }
+        return null
+    }
 }
