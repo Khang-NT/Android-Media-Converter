@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_close_black_24dp"
+        android:src="@drawable/ic_edit_black_24dp"
         android:tint="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -52,7 +52,7 @@
         android:textSize="@dimen/text_size_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/tvFileId"
-        app:layout_constraintRight_toLeftOf="@id/ivRemove"
+        app:layout_constraintRight_toLeftOf="@id/ivEditName"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="File abc xxxxxxxxxxxxxxxxxxxxx xyz.mp4" />
 
