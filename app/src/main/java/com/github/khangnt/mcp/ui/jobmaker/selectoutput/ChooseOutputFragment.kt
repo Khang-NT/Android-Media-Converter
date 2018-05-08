@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.jobmaker
+package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -12,8 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
+import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
+import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.getViewModel
@@ -34,6 +37,17 @@ class ChooseOutputFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
+            withModel<FileModel> {
+                ItemOutputFileViewHolder.Factory {
+//                    onStartDrag = { itemTouchHelper.startDrag(it) }
+//                    onRemoveFile = { jobMakerViewModel.removeSelectedFiles(it) }
+                }
+            }
+        }.build()
+    }
+
     private var outputFolderUri: Uri? = null
 
     override fun onCreateView(
@@ -60,6 +74,14 @@ class ChooseOutputFragment : StepFragment() {
             }
             val intent = FilePickerActivity.pickFolderIntent(it.context, ensureWritable = true)
             startActivityForResult(intent, RC_PICK_FOLDER)
+        }
+
+
+        recyclerView.adapter = adapter
+
+        jobMakerViewModel.getSelectedFiles().observe { selectedFiles ->
+            adapter.setData(selectedFiles.map { FileModel(it) })
+//            tvEmptyMessage.visibility = if (selectedFiles.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 

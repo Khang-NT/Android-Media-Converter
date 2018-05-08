@@ -11,6 +11,7 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVER
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_SELECT_FILES
 import com.github.khangnt.mcp.ui.jobmaker.selectfile.SelectedFilesFragment
 import com.github.khangnt.mcp.ui.jobmaker.selectformat.ChooseCommandFragment
+import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputFragment
 import com.github.khangnt.mcp.util.disableInHalfSecond
 import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_job_maker.*
