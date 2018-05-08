@@ -8,6 +8,7 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +20,13 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
+import com.github.khangnt.mcp.util.checkFileExists
 import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
+import android.widget.LinearLayout
+import android.widget.EditText
+
 
 /**
  * Created by Khang NT on 4/11/18.
@@ -118,6 +123,27 @@ class ChooseOutputFragment : StepFragment() {
     override fun onGoToNextStep() {
         getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
 
+        jobMakerViewModel.getCommandConfig().generateOutputFileNames().forEach { fileName ->
+            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName)?.toString()
+
+            if (existingFile != null) {
+                // ask user whether they want to override this file or change file name
+                AlertDialog.Builder(context!!)
+                        .setTitle(R.string.dialog_error_file_exists)
+                        .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.action_override, { _, _ ->
+                            // override existing file??
+                        })
+                        .setNegativeButton(R.string.action_rename, { _, _ ->
+                            // show edit name dialog
+                            editOutputFileName(fileName)
+                        })
+                        .show()
+                return
+            }
+        }
+
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
@@ -127,5 +153,29 @@ class ChooseOutputFragment : StepFragment() {
             return getString(R.string.error_output_folder_empty)
         }
         return null
+    }
+
+    private fun editOutputFileName(fileName: String) {
+        val input = EditText(context)
+        val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT)
+        input.layoutParams = lp
+        lp.setMargins(8,8,8,8)
+        input.setText(fileName)
+
+        // ask user to enter new file name
+        AlertDialog.Builder(context!!)
+                .setTitle("Please enter new file name")
+                .setCancelable(true)
+                .setPositiveButton(R.string.action_rename, { _, _ ->
+                    // rename the file
+                })
+                .setNegativeButton("Cancel", { _, _ ->
+                    // nothing to do
+                })
+                .setView(input)
+                .show()
+        return
     }
 }
