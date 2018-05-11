@@ -8,6 +8,7 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
 import android.widget.LinearLayout
 import android.widget.EditText
+import com.github.khangnt.mcp.SingletonInstances
 
 
 /**
@@ -46,7 +48,6 @@ class ChooseOutputFragment : StepFragment() {
         MixAdapter.Builder {
             withModel<OutputFile> {
                 ItemOutputFileViewHolder.Factory {
-//                    onStartDrag = { itemTouchHelper.startDrag(it) }
 //                    onRemoveFile = { jobMakerViewModel.removeSelectedFiles(it) }
                 }
             }
@@ -54,6 +55,17 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private var outputFolderUri: Uri? = null
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        outputFolderUri = if (sharedPrefs.lastOutputFolderUri !== null) {
+            sharedPrefs.lastOutputFolderUri.let { Uri.parse(it) }
+        } else {
+            Uri.parse("" + Environment.getExternalStorageDirectory() + "/MediaConverterPro/")
+        }
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -67,6 +79,11 @@ class ChooseOutputFragment : StepFragment() {
 //- Show list output file
 //- Highlight conflict output file with resolve options (rename, override)
 //"""
+        outputFolderUri?.let { uri ->
+            val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
+            edOutputPath.setText(path ?: uri.toString())
+        }
+
         edOutputPath.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
@@ -103,6 +120,7 @@ class ChooseOutputFragment : StepFragment() {
                     outputFolderUri = Uri.fromFile(File(path))
                     edOutputPath.setText(path)
                     edOutputPath.error = null
+                    sharedPrefs.lastOutputFolderUri = outputFolderUri?.toString()
                 }
             }
             RC_PICK_DOCUMENT_TREE -> {
@@ -120,6 +138,7 @@ class ChooseOutputFragment : StepFragment() {
                 val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
                 edOutputPath.setText(path ?: uri.toString())
                 edOutputPath.error = null
+                sharedPrefs.lastOutputFolderUri = outputFolderUri?.toString()
             }
         }
     }
@@ -165,7 +184,7 @@ class ChooseOutputFragment : StepFragment() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT)
         input.layoutParams = lp
-        lp.setMargins(8,8,8,8)
+        lp.setMargins(8, 8, 8, 8)
         input.setText(fileName)
 
         // ask user to enter new file name
