@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
@@ -28,6 +29,7 @@ import java.io.File
 import android.widget.LinearLayout
 import android.widget.EditText
 import com.github.khangnt.mcp.SingletonInstances
+import com.github.khangnt.mcp.ui.common.AdapterModel
 
 
 /**
@@ -101,10 +103,30 @@ class ChooseOutputFragment : StepFragment() {
 
         recyclerView.adapter = adapter
 
+        val outputList = getNonConflictOutputs()
+
+        adapter.setData(outputList.map { OutputFile(it.first, it.second) })
+
+    }
+
+    private fun getNonConflictOutputs(): List<Pair<String, String>> {
         val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
 
-        adapter.setData(outputFileNames.map { OutputFile(it.first, it.second) })
+        return List(outputFileNames.size, { index ->
+            getNonConflictName(context!!, outputFolderUri!!, outputFileNames.get(index))
+        })
+    }
 
+    private fun getNonConflictName(context: Context, outputFolderUri: Uri, fileName: Pair<String, String>): Pair<String, String> {
+        if (context.checkFileExists(outputFolderUri, "${fileName.first}.${fileName.second}")?.toString() !== null) {
+            var i = 1
+            while (context.checkFileExists(outputFolderUri, "${fileName.first}.${fileName.second} ($i)")?.toString() !== null) {
+                i++
+            }
+            return Pair("${fileName.first} ($i)", fileName.second)
+        } else {
+            return Pair(fileName.first, fileName.second)
+        }
     }
 
     @SuppressLint("NewApi", "SetTextI18n")
@@ -145,26 +167,26 @@ class ChooseOutputFragment : StepFragment() {
     override fun onGoToNextStep() {
         getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
 
-        jobMakerViewModel.getCommandConfig().generateOutputFileNames().forEach { fileName ->
-            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName.first + fileName.second)?.toString()
-
-            if (existingFile != null) {
-                // ask user whether they want to override this file or change file name
-                AlertDialog.Builder(context!!)
-                        .setTitle(R.string.dialog_error_file_exists)
-                        .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.action_override, { _, _ ->
-                            // override existing file??
-                        })
-                        .setNegativeButton(R.string.action_rename, { _, _ ->
-                            // show edit name dialog
-                            editOutputFileName(fileName.first + fileName.second)
-                        })
-                        .show()
-                return
-            }
-        }
+//        jobMakerViewModel.getCommandConfig().generateOutputFileNames().forEach { fileName ->
+//            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName.first + fileName.second)?.toString()
+//
+//            if (existingFile != null) {
+//                // ask user whether they want to override this file or change file name
+//                AlertDialog.Builder(context!!)
+//                        .setTitle(R.string.dialog_error_file_exists)
+//                        .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.action_override, { _, _ ->
+//                            // override existing file??
+//                        })
+//                        .setNegativeButton(R.string.action_rename, { _, _ ->
+//                            // show edit name dialog
+//                            editOutputFileName(fileName.first + fileName.second)
+//                        })
+//                        .show()
+//                return
+//            }
+//        }
 
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
