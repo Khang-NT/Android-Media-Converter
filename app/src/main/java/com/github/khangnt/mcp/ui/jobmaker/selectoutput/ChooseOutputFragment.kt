@@ -59,6 +59,7 @@ class ChooseOutputFragment : StepFragment() {
 
     private var outputFolderUri: Uri? = null
     private var outputFolderFiles = HashSet<String>()
+    private var reservedOutputFiles = HashSet<String>()
 
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
@@ -129,6 +130,7 @@ class ChooseOutputFragment : StepFragment() {
 
     private fun getNonConflictOutputs(): List<Pair<String, String>> {
         val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
+        reservedOutputFiles.clear()
 
         return List(outputFileNames.size, { index ->
             getNonConflictName(outputFileNames.get(index))
@@ -136,13 +138,17 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private fun getNonConflictName(fileName: Pair<String, String>): Pair<String, String> {
-        if (outputFolderFiles.contains("${fileName.first}.${fileName.second}")) {
+        if (outputFolderFiles.contains("${fileName.first}.${fileName.second}")
+                || reservedOutputFiles.contains("${fileName.first}.${fileName.second}")) {
             var i = 1
-            while (outputFolderFiles.contains("${fileName.first}.${fileName.second} ($i)")) {
+            while (outputFolderFiles.contains("${fileName.first} ($i).${fileName.second}")
+                            || reservedOutputFiles.contains("${fileName.first} ($i).${fileName.second}")) {
                 i++
             }
+            reservedOutputFiles.add("${fileName.first} ($i).${fileName.second}")
             return Pair("${fileName.first} ($i)", fileName.second)
         } else {
+            reservedOutputFiles.add("${fileName.first}.${fileName.second}")
             return Pair(fileName.first, fileName.second)
         }
     }
