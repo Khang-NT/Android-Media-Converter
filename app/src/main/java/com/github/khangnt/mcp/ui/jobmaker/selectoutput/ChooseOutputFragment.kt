@@ -102,9 +102,8 @@ class ChooseOutputFragment : StepFragment() {
         recyclerView.adapter = adapter
 
         val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
-        val outputFileExt = jobMakerViewModel.getCommandConfig().getOutputFileNameExt()
 
-        adapter.setData(outputFileNames.map { OutputFile(it, outputFileExt) })
+        adapter.setData(outputFileNames.map { OutputFile(it.first, it.second) })
 
     }
 
@@ -147,7 +146,7 @@ class ChooseOutputFragment : StepFragment() {
         getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
 
         jobMakerViewModel.getCommandConfig().generateOutputFileNames().forEach { fileName ->
-            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName)?.toString()
+            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName.first + fileName.second)?.toString()
 
             if (existingFile != null) {
                 // ask user whether they want to override this file or change file name
@@ -160,7 +159,7 @@ class ChooseOutputFragment : StepFragment() {
                         })
                         .setNegativeButton(R.string.action_rename, { _, _ ->
                             // show edit name dialog
-                            editOutputFileName(fileName)
+                            editOutputFileName(fileName.first + fileName.second)
                         })
                         .show()
                 return

@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
+import android.annotation.SuppressLint
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
@@ -33,12 +34,13 @@ class ItemOutputFileViewHolder(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun bind(model: OutputFile, pos: Int) {
         currentFile = model.fileName
         val displayId = pos + 1
 
-        model.fileName.apply {
-            tvFileName.text = this
+        model.apply {
+            tvFileName.text = "$fileName.$fileExt"
             tvFileId.text = displayId.toString()
         }
     }

@@ -58,20 +58,8 @@ class Mp4CmdConfig(
 
     override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
 
-    override fun generateOutputFileNames(): List<String> {
-        return inputFiles.map {
-            val inputFileName = it.parseInputUri().lastPathSegment?.trim()
-            if (inputFileName == null || inputFileName.isEmpty()) {
-                return@map "Untitled.mp4"
-            }
-            val (name, extension) = inputFileName.parseFileName()
-            Timber.d("File '$name' ext '$extension'")
-            return@map "$name.mp4"
-        }
-    }
-
-    override fun getOutputFileNameExt(): String {
-        return "mp4"
+    override fun generateOutputFileNames(): List<Pair<String, String>> {
+        return List(inputFiles.size, { i -> Pair(getFileNameFromInputs(i), "mp4")})
     }
 
     override fun makeJobs(finalOutputs: List<Output>): List<Job> {

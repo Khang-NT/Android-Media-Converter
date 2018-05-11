@@ -71,20 +71,8 @@ class AacCmdConfig(
 
     override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
 
-    override fun generateOutputFileNames(): List<String> {
-        return inputFiles.map {
-            val inputFileName = it.parseInputUri().lastPathSegment?.trim()
-            if (inputFileName == null || inputFileName.isEmpty()) {
-                return@map "Untitled.aac"
-            }
-            val (name, extension) = inputFileName.parseFileName()
-            Timber.d("File '$name' ext '$extension'")
-            return@map "$name.aac"
-        }
-    }
-
-    override fun getOutputFileNameExt(): String {
-        return "aac"
+    override fun generateOutputFileNames(): List<Pair<String, String>> {
+        return List(inputFiles.size, { i -> Pair(getFileNameFromInputs(i), "aac")})
     }
 
     override fun makeJobs(finalOutputs: List<Output>): List<Job> {
