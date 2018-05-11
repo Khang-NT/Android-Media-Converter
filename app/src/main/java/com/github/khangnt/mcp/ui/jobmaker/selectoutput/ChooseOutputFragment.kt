@@ -157,9 +157,7 @@ class ChooseOutputFragment : StepFragment() {
             RC_PICK_FOLDER -> {
                 data?.getStringExtra(DIRECTORY_RESULT)?.let { path ->
                     outputFolderUri = Uri.fromFile(File(path))
-                    edOutputPath.setText(path)
-                    edOutputPath.error = null
-                    sharedPrefs.lastOutputFolderUri = outputFolderUri?.toString()
+                    onOutputFolderChanged()
                 }
             }
             RC_PICK_DOCUMENT_TREE -> {
@@ -173,13 +171,19 @@ class ChooseOutputFragment : StepFragment() {
                 }
 
                 outputFolderUri = uri
-
-                val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
-                edOutputPath.setText(path ?: uri.toString())
-                edOutputPath.error = null
-                sharedPrefs.lastOutputFolderUri = outputFolderUri?.toString()
+                onOutputFolderChanged()
             }
         }
+    }
+
+    private fun onOutputFolderChanged() {
+        sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
+
+        val path = catchAll { UriUtils.getDirectoryPathFromUri(outputFolderUri) }
+        edOutputPath.setText(path ?: outputFolderUri.toString())
+        edOutputPath.error = null
+
+        refreshOutputFolderFiles(outputFolderUri!!)
     }
 
     override fun onGoToNextStep() {
