@@ -102,6 +102,7 @@ class ChooseOutputFragment : StepFragment() {
                 data?.getStringExtra(DIRECTORY_RESULT)?.let { path ->
                     outputFolderUri = Uri.fromFile(File(path))
                     edOutputPath.setText(path)
+                    edOutputPath.error = null
                 }
             }
             RC_PICK_DOCUMENT_TREE -> {
@@ -118,6 +119,7 @@ class ChooseOutputFragment : StepFragment() {
 
                 val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
                 edOutputPath.setText(path ?: uri.toString())
+                edOutputPath.error = null
             }
         }
     }
