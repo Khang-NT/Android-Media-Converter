@@ -70,6 +70,10 @@ class Mp4CmdConfig(
         }
     }
 
+    override fun getOutputFileNameExt(): String {
+        return "mp4"
+    }
+
     override fun makeJobs(finalOutputs: List<Output>): List<Job> {
         check(finalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map_metadata 0:g -map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt ")

@@ -129,6 +129,10 @@ class Mp3CmdConfig(
         }
     }
 
+    override fun getOutputFileNameExt(): String {
+        return "mp3"
+    }
+
     override fun makeJobs(finalOutputs: List<Output>): List<Job> {
         check(finalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")

@@ -14,6 +14,8 @@ abstract class CommandConfig(val inputFiles: List<String>) {
 
     abstract fun generateOutputFileNames(): List<String>
 
+    abstract fun getOutputFileNameExt(): String
+
     abstract fun makeJobs(finalOutputs: List<Output>): List<Job>
 
 }
