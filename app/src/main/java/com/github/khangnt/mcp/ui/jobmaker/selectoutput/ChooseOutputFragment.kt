@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +58,7 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private var outputFolderUri: Uri? = null
+    private var outputFolderFiles = HashSet<String>()
 
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
@@ -84,6 +86,8 @@ class ChooseOutputFragment : StepFragment() {
         outputFolderUri?.let { uri ->
             val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
             edOutputPath.setText(path ?: uri.toString())
+
+            refreshOutputFolderFiles(uri)
         }
 
         edOutputPath.setOnClickListener {
@@ -109,18 +113,32 @@ class ChooseOutputFragment : StepFragment() {
 
     }
 
+    private fun refreshOutputFolderFiles(uri: Uri) {
+        outputFolderFiles.clear()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            DocumentFile.fromTreeUri(context, uri).listFiles().forEach {
+                outputFolderFiles.add(it.name)
+            }
+        } else {
+            File(uri.toString()).listFiles().forEach {
+                outputFolderFiles.add(it.name)
+            }
+        }
+    }
+
     private fun getNonConflictOutputs(): List<Pair<String, String>> {
         val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
 
         return List(outputFileNames.size, { index ->
-            getNonConflictName(context!!, outputFolderUri!!, outputFileNames.get(index))
+            getNonConflictName(outputFileNames.get(index))
         })
     }
 
-    private fun getNonConflictName(context: Context, outputFolderUri: Uri, fileName: Pair<String, String>): Pair<String, String> {
-        if (context.checkFileExists(outputFolderUri, "${fileName.first}.${fileName.second}")?.toString() !== null) {
+    private fun getNonConflictName(fileName: Pair<String, String>): Pair<String, String> {
+        if (outputFolderFiles.contains("${fileName.first}.${fileName.second}")) {
             var i = 1
-            while (context.checkFileExists(outputFolderUri, "${fileName.first}.${fileName.second} ($i)")?.toString() !== null) {
+            while (outputFolderFiles.contains("${fileName.first}.${fileName.second} ($i)")) {
                 i++
             }
             return Pair("${fileName.first} ($i)", fileName.second)
