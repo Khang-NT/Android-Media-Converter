@@ -85,12 +85,6 @@ class ChooseOutputFragment : StepFragment() {
 //- Show list output file
 //- Highlight conflict output file with resolve options (rename, override)
 //"""
-        outputFolderUri?.let { uri ->
-            val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
-            edOutputPath.setText(path ?: uri.toString())
-
-            refreshOutputFolderFiles(uri)
-        }
 
         edOutputPath.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -112,11 +106,9 @@ class ChooseOutputFragment : StepFragment() {
             adapter.setData(it)
         }
 
-        if (step4ViewModel.getListOutputFile().value!!.isEmpty()) {
-            val outputList = getNonConflictOutputs()
-            step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
-        }
-
+        // todo: refactoring code
+        // fixme: view model's output file list showing old data
+        onOutputFolderChanged()
     }
 
     private fun refreshOutputFolderFiles(uri: Uri) {
@@ -193,21 +185,27 @@ class ChooseOutputFragment : StepFragment() {
     private fun onOutputFolderChanged() {
         sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
 
-        val path = catchAll { UriUtils.getDirectoryPathFromUri(outputFolderUri) }
-        edOutputPath.setText(path ?: outputFolderUri.toString())
-        edOutputPath.error = null
+        outputFolderUri?.let { uri ->
+            val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
+            edOutputPath.setText(path ?: uri.toString())
 
-        refreshOutputFolderFiles(outputFolderUri!!)
-        checkConflict()
+            refreshOutputFolderFiles(uri)
+        }
+
+        if (step4ViewModel.getListOutputFile().value!!.isEmpty()) {
+            val outputList = getNonConflictOutputs()
+            step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
+        } else {
+            checkConflict()
+        }
     }
 
     private fun checkConflict() {
-
-//        step4ViewModel.getListOutputFile().value?.forEach { output ->
-//            if (isNameConflict("${output.fileName}.${output.fileExt}")) {
-//                output.isConflict = true
-//            }
-//        }
+        val listOutputFile = step4ViewModel.getListOutputFile().value
+        listOutputFile!!.forEach { output ->
+            output.isConflict = isNameConflict("${output.fileName}.${output.fileExt}")
+        }
+        step4ViewModel.setListOutputFile(listOutputFile)
     }
 
     override fun onGoToNextStep() {
