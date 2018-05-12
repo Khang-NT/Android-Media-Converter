@@ -143,11 +143,9 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private fun getNonConflictName(fileName: Pair<String, String>): Pair<String, String> {
-        if (outputFolderFiles.contains("${fileName.first}.${fileName.second}")
-                || reservedOutputFiles.contains("${fileName.first}.${fileName.second}")) {
+        if (isNameConflict("${fileName.first}.${fileName.second}")) {
             var i = 1
-            while (outputFolderFiles.contains("${fileName.first} ($i).${fileName.second}")
-                            || reservedOutputFiles.contains("${fileName.first} ($i).${fileName.second}")) {
+            while (isNameConflict("${fileName.first} ($i).${fileName.second}")) {
                 i++
             }
             reservedOutputFiles.add("${fileName.first} ($i).${fileName.second}")
@@ -156,6 +154,11 @@ class ChooseOutputFragment : StepFragment() {
             reservedOutputFiles.add("${fileName.first}.${fileName.second}")
             return Pair(fileName.first, fileName.second)
         }
+    }
+
+    private fun isNameConflict(fileName: String): Boolean {
+        return (outputFolderFiles.contains(fileName)
+                || reservedOutputFiles.contains(fileName))
     }
 
     @SuppressLint("NewApi", "SetTextI18n")
@@ -200,6 +203,11 @@ class ChooseOutputFragment : StepFragment() {
 
     private fun checkConflict() {
 
+//        step4ViewModel.getListOutputFile().value?.forEach { output ->
+//            if (isNameConflict("${output.fileName}.${output.fileExt}")) {
+//                output.isConflict = true
+//            }
+//        }
     }
 
     override fun onGoToNextStep() {
