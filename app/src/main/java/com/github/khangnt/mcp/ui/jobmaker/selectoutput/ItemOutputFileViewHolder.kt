@@ -12,10 +12,10 @@ import java.io.File
  * Email: simonpham.dn@gmail.com
  */
 
-data class OutputFile(val fileName: String,
-                      val fileExt: String,
-                      val isConflict: Boolean = false,
-                      val isOverrideAllowed: Boolean = false) : AdapterModel, HasIdLong {
+data class OutputFile(var fileName: String,
+                      var fileExt: String,
+                      var isConflict: Boolean = false,
+                      var isOverrideAllowed: Boolean = false) : AdapterModel, HasIdLong {
     override val idLong: Long = IdGenerator.idFor(fileName)
 }
 
