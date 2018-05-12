@@ -13,6 +13,10 @@ class Step4ViewModel: ViewModel() {
 
     private val listOutputFileLiveData = MutableLiveData<List<OutputFile>>()
 
+    init {
+        listOutputFileLiveData.value = emptyList()
+    }
+
     fun getListOutputFile(): LiveData<List<OutputFile>> = listOutputFileLiveData
 
     fun setListOutputFile(outputs: List<OutputFile>) {

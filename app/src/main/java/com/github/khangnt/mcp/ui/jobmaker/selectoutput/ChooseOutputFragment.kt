@@ -106,12 +106,16 @@ class ChooseOutputFragment : StepFragment() {
             startActivityForResult(intent, RC_PICK_FOLDER)
         }
 
-
         recyclerView.adapter = adapter
 
-        val outputList = getNonConflictOutputs()
+        step4ViewModel.getListOutputFile().observe {
+            adapter.setData(it)
+        }
 
-        adapter.setData(outputList.map { OutputFile(it.first, it.second) })
+        if (step4ViewModel.getListOutputFile().value!!.isEmpty()) {
+            val outputList = getNonConflictOutputs()
+            step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
+        }
 
     }
 
@@ -191,6 +195,11 @@ class ChooseOutputFragment : StepFragment() {
         edOutputPath.error = null
 
         refreshOutputFolderFiles(outputFolderUri!!)
+        checkConflict()
+    }
+
+    private fun checkConflict() {
+
     }
 
     override fun onGoToNextStep() {
