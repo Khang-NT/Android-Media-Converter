@@ -47,6 +47,7 @@ class ChooseOutputFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
+    private val step4ViewModel by lazy { requireActivity().getViewModel<Step4ViewModel>() }
     private val adapter: MixAdapter by lazy {
         MixAdapter.Builder {
             withModel<OutputFile> {
