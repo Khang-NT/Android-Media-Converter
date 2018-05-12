@@ -42,6 +42,10 @@ class ItemOutputFileViewHolder(
         model.apply {
             tvFileName.text = "$fileName.$fileExt"
             tvFileId.text = displayId.toString()
+
+        }
+        if (model.isConflict) {
+            tvFileName.error = "conflict"   // testing
         }
     }
 
