@@ -161,6 +161,7 @@ class ChooseOutputFragment : StepFragment() {
             RC_PICK_FOLDER -> {
                 data?.getStringExtra(DIRECTORY_RESULT)?.let { path ->
                     outputFolderUri = Uri.fromFile(File(path))
+                    sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
                     onOutputFolderChanged()
                 }
             }
@@ -175,13 +176,13 @@ class ChooseOutputFragment : StepFragment() {
                 }
 
                 outputFolderUri = uri
+                sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
                 onOutputFolderChanged()
             }
         }
     }
 
     private fun onOutputFolderChanged() {
-        sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
 
         outputFolderUri?.let { uri ->
             val path = catchAll { UriUtils.getDirectoryPathFromUri(uri) }
@@ -194,14 +195,14 @@ class ChooseOutputFragment : StepFragment() {
             val outputList = getNonConflictOutputs()
             step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
         } else {
-            checkConflict()
+            checkConflictInFolder()
         }
     }
 
-    private fun checkConflict() {
+    private fun checkConflictInFolder() {
         val listOutputFile = step4ViewModel.getListOutputFile().value
         listOutputFile!!.forEach { output ->
-            output.isConflict = isNameConflict("${output.fileName}.${output.fileExt}")
+            output.isConflict = outputFolderFiles.contains("${output.fileName}.${output.fileExt}")
         }
         step4ViewModel.setListOutputFile(listOutputFile)
     }
