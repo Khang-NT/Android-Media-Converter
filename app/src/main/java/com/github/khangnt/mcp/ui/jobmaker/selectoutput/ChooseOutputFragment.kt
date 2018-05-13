@@ -106,8 +106,6 @@ class ChooseOutputFragment : StepFragment() {
             adapter.setData(it)
         }
 
-        // todo: refactoring code
-        // fixme: view model's output file list showing old data
         onOutputFolderChanged()
     }
 
@@ -233,6 +231,8 @@ class ChooseOutputFragment : StepFragment() {
 //        }
 
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
+
+        step4ViewModel.clear()
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
 

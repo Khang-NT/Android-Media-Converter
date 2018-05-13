@@ -15,6 +15,7 @@ import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
+import com.github.khangnt.mcp.ui.jobmaker.selectoutput.Step4ViewModel
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_choose_command.*
@@ -28,6 +29,7 @@ class ChooseCommandFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
+    private val step4ViewModel by lazy { requireActivity().getViewModel<Step4ViewModel>() }
 
     private val adapter: MixAdapter by lazy {
         MixAdapter.Builder {
@@ -112,6 +114,9 @@ class ChooseCommandFragment : StepFragment() {
             }
             return
         }
+
+        step4ViewModel.clear()
+
         jobMakerViewModel.setSelectedCommand(editCommandModel.editCommand)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_CONFIGURE_COMMAND)
     }

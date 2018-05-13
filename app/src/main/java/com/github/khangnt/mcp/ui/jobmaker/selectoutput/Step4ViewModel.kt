@@ -17,6 +17,10 @@ class Step4ViewModel: ViewModel() {
         listOutputFileLiveData.value = emptyList()
     }
 
+    fun clear() {
+        listOutputFileLiveData.value = emptyList()
+    }
+
     fun getListOutputFile(): LiveData<List<OutputFile>> = listOutputFileLiveData
 
     fun setListOutputFile(outputs: List<OutputFile>) {
