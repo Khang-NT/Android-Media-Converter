@@ -120,13 +120,15 @@ class ChooseOutputFragment : StepFragment() {
     private fun refreshOutputFolderFiles(uri: Uri) {
         outputFolderFiles.clear()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            DocumentFile.fromTreeUri(context, uri).listFiles().forEach {
-                outputFolderFiles.add(it.name)
-            }
-        } else {
-            File(uri.toString()).listFiles().forEach {
-                outputFolderFiles.add(it.name)
+        catchAll {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                DocumentFile.fromTreeUri(context, uri).listFiles().forEach {
+                    outputFolderFiles.add(it.name)
+                }
+            } else {
+                File(uri.toString()).listFiles().forEach {
+                    outputFolderFiles.add(it.name)
+                }
             }
         }
     }
