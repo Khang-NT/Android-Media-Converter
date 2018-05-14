@@ -26,6 +26,7 @@ import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
 
@@ -212,26 +213,12 @@ class ChooseOutputFragment : StepFragment() {
     override fun onGoToNextStep() {
         getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
 
-//        jobMakerViewModel.getCommandConfig().generateOutputFileNames().forEach { fileName ->
-//            val existingFile = context!!.checkFileExists(outputFolderUri!!, fileName.first + fileName.second)?.toString()
-//
-//            if (existingFile != null) {
-//                // ask user whether they want to override this file or change file name
-//                AlertDialog.Builder(context!!)
-//                        .setTitle(R.string.dialog_error_file_exists)
-//                        .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
-//                        .setCancelable(false)
-//                        .setPositiveButton(R.string.action_override, { _, _ ->
-//                            // override existing file??
-//                        })
-//                        .setNegativeButton(R.string.action_rename, { _, _ ->
-//                            // show edit name dialog
-//                            editOutputFileName(fileName.first + fileName.second)
-//                        })
-//                        .show()
-//                return
-//            }
-//        }
+        step4ViewModel.getListOutputFile().value!!.forEach {
+            if (it.isConflict && !(it.isOverrideAllowed)) {
+                toast("Please resolve conflicted files before continuing!")
+                return
+            }
+        }
 
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
 
