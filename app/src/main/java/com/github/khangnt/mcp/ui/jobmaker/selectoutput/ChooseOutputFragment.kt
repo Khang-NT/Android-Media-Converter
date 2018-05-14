@@ -63,7 +63,7 @@ class ChooseOutputFragment : StepFragment() {
 
     private var outputFolderUri: Uri? = null
     private var outputFolderFiles = HashSet<String>()
-    private var reservedOutputFiles = HashSet<String>()
+    private var reservedOutputFiles = ArrayList<String>()
 
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
@@ -107,6 +107,11 @@ class ChooseOutputFragment : StepFragment() {
 
         step4ViewModel.getListOutputFile().observe {
             adapter.setData(it)
+
+            reservedOutputFiles.clear()
+            it.forEach {
+                reservedOutputFiles.add("${it.fileName}.${it.fileExt}")
+            }
         }
 
         onOutputFolderChanged()
@@ -198,14 +203,23 @@ class ChooseOutputFragment : StepFragment() {
             val outputList = getNonConflictOutputs()
             step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
         } else {
-            checkConflictInFolder()
+            checkConflict()
         }
     }
 
-    private fun checkConflictInFolder() {
+    private fun checkConflict() {
         val listOutputFile = step4ViewModel.getListOutputFile().value
         listOutputFile!!.forEach { output ->
-            output.isConflict = outputFolderFiles.contains("${output.fileName}.${output.fileExt}")
+            if (outputFolderFiles.contains("${output.fileName}.${output.fileExt}")) {
+                output.isConflict = true
+            } else {
+                step4ViewModel.setListOutputFile(listOutputFile)
+                var count = 0
+                reservedOutputFiles.forEach {
+                    if (it == "${output.fileName}.${output.fileExt}") { count++ }
+                }
+                output.isConflict = count > 1
+            }
         }
         step4ViewModel.setListOutputFile(listOutputFile)
     }
@@ -252,7 +266,7 @@ class ChooseOutputFragment : StepFragment() {
                     // rename the file
                     newList.get(position).fileName = input.text.toString()
                     step4ViewModel.setListOutputFile(newList)
-                    checkConflictInFolder()
+                    checkConflict()
                 })
                 .setNegativeButton("Cancel", { _, _ ->
                     // nothing to do
@@ -277,7 +291,7 @@ class ChooseOutputFragment : StepFragment() {
                 .setNegativeButton("Override", { _, _ ->
                     newList.get(position).isOverrideAllowed = true
                     step4ViewModel.setListOutputFile(newList)
-                    checkConflictInFolder()
+                    checkConflict()
                 })
                 .setNeutralButton("Cancel", { _, _ ->
                     // nothing to do
