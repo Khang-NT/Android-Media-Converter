@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
+        android:clickable="false"
         android:ellipsize="middle"
         android:singleLine="true"
         android:textColor="?android:textColorSecondary"

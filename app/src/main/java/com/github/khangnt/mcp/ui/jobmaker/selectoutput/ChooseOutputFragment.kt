@@ -52,6 +52,9 @@ class ChooseOutputFragment : StepFragment() {
                     onEditFileNameClick = View.OnClickListener {
                         editOutputFileName(it.tag as Int)
                     }
+                    onFileNameClick = View.OnClickListener {
+                        renameOrOverride(it.tag as Int)
+                    }
                 }
             }
         }.build()
@@ -268,6 +271,30 @@ class ChooseOutputFragment : StepFragment() {
                     // nothing to do
                 })
                 .setView(input)
+                .show()
+        return
+    }
+
+    private fun renameOrOverride(position: Int) {
+        val newList = step4ViewModel.getListOutputFile().value
+        val fileName = "${newList!!.get(position).fileName}.${newList!!.get(position).fileExt}"
+
+        AlertDialog.Builder(context!!)
+                .setTitle(R.string.dialog_error_file_exists)
+                .setMessage(getString(R.string.dialog_error_file_exists_message, fileName))
+                .setCancelable(true)
+                .setPositiveButton(R.string.action_rename, { _, _ ->
+                    // show rename dialog
+                    editOutputFileName(position)
+                })
+                .setNegativeButton("Override", { _, _ ->
+                    newList.get(position).isOverrideAllowed = true
+                    step4ViewModel.setListOutputFile(newList)
+                    checkConflictInFolder()
+                })
+                .setNeutralButton("Cancel", { _, _ ->
+                    // nothing to do
+                })
                 .show()
         return
     }

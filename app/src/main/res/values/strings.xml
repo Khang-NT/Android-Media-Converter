@@ -75,7 +75,7 @@
     <string name="error_file_name_empty">Please set file name</string>
 
     <string name="dialog_error_file_exists">File name exists</string>
-    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
+    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override or rename it?</string>
     <string name="action_override">Override</string>
     <string name="action_rename">Rename</string>
 

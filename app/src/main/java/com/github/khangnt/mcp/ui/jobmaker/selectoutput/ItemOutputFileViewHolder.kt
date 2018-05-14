@@ -1,6 +1,7 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
 import android.annotation.SuppressLint
+import android.support.v4.content.ContextCompat
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
@@ -20,15 +21,18 @@ data class OutputFile(var fileName: String,
 
 class ItemOutputFileViewHolder(
         itemView: View,
-        onEditFileNameClick: View.OnClickListener
+        onEditFileNameClick: View.OnClickListener,
+        onFileNameClick: View.OnClickListener
 ) : CustomViewHolder<OutputFile>(itemView) {
 
+    private val context = itemView.context
     private val ivEditName = itemView.ivEditName
     private val tvFileName = itemView.tvFileName
     private val tvFileId = itemView.tvFileId
 
     init {
         ivEditName.setOnClickListener(onEditFileNameClick)
+        tvFileName.setOnClickListener(onFileNameClick)
     }
 
     @SuppressLint("SetTextI18n")
@@ -39,22 +43,30 @@ class ItemOutputFileViewHolder(
             tvFileName.text = "$fileName.$fileExt"
             tvFileId.text = displayId.toString()
             ivEditName.tag = pos
+            tvFileName.tag = pos
         }
-        if (model.isConflict) {
-            tvFileName.error = "conflict"   // testing
+        if (model.isConflict && !(model.isOverrideAllowed)) {
+            tvFileName.isClickable = true
+            tvFileName.error = "conflict"
+            tvFileName.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+        } else {
+            tvFileName.isClickable = false
+            tvFileName.error = null
+            tvFileName.setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_light))
         }
     }
 
     class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_output_files
         lateinit var onEditFileNameClick: View.OnClickListener
+        lateinit var onFileNameClick: View.OnClickListener
 
         init {
             init()
         }
 
         override fun create(itemView: View): CustomViewHolder<*> {
-            return ItemOutputFileViewHolder(itemView, onEditFileNameClick)
+            return ItemOutputFileViewHolder(itemView, onEditFileNameClick, onFileNameClick)
         }
     }
 
