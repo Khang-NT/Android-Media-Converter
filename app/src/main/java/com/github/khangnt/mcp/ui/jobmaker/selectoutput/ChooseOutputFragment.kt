@@ -3,7 +3,6 @@ package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
@@ -15,7 +14,10 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
@@ -23,14 +25,9 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
-import com.github.khangnt.mcp.util.checkFileExists
 import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
-import android.widget.LinearLayout
-import android.widget.EditText
-import com.github.khangnt.mcp.SingletonInstances
-import com.github.khangnt.mcp.ui.common.AdapterModel
 
 
 /**
@@ -52,7 +49,9 @@ class ChooseOutputFragment : StepFragment() {
         MixAdapter.Builder {
             withModel<OutputFile> {
                 ItemOutputFileViewHolder.Factory {
-//                    onRemoveFile = { jobMakerViewModel.removeSelectedFiles(it) }
+                    onEditFileNameClick = View.OnClickListener {
+                        editOutputFileName(it.tag as Int)
+                    }
                 }
             }
         }.build()
@@ -244,14 +243,16 @@ class ChooseOutputFragment : StepFragment() {
         return null
     }
 
-    private fun editOutputFileName(fileName: String) {
+    private fun editOutputFileName(position: Int) {
+        val newList = step4ViewModel.getListOutputFile().value
+
         val input = EditText(context)
         val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT)
         input.layoutParams = lp
         lp.setMargins(8, 8, 8, 8)
-        input.setText(fileName)
+        input.setText(newList!!.get(position).fileName)
 
         // ask user to enter new file name
         AlertDialog.Builder(context!!)
@@ -259,6 +260,9 @@ class ChooseOutputFragment : StepFragment() {
                 .setCancelable(true)
                 .setPositiveButton(R.string.action_rename, { _, _ ->
                     // rename the file
+                    newList.get(position).fileName = input.text.toString()
+                    step4ViewModel.setListOutputFile(newList)
+                    checkConflictInFolder()
                 })
                 .setNegativeButton("Cancel", { _, _ ->
                     // nothing to do
