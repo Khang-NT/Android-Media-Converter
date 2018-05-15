@@ -10,10 +10,8 @@ import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
-import com.github.khangnt.mcp.util.parseFileName
-import com.github.khangnt.mcp.util.parseInputUri
+import io.fabric.sdk.android.services.network.HttpRequest.append
 import kotlinx.android.synthetic.main.fragment_convert_mp4.*
-import timber.log.Timber
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -24,9 +22,7 @@ class Mp4CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
         fun create(inputFiles: List<String>) = Mp4CmdBuilderFragment().apply {
-            arguments = Bundle().apply {
-                putStringArrayList(ARG_INPUT_FILES, ArrayList(inputFiles))
-            }
+            arguments = Bundle().putInputFile(inputFiles)
         }
 
         // https://trac.ffmpeg.org/wiki/Encode/MPEG-4
@@ -58,16 +54,17 @@ class Mp4CmdConfig(
 
     override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
 
-    override fun generateOutputFileNames(): List<Pair<String, String>> {
-        return List(inputFiles.size, { i -> Pair(getFileNameFromInputs(i), "mp4")})
+    override fun generateOutputFiles(): List<AutoGenOutput> {
+        return List(inputFiles.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp4")})
     }
 
-    override fun makeJobs(finalOutputs: List<Output>): List<Job> {
-        check(finalOutputs.size == getNumberOfOutput())
-        val cmdArgs = StringBuffer("-hide_banner -map_metadata 0:g -map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt ")
+    override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
+        check(finalFinalOutputs.size == getNumberOfOutput())
+        val cmdArgs = StringBuffer("-hide_banner -map_metadata 0:g")
+                .append("-map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt ")
                 .append("-q:v $videoQuality")
                 .toString()
-        return finalOutputs.mapIndexed { index, output ->
+        return finalFinalOutputs.mapIndexed { index, output ->
             Job(
                     title = output.title,
                     command = Command(

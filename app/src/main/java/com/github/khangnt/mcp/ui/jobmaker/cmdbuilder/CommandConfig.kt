@@ -11,16 +11,17 @@ import timber.log.Timber
  */
 
 abstract class CommandConfig(val inputFiles: List<String>) {
-    data class Output(val title: String, val outputUri: String)
+    data class AutoGenOutput(val fileName: String, val fileExt: String)
+    data class FinalOutput(val title: String, val outputUri: String)
 
     abstract fun getNumberOfOutput(): Int
 
-    abstract fun generateOutputFileNames(): List<Pair<String, String>>
+    abstract fun generateOutputFiles(): List<AutoGenOutput>
 
-    abstract fun makeJobs(finalOutputs: List<Output>): List<Job>
+    abstract fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job>
 
-    fun getFileNameFromInputs(index: Int): String {
-        val inputFileName = inputFiles.get(index).parseInputUri().lastPathSegment?.trim()
+    protected fun getFileNameFromInputs(index: Int): String {
+        val inputFileName = inputFiles[index].parseInputUri().lastPathSegment?.trim()
         if (inputFileName == null || inputFileName.isEmpty()) {
             return "Untitled"
         }

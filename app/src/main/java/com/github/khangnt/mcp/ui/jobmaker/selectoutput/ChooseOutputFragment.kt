@@ -23,6 +23,7 @@ import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
 import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.getViewModel
@@ -134,7 +135,7 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private fun getNonConflictOutputs(): List<Pair<String, String>> {
-        val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFileNames()
+        val outputFileNames = jobMakerViewModel.getCommandConfig().generateOutputFiles()
         reservedOutputFiles.clear()
 
         return List(outputFileNames.size, { index ->
@@ -142,7 +143,9 @@ class ChooseOutputFragment : StepFragment() {
         })
     }
 
-    private fun getNonConflictName(fileName: Pair<String, String>): Pair<String, String> {
+    private fun getNonConflictName(autoGenOutput: CommandConfig.AutoGenOutput): Pair<String, String> {
+        // fixme
+        val fileName = Pair(autoGenOutput.fileName, autoGenOutput.fileExt)
         if (isNameConflict("${fileName.first}.${fileName.second}")) {
             var i = 1
             while (isNameConflict("${fileName.first} ($i).${fileName.second}")) {

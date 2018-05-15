@@ -56,6 +56,9 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
             bottomSheetArea?.doOnPreDraw {
                 it.peekHeight += resources.getDimensionPixelOffset(R.dimen.margin_small)
             }
+            if (savedInstanceState != null) {
+                it.state = BottomSheetBehavior.STATE_EXPANDED
+            }
         }
 
         jobMakerViewModel.onResetEvent().observe {
