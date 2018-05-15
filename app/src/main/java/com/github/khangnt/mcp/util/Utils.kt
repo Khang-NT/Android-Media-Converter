@@ -227,3 +227,5 @@ fun getSdCardPaths(context: Context): List<String> {
     }
     return emptyList()
 }
+
+fun String.toUri(): Uri = Uri.parse(this)

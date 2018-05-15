@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
  * Email: khang.neon.1997@gmail.com
  */
 
-class SingletonInstances private constructor(appContext: Context) {
+class SingletonInstances private constructor(private val appContext: Context) {
     companion object {
         private const val CACHE_SIZE = 20 * 1024 * 1024L     //20MB
 
@@ -48,8 +48,9 @@ class SingletonInstances private constructor(appContext: Context) {
 
         fun getViewModelFactory(): ViewModelProvider.Factory = INSTANCE.viewModelFactory
 
-        fun getJobWorkerMangager(): JobWorkerManager = INSTANCE.jobWorkerManagerLazy
+        fun getJobWorkerManager(): JobWorkerManager = INSTANCE.jobWorkerManagerLazy
 
+        fun getAppContext() = INSTANCE.appContext
     }
 
     private val mainCacheLazy by lazy {

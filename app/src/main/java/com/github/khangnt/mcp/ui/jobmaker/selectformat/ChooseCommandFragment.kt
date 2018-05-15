@@ -29,7 +29,6 @@ class ChooseCommandFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
-    private val step4ViewModel by lazy { requireActivity().getViewModel<ChooseOutputViewModel>() }
 
     private val adapter: MixAdapter by lazy {
         MixAdapter.Builder {
@@ -114,8 +113,6 @@ class ChooseCommandFragment : StepFragment() {
             }
             return
         }
-
-        step4ViewModel.clear()
 
         jobMakerViewModel.setSelectedCommand(editCommandModel.editCommand)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_CONFIGURE_COMMAND)

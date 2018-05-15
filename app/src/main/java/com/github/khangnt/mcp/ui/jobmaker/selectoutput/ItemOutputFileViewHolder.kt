@@ -1,7 +1,9 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
@@ -12,61 +14,77 @@ import kotlinx.android.synthetic.main.item_output_files.view.*
  * Email: simonpham.dn@gmail.com
  */
 
-data class OutputFile(var fileName: String,
-                      var fileExt: String,
-                      var isConflict: Boolean = false,
-                      var isOverrideAllowed: Boolean = false) : AdapterModel, HasIdLong {
+data class OutputFileAdapterModel(
+        val fileName: String,
+        val isConflict: Boolean = false,
+        val isOverrideAllowed: Boolean = false
+) : AdapterModel, HasIdLong {
     override val idLong: Long = IdGenerator.idFor(fileName)
 }
 
 class ItemOutputFileViewHolder(
         itemView: View,
-        onEditFileNameClick: View.OnClickListener,
-        onFileNameClick: View.OnClickListener
-) : CustomViewHolder<OutputFile>(itemView) {
+        onEdit: (model: OutputFileAdapterModel, position: Int) -> Unit,
+        onResolveConflict: (model: OutputFileAdapterModel, position: Int) -> Unit
+) : CustomViewHolder<OutputFileAdapterModel>(itemView) {
 
     private val context = itemView.context
     private val ivEditName = itemView.ivEditName
     private val tvFileName = itemView.tvFileName
     private val tvFileId = itemView.tvFileId
+    private val textColorNormal = tvFileName.currentTextColor
+
+    private var currentModel: OutputFileAdapterModel? = null
 
     init {
-        ivEditName.setOnClickListener(onEditFileNameClick)
-        tvFileName.setOnClickListener(onFileNameClick)
+        itemView.setOnClickListener {
+            val adapterPos = adapterPosition
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                // only clickable when isConflict == true
+                check(currentModel?.isConflict == true)
+                onResolveConflict(checkNotNull(currentModel), adapterPosition)
+            }
+        }
+
+        ivEditName.setOnClickListener {
+            val adapterPos = adapterPosition
+            if (adapterPos != RecyclerView.NO_POSITION) {
+                onEdit(checkNotNull(currentModel), adapterPosition)
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bind(model: OutputFile, pos: Int) {
+    override fun bind(model: OutputFileAdapterModel, pos: Int) {
+        this.currentModel = model
         val displayId = pos + 1
 
         model.apply {
-            tvFileName.text = "$fileName.$fileExt"
+            tvFileName.text = fileName
             tvFileId.text = displayId.toString()
-            ivEditName.tag = pos
-            tvFileName.tag = pos
-        }
-        if (model.isConflict && !(model.isOverrideAllowed)) {
-            tvFileName.isClickable = true
-            tvFileName.error = "conflict"
-            tvFileName.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-        } else {
-            tvFileName.isClickable = false
-            tvFileName.error = null
-            tvFileName.setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_light))
+            if (isConflict && !isOverrideAllowed) {
+                itemView.isClickable = true
+                tvFileName.error = context.getString(R.string.file_exists)
+                tvFileName.setTextColor(Color.RED)
+            } else {
+                itemView.isClickable = false
+                tvFileName.error = null
+                tvFileName.setTextColor(textColorNormal)
+            }
         }
     }
 
     class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_output_files
-        lateinit var onEditFileNameClick: View.OnClickListener
-        lateinit var onFileNameClick: View.OnClickListener
+        lateinit var onEdit: (model: OutputFileAdapterModel, position: Int) -> Unit
+        lateinit var onResolveConflict: (model: OutputFileAdapterModel, position: Int) -> Unit
 
         init {
             init()
         }
 
         override fun create(itemView: View): CustomViewHolder<*> {
-            return ItemOutputFileViewHolder(itemView, onEditFileNameClick, onFileNameClick)
+            return ItemOutputFileViewHolder(itemView, onEdit, onResolveConflict)
         }
     }
 
