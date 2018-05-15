@@ -9,7 +9,7 @@ import android.arch.lifecycle.ViewModel
  * Email: simonpham.dn@gmail.com
  */
 
-class Step4ViewModel: ViewModel() {
+class ChooseOutputViewModel: ViewModel() {
 
     private val listOutputFileLiveData = MutableLiveData<List<OutputFile>>()
 

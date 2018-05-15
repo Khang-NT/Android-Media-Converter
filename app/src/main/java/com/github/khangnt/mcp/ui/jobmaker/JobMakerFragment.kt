@@ -101,6 +101,7 @@ class JobMakerFragment : BaseFragment() {
     private fun showFragment(tag: String, reverseAnim: Boolean, createFragment: () -> Fragment) {
         if (childFragmentManager.findFragmentByTag(tag) == null) {
             val fragment = createFragment()
+
             childFragmentManager.beginTransaction().apply {
                 if (reverseAnim) {
                     setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)

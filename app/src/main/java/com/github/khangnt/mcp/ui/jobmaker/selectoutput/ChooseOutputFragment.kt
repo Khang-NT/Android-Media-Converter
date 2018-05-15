@@ -45,7 +45,7 @@ class ChooseOutputFragment : StepFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
-    private val step4ViewModel by lazy { requireActivity().getViewModel<Step4ViewModel>() }
+    private val chooseOutputViewModel by lazy { requireActivity().getViewModel<ChooseOutputViewModel>() }
     private val adapter: MixAdapter by lazy {
         MixAdapter.Builder {
             withModel<OutputFile> {
@@ -105,7 +105,7 @@ class ChooseOutputFragment : StepFragment() {
 
         recyclerView.adapter = adapter
 
-        step4ViewModel.getListOutputFile().observe {
+        chooseOutputViewModel.getListOutputFile().observe {
             adapter.setData(it)
 
             reservedOutputFiles.clear()
@@ -201,21 +201,21 @@ class ChooseOutputFragment : StepFragment() {
             refreshOutputFolderFiles(uri)
         }
 
-        if (step4ViewModel.getListOutputFile().value!!.isEmpty()) {
+        if (chooseOutputViewModel.getListOutputFile().value!!.isEmpty()) {
             val outputList = getNonConflictOutputs()
-            step4ViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
+            chooseOutputViewModel.setListOutputFile(outputList.map { OutputFile(it.first, it.second) })
         } else {
             checkConflict()
         }
     }
 
     private fun checkConflict() {
-        val listOutputFile = step4ViewModel.getListOutputFile().value
+        val listOutputFile = chooseOutputViewModel.getListOutputFile().value
         listOutputFile!!.forEach { output ->
             if (outputFolderFiles.contains("${output.fileName}.${output.fileExt}")) {
                 output.isConflict = true
             } else {
-                step4ViewModel.setListOutputFile(listOutputFile)
+                chooseOutputViewModel.setListOutputFile(listOutputFile)
                 var count = 0
                 reservedOutputFiles.forEach {
                     if (it == "${output.fileName}.${output.fileExt}") { count++ }
@@ -223,13 +223,13 @@ class ChooseOutputFragment : StepFragment() {
                 output.isConflict = count > 1
             }
         }
-        step4ViewModel.setListOutputFile(listOutputFile)
+        chooseOutputViewModel.setListOutputFile(listOutputFile)
     }
 
     override fun onGoToNextStep() {
         getOutputFolderError()?.apply { edOutputPath.error = this }?.also { return }
 
-        step4ViewModel.getListOutputFile().value!!.forEach {
+        chooseOutputViewModel.getListOutputFile().value!!.forEach {
             if (it.isConflict && !(it.isOverrideAllowed)) {
                 toast("Please resolve conflicted files before continuing!")
                 return
@@ -238,7 +238,7 @@ class ChooseOutputFragment : StepFragment() {
 
         // jobMakerViewModel.getCommandConfig().makeJobs(final outputs)
 
-        step4ViewModel.clear()
+        chooseOutputViewModel.clear()
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
 
@@ -250,7 +250,7 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private fun editOutputFileName(position: Int) {
-        val newList = step4ViewModel.getListOutputFile().value
+        val newList = chooseOutputViewModel.getListOutputFile().value
 
         val input = EditText(context)
         val lp = LinearLayout.LayoutParams(
@@ -267,7 +267,7 @@ class ChooseOutputFragment : StepFragment() {
                 .setPositiveButton(R.string.action_rename, { _, _ ->
                     // rename the file
                     newList.get(position).fileName = input.text.toString()
-                    step4ViewModel.setListOutputFile(newList)
+                    chooseOutputViewModel.setListOutputFile(newList)
                     checkConflict()
                 })
                 .setNegativeButton("Cancel", { _, _ ->
@@ -279,7 +279,7 @@ class ChooseOutputFragment : StepFragment() {
     }
 
     private fun renameOrOverride(position: Int) {
-        val newList = step4ViewModel.getListOutputFile().value
+        val newList = chooseOutputViewModel.getListOutputFile().value
         val fileName = "${newList!!.get(position).fileName}.${newList!!.get(position).fileExt}"
 
         AlertDialog.Builder(context!!)
@@ -292,7 +292,7 @@ class ChooseOutputFragment : StepFragment() {
                 })
                 .setNegativeButton("Override", { _, _ ->
                     newList.get(position).isOverrideAllowed = true
-                    step4ViewModel.setListOutputFile(newList)
+                    chooseOutputViewModel.setListOutputFile(newList)
                     checkConflict()
                 })
                 .setNeutralButton("Cancel", { _, _ ->
