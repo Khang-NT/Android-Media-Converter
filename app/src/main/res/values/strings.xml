@@ -68,7 +68,7 @@
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
 
-    <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
+    <string name="error_can_not_create_output_file">Can\'t create output file, please try again or change output folder</string>
     <string name="error_input_too_short">Input too short</string>
     <string name="error_file_not_exists">This path doesn\'t exists</string>
     <string name="error_not_a_file">This is not a file</string>

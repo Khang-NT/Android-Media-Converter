@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.dialog.InputDialogFragment
@@ -93,7 +94,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             val intent = FilePickerActivity.pickFolderIntent(it.context, ensureWritable = true)
             startActivityForResult(intent, RC_PICK_FOLDER)
         }
-        updateOutputPathAsync()
+
 
         recyclerView.adapter = adapter
 
@@ -110,11 +111,14 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         chooseOutputViewModel.getListOutputFile().observe {
             adapter.setData(it)
         }
+
+        chooseOutputViewModel.getOutputFolderUri().observe {
+            updateOutputPathAsync(it)
+        }
     }
 
-    private fun updateOutputPathAsync() {
+    private fun updateOutputPathAsync(outputFolderUri: Uri) {
         edOutputPath.isEnabled = false
-        val outputFolderUri = chooseOutputViewModel.getOutputFolderUri()
         val weakRef = edOutputPath.toWeakRef()
         thread {
             val path = catchAll { UriUtils.getDirectoryPathFromUri(outputFolderUri) }
@@ -153,7 +157,6 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 chooseOutputViewModel.setOutputFolderUri(uri)
             }
         }
-        updateOutputPathAsync()
     }
 
     override fun onGoToNextStep() {
@@ -169,22 +172,32 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         }
 
         val createFinalOutput: (fileName: String) -> CommandConfig.FinalOutput
-        if (chooseOutputViewModel.getOutputFolderUri().scheme == ContentResolver.SCHEME_CONTENT) {
+        val outputFolderUri = checkNotNull(chooseOutputViewModel.getOutputFolderUri().value)
+        if (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT) {
             val documentFile = DocumentFile.fromTreeUri(requireContext(),
-                    chooseOutputViewModel.getOutputFolderUri())
+                    outputFolderUri)
             createFinalOutput = { fileName ->
                 val file = documentFile.createFile(null, fileName)
+                if (file == null) {
+                    toast(R.string.error_can_not_create_output_file)
+                    throw IllegalStateException()
+                }
                 CommandConfig.FinalOutput(fileName, file.uri.toString())
             }
         } else {
-            val folder = File(chooseOutputViewModel.getOutputFolderUri().path)
+            val folder = File(outputFolderUri.path)
             createFinalOutput = { fileName ->
                 CommandConfig.FinalOutput(fileName, Uri.fromFile(File(folder, fileName)).toString())
             }
         }
 
         val finalOutputs = checkNotNull(chooseOutputViewModel.getListOutputFile().value).map {
-            createFinalOutput(it.fileName)
+            try {
+                createFinalOutput(it.fileName)
+            } catch (ignore: IllegalStateException) {
+                // abort
+                return
+            }
         }
 
         jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs).forEach { job ->

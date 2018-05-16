@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -24,12 +25,16 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class ChooseOutputViewModel : ViewModel() {
     companion object {
-        val DEFAULT_OUTPUT_FOLDER: Uri = Uri.fromFile(
-                File(Environment.getExternalStorageDirectory(), "MediaConverterPro"))
+        val DEFAULT_OUTPUT_FOLDER: Uri
+            get() = Uri.fromFile(
+                    File(Environment.getExternalStorageDirectory(), "MediaConverterPro"))
     }
 
+    @SuppressLint("StaticFieldLeak")
+    private val appContext = SingletonInstances.getAppContext()
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
-    private var outputFolderUri: Uri
+    private lateinit var outputFolderUri: Uri
+    private val outputFolderUriLiveData = MutableLiveData<Uri>()
 
     private val outputFolderFiles = mutableSetOf<String>()
     private val reservedOutputFiles = mutableSetOf<String>()
@@ -43,13 +48,9 @@ class ChooseOutputViewModel : ViewModel() {
     private val executor = Executors.newSingleThreadExecutor()
 
     init {
-        outputFolderUri = sharedPrefs.lastOutputFolderUri?.toUri() ?: DEFAULT_OUTPUT_FOLDER
         listOutputFileModel.value = emptyList()
 
-        processing.setValue(true)
-        executeAsync {
-            updateFolderFiles()
-        }
+        setOutputFolderUri(sharedPrefs.lastOutputFolderUri?.toUri())
     }
 
     private fun executeAsync(action: () -> Unit) {
@@ -61,12 +62,20 @@ class ChooseOutputViewModel : ViewModel() {
         }
     }
 
-    fun setOutputFolderUri(outputFolderUri: Uri) {
-        if (outputFolderUri != this.outputFolderUri) {
-            this.outputFolderUri = outputFolderUri
-            sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
+    fun setOutputFolderUri(outputFolderUri: Uri?) {
+        if (!this::outputFolderUri.isInitialized || outputFolderUri != this.outputFolderUri) {
             processing.setValue(true)
             executeAsync {
+                this.outputFolderUri = if (outputFolderUri != null &&
+                        (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT &&
+                                DocumentFile.fromTreeUri(appContext, outputFolderUri).exists()
+                                || File(outputFolderUri.path).exists())) {
+                    outputFolderUri
+                } else {
+                    DEFAULT_OUTPUT_FOLDER
+                }
+                outputFolderUriLiveData.postValue(this.outputFolderUri)
+                sharedPrefs.lastOutputFolderUri = this.outputFolderUri.toString()
                 updateFolderFiles()
                 if (this::commandConfig.isInitialized) {
                     updateListOutputFileModel()
@@ -75,7 +84,7 @@ class ChooseOutputViewModel : ViewModel() {
         }
     }
 
-    fun getOutputFolderUri(): Uri = outputFolderUri
+    fun getOutputFolderUri(): LiveData<Uri> = outputFolderUriLiveData
 
     fun getListFolderFileNames(): Set<String> = outputFolderFiles
 
