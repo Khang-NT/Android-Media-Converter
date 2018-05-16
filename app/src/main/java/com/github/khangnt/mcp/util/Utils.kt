@@ -21,6 +21,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.*
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -203,3 +204,5 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(key: String? = null): T
 }
 
 fun String.toUri(): Uri = Uri.parse(this)
+
+fun <T : Any> T.toWeakRef(): WeakReference<T> = WeakReference(this)

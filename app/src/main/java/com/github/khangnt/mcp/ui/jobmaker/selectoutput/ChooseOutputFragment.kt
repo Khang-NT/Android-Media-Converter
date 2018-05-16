@@ -9,17 +9,12 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.R.id.edOutputPath
-import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.dialog.InputDialogFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
@@ -28,9 +23,10 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.*
-import io.fabric.sdk.android.services.settings.IconRequest.build
+import io.fabric.sdk.android.services.network.HttpRequest.post
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
+import kotlin.concurrent.thread
 
 
 /**
@@ -96,7 +92,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             val intent = FilePickerActivity.pickFolderIntent(it.context, ensureWritable = true)
             startActivityForResult(intent, RC_PICK_FOLDER)
         }
-        updateOutputPath()
+        updateOutputPathAsync()
 
         recyclerView.adapter = adapter
 
@@ -115,10 +111,19 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         }
     }
 
-    private fun updateOutputPath() {
+    private fun updateOutputPathAsync() {
+        edOutputPath.isEnabled = false
         val outputFolderUri = chooseOutputViewModel.getOutputFolderUri()
-        val path = catchAll { UriUtils.getDirectoryPathFromUri(outputFolderUri) }
-        edOutputPath.setText(path ?: outputFolderUri.toString())
+        val weakRef = edOutputPath.toWeakRef()
+        thread {
+            val path = catchAll { UriUtils.getDirectoryPathFromUri(outputFolderUri) }
+            weakRef.get()?.let { edOutputPath ->
+                edOutputPath.post {
+                    edOutputPath.setText(path ?: outputFolderUri.toString())
+                    edOutputPath.isEnabled = true
+                }
+            }
+        }
     }
 
     @SuppressLint("NewApi", "SetTextI18n")
@@ -147,7 +152,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 chooseOutputViewModel.setOutputFolderUri(uri)
             }
         }
-        updateOutputPath()
+        updateOutputPathAsync()
     }
 
     override fun onGoToNextStep() {
