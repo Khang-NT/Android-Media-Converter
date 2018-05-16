@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.util.parseFileName
 import com.github.khangnt.mcp.util.parseInputUri
+import com.github.khangnt.mcp.util.toUri
 import timber.log.Timber
 
 /**
@@ -21,7 +22,8 @@ abstract class CommandConfig(val inputFileUris: List<String>) {
     abstract fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job>
 
     protected fun getFileNameFromInputs(index: Int): String {
-        val inputFileName = inputFileUris[index].parseInputUri().lastPathSegment?.trim()
+        val inputFileName = inputFileUris[index].toUri().path.toString()
+                .split("/").lastOrNull()
         if (inputFileName == null || inputFileName.isEmpty()) {
             return "Untitled"
         }
