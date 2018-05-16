@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
@@ -8,6 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutMp3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/fragment_convert_padding">
@@ -52,15 +52,29 @@
             tools:text="128 - 172 kbps" />
 
         <SeekBar
-            android:id="@+id/sbQuality"
+            android:id="@+id/sbQualityLame"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:max="9"
-            android:progress="9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader" />
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
+            tools:max="9"
+            tools:progress="9" />
+
+        <SeekBar
+            android:id="@+id/sbQualityShine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
+            tools:layout_marginTop="40dp"
+            tools:max="275"
+            tools:progress="211"
+            tools:visibility="visible" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

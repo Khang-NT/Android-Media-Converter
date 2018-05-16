@@ -191,7 +191,7 @@ class SingleInputOutputFragment : BaseFragment() {
     private fun getInput0Error(): String? {
         val uriString = edInput0.text.toString()
         if (uriString.isEmpty()) {
-            return getString(R.string.error_input_text_empty)
+            return getString(R.string.error_input_too_short)
         }
         val uri = uriString.parseInputUri()
         when (uri.scheme?.toLowerCase()) {

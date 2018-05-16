@@ -12,10 +12,7 @@ import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.onSeekBarChanged
-import com.github.khangnt.mcp.util.parseFileName
-import com.github.khangnt.mcp.util.parseInputUri
 import kotlinx.android.synthetic.main.fragment_convert_aac.*
-import timber.log.Timber
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -25,12 +22,6 @@ import timber.log.Timber
 class AacCmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
-        fun create(inputFiles: List<String>) = AacCmdBuilderFragment().apply {
-            arguments = Bundle().apply {
-                putStringArrayList(ARG_INPUT_FILES, ArrayList(inputFiles))
-            }
-        }
-
         private const val CBR_MIN = 45  // 45 kbps
         private const val CBR_MAX = 320 // 320 kbps
         private const val CBR_RECOMMEND = 256
@@ -60,7 +51,7 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(AacCmdConfig(inputFiles, CBR_MIN + sbQuality.progress))
+        onSuccess(AacCmdConfig(inputFileUris, CBR_MIN + sbQuality.progress))
     }
 }
 
@@ -69,23 +60,23 @@ class AacCmdConfig(
         private val quality: Int
 ) : CommandConfig(inputFiles) {
 
-    override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
+    override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
-    override fun generateOutputFileNames(): List<Pair<String, String>> {
-        return List(inputFiles.size, { i -> Pair(getFileNameFromInputs(i), "aac")})
+    override fun generateOutputFiles(): List<AutoGenOutput> {
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "aac") })
     }
 
-    override fun makeJobs(finalOutputs: List<Output>): List<Job> {
-        check(finalOutputs.size == getNumberOfOutput())
+    override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
+        check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a aac ")
                 .append("-b:a ${quality}k ")
                 .toString()
-        return finalOutputs.mapIndexed { index, output ->
+        return finalFinalOutputs.mapIndexed { index, output ->
             Job(
                     title = output.title,
                     command = Command(
-                            listOf(inputFiles[index]), output.outputUri, // single input output
+                            listOf(inputFileUris[index]), output.outputUri, // single input output
                             Muxer.IPOD, cmdArgs, emptyMap()
                     )
             )

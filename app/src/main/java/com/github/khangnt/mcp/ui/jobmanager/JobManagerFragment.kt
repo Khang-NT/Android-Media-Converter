@@ -37,7 +37,7 @@ class JobManagerFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SingletonInstances.getJobWorkerMangager().maybeLaunchWorker()
+        SingletonInstances.getJobWorkerManager().maybeLaunchWorker()
 
         val latestStatus = viewModel.getStatus().value
         val latestJobs = viewModel.getAdapterModel().value.orEmpty()

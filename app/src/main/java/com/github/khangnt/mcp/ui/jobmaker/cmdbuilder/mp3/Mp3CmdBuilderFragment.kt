@@ -14,12 +14,11 @@ import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
+import com.github.khangnt.mcp.util.gone
 import com.github.khangnt.mcp.util.onItemSelected
 import com.github.khangnt.mcp.util.onSeekBarChanged
-import com.github.khangnt.mcp.util.parseFileName
-import com.github.khangnt.mcp.util.parseInputUri
+import com.github.khangnt.mcp.util.visible
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
-import timber.log.Timber
 import java.lang.IllegalStateException
 
 /**
@@ -30,12 +29,6 @@ import java.lang.IllegalStateException
 class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
-        fun create(inputFiles: List<String>) = Mp3CmdBuilderFragment().apply {
-            arguments = Bundle().apply {
-                putStringArrayList(ARG_INPUT_FILES, ArrayList(inputFiles))
-            }
-        }
-
         // https://trac.ffmpeg.org/wiki/Encode/MP3
         private val libMp3LameQuality = arrayOf(
                 "220-260", "190-250", "170-210", "150-195", "140-185",
@@ -45,6 +38,8 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         private const val CBR_MIN = 45  // 45 kbps
         private const val CBR_MAX = 320 // 320 kbps
         private const val CBR_RECOMMEND = 256
+
+        private const val VBR_MAX = 9
     }
 
     override fun onCreateView(
@@ -55,49 +50,47 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sbQuality.onSeekBarChanged { updateQualityText() }
+        sbQualityLame.max = VBR_MAX
+        sbQualityLame.progress = VBR_MAX
+        sbQualityShine.max = CBR_MAX - CBR_MIN
+        sbQualityShine.progress = CBR_RECOMMEND - CBR_MIN
+
+        sbQualityLame.onSeekBarChanged { updateQualityText() }
+        sbQualityShine.onSeekBarChanged { updateQualityText() }
         spinnerEncoder.onItemSelected { position ->
             when (position) {
-                0 -> {
-                    // libMp3lame
-                    if (sbQuality.max != 9) {
-                        sbQuality.progress = 9
-                        sbQuality.max = 9
-                    }
+                0 -> { // libMp3lame
+                    sbQualityLame.visible()
+                    sbQualityShine.gone()
                 }
-                1 -> {
-                    if (sbQuality.max != CBR_MAX - CBR_MIN) {
-                        sbQuality.max = CBR_MAX - CBR_MIN
-                        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
-                    }
+                1 -> { // libShine
+                    sbQualityShine.visible()
+                    sbQualityLame.gone()
                 }
             }
+            updateQualityText()
         }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        updateQualityText()
-    }
 
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
-        if (spinnerEncoder.selectedItemPosition == 0 && sbQuality.progress <= 9) {
-            tvQualityValue.text = "${libMp3LameQuality[9 - sbQuality.progress]} kbps"
+        if (spinnerEncoder.selectedItemPosition == 0 && sbQualityLame.progress <= 9) {
+            tvQualityValue.text = "${libMp3LameQuality[VBR_MAX - sbQualityLame.progress]} kbps"
         } else {
-            tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
+            tvQualityValue.text = "${sbQualityShine.progress + CBR_MIN} kbps"
         }
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
         if (spinnerEncoder.selectedItemPosition == 0) {
             val encoder = Encoders.LIBMP3LAME
-            val quality = 9 - sbQuality.progress
-            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.VBR, quality))
+            val quality = VBR_MAX - sbQualityLame.progress
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.VBR, quality))
         } else {
             val encoder = Encoders.LIBSHINE
-            val quality = CBR_MIN + sbQuality.progress
-            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.CBR, quality))
+            val quality = CBR_MIN + sbQualityShine.progress
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.CBR, quality))
         }
     }
 }
@@ -115,14 +108,14 @@ class Mp3CmdConfig(
         }
     }
 
-    override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
+    override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
-    override fun generateOutputFileNames(): List<Pair<String, String>> {
-        return List(inputFiles.size, { i -> Pair(getFileNameFromInputs(i), "mp3")})
+    override fun generateOutputFiles(): List<AutoGenOutput> {
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp3") })
     }
 
-    override fun makeJobs(finalOutputs: List<Output>): List<Job> {
-        check(finalOutputs.size == getNumberOfOutput())
+    override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
+        check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a $encoder ")
                 .append(when (qualityType) {
@@ -131,11 +124,11 @@ class Mp3CmdConfig(
                     else -> throw IllegalStateException("Unknown quality type: $qualityType")
                 })
                 .toString()
-        return finalOutputs.mapIndexed { index, output ->
+        return finalFinalOutputs.mapIndexed { index, output ->
             Job(
                     title = output.title,
                     command = Command(
-                            listOf(inputFiles[index]), output.outputUri, // single input output
+                            listOf(inputFileUris[index]), output.outputUri, // single input output
                             Muxer.MP3, cmdArgs, emptyMap()
                     )
             )

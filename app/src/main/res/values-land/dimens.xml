@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fragment_convert_padding">24dp</dimen>
-
     <dimen name="activity_about_padding">24dp</dimen>
 </resources>

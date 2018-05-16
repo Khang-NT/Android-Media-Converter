@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.jobmaker
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,8 +48,8 @@ class ConfigureCommandFragment : StepFragment() {
         // create new one
         val newFragment = selectedCommand.createCommandBuilderFragment()
         newFragment.arguments = Bundle().apply {
-            putStringArrayList(CommandBuilderFragment.ARG_INPUT_FILES,
-                    ArrayList(selectedFiles.map { it.absolutePath }))
+            putStringArrayList(CommandBuilderFragment.ARG_INPUT_FILE_URIS,
+                    ArrayList(selectedFiles.map { Uri.fromFile(it).toString() }))
         }
         childFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, newFragment, selectedCommand.getTag())

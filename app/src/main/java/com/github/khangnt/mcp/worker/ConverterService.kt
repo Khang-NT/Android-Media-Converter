@@ -104,7 +104,7 @@ class ConverterService : Service() {
 
     private lateinit var serviceWakeLock: PowerManager.WakeLock
 
-    private val jobWorkerManager by lazy { SingletonInstances.getJobWorkerMangager() }
+    private val jobWorkerManager by lazy { SingletonInstances.getJobWorkerManager() }
 
     override fun onBind(intent: Intent): IBinder? = null
 

@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder
 
+import android.os.Bundle
 import com.github.khangnt.mcp.ui.BaseFragment
 import java.util.*
 
@@ -11,12 +12,12 @@ import java.util.*
 abstract class CommandBuilderFragment : BaseFragment() {
 
     companion object {
-        const val ARG_INPUT_FILES = "inputFiles"
+        const val ARG_INPUT_FILE_URIS = "inputFileUris"
     }
 
-    protected val inputFiles: List<String> by lazy {
-        Collections.unmodifiableList(arguments?.getStringArrayList(ARG_INPUT_FILES)
-                ?: throw IllegalStateException("Missing argument $ARG_INPUT_FILES"))
+    protected val inputFileUris: List<String> by lazy {
+        Collections.unmodifiableList(arguments?.getStringArrayList(ARG_INPUT_FILE_URIS)
+                ?: throw IllegalStateException("Missing argument $ARG_INPUT_FILE_URIS"))
     }
 
     abstract fun validateConfig(onSuccess: (CommandConfig) -> Unit)

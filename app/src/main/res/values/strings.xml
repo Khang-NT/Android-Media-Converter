@@ -53,7 +53,9 @@
     <string name="create_new_folder">New folder</string>
     <string name="permission_denied">Permission denied</string>
     <string name="hint_type_folder_name">Folder name</string>
+    <string name="hint_file_name">File name</string>
     <string name="folder_exists">Folder exists</string>
+    <string name="file_exists">File name exists</string>
     <string name="create_folder_failed">Create folder failed, please check folder name.</string>
     <string name="create_folder_success">Create folder \'%s\' success</string>
     <string name="select">Select</string>
@@ -66,8 +68,8 @@
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
 
-    <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
-    <string name="error_input_text_empty">Input can\'t empty</string>
+    <string name="error_can_not_create_output_file">Can\'t create output file, please try again or change output folder</string>
+    <string name="error_input_too_short">Input too short</string>
     <string name="error_file_not_exists">This path doesn\'t exists</string>
     <string name="error_not_a_file">This is not a file</string>
     <string name="error_invalid_url">Invalid URL</string>
@@ -153,6 +155,7 @@
 
     <string name="message_disallow_change_selected_files">You can\'t change selected files</string>
     <string name="message_please_select_an_option">Please select an option</string>
+    <string name="message_please_resolve_conflict">Please resolve conflicted files to continue!</string>
 
     <string name="title_convert">Convert %s</string>
 

@@ -99,17 +99,26 @@ class JobMakerFragment : BaseFragment() {
     }
 
     private fun showFragment(tag: String, reverseAnim: Boolean, createFragment: () -> Fragment) {
-        if (childFragmentManager.findFragmentByTag(tag) == null) {
-            val fragment = createFragment()
-            childFragmentManager.beginTransaction().apply {
-                if (reverseAnim) {
-                    setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-                } else {
-                    setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-                }
-                replace(R.id.fragmentContainer, fragment, tag)
-                commit()
+        val showingFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (showingFragment?.tag == tag) {
+            return
+        }
+        childFragmentManager.beginTransaction().apply {
+            if (reverseAnim) {
+                setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            } else {
+                setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
             }
+            val fragment = childFragmentManager.findFragmentByTag(tag) ?: createFragment()
+            if (fragment.isDetached) {
+                attach(fragment)
+            } else {
+                add(R.id.fragmentContainer, fragment, tag)
+            }
+            if (showingFragment != null) {
+                detach(showingFragment)
+            }
+            commit()
         }
     }
 
