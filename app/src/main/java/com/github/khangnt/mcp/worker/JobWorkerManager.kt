@@ -126,8 +126,8 @@ class JobWorkerManager(
             // delete output file if size == 0
             val outputUri = Uri.parse(job.command.output)
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
-                val docFile = DocumentFile.fromTreeUri(appContext, outputUri)
-                if (docFile.length() < 10 * 1024L) {
+                val docFile = DocumentFile.fromSingleUri(appContext, outputUri)
+                if (docFile != null && docFile.length() < 10 * 1024L) {
                     docFile.delete()
                 }
             } else {
