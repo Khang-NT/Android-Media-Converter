@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserViewModel
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
+import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputViewModel
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerViewModel
 import java.lang.IllegalArgumentException
 
@@ -21,6 +22,7 @@ class ViewModelFactory(private val appContext: Context) : ViewModelProvider.Fact
             isAssignableFrom(JobManagerViewModel::class.java) -> JobManagerViewModel(appContext)
             isAssignableFrom(FileBrowserViewModel::class.java) -> FileBrowserViewModel()
             isAssignableFrom(JobMakerViewModel::class.java) -> JobMakerViewModel()
+            isAssignableFrom(ChooseOutputViewModel::class.java) -> ChooseOutputViewModel()
             else -> throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
         } as T
     }

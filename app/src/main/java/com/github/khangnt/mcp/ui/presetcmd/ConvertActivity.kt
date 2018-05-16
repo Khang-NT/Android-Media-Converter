@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
-import com.github.khangnt.mcp.PresetCommand
+import com.github.khangnt.mcp.ConvertCommand
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import kotlinx.android.synthetic.main.activity_convert.*
@@ -30,13 +30,13 @@ class ConvertActivity : SingleFragmentActivity(), ConvertFragment.OnSubmittedLis
         }
     }
 
-    private val presetCommand: PresetCommand by lazy {
+    private val presetCommand: ConvertCommand by lazy {
         val id = intent.getIntExtra(EXTRA_PRESET_COMMAND_ID, -1)
-        PresetCommand.values()[id]
+        ConvertCommand.values()[id]
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
-        return presetCommand.convertFragmentFactory.invoke()
+        return presetCommand.fragmentFactory.invoke()
     }
 
     override fun onCreateLayout(savedInstanceState: Bundle?) {
@@ -45,7 +45,6 @@ class ConvertActivity : SingleFragmentActivity(), ConvertFragment.OnSubmittedLis
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        title = getString(presetCommand.titleRes)
         collapsingToolbar.title = title
 
         collapsingToolbar.contentScrim = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,

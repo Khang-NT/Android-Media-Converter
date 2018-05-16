@@ -3,9 +3,11 @@ package com.github.khangnt.mcp.ui.jobmaker
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.github.khangnt.mcp.ConvertCommand
+import com.github.khangnt.mcp.PresetCommand
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.LiveEvent
+import java.io.File
+import java.util.*
 
 class JobMakerViewModel : ViewModel() {
 
@@ -18,11 +20,11 @@ class JobMakerViewModel : ViewModel() {
     }
 
     private val currentStepLiveData = MutableLiveData<Int>()
-    private val selectedFilesLiveData = MutableLiveData<List<String>>()
+    private val selectedFilesLiveData = MutableLiveData<List<File>>()
     private val onResetLiveEvent = LiveEvent()
     private val requestVisibleLiveEvent = LiveEvent()
 
-    private lateinit var selectedCommand: ConvertCommand
+    private lateinit var selectedCommand: PresetCommand
     private lateinit var commandConfig: CommandConfig
 
     init {
@@ -37,17 +39,29 @@ class JobMakerViewModel : ViewModel() {
         currentStepLiveData.value = step
     }
 
-    fun getSelectedFiles(): LiveData<List<String>> = selectedFilesLiveData
+    fun getSelectedFiles(): LiveData<List<File>> = selectedFilesLiveData
 
-    fun setSelectedFiles(files: List<String>) {
+    fun setSelectedFiles(files: List<File>) {
         selectedFilesLiveData.value = files
     }
 
-    fun setSelectedCommand(command: ConvertCommand) {
+    fun moveSelectedFiles(fromPos: Int, toPos: Int) {
+        val newList = ArrayList(selectedFilesLiveData.value)
+        newList.add(toPos, newList.removeAt(fromPos))
+        selectedFilesLiveData.value = newList
+    }
+
+    fun removeSelectedFiles(file: File) {
+        val newList = ArrayList(selectedFilesLiveData.value)
+        newList.remove(file)
+        selectedFilesLiveData.value = newList
+    }
+
+    fun setSelectedCommand(command: PresetCommand) {
         selectedCommand = command
     }
 
-    fun getSelectCommand(): ConvertCommand {
+    fun getSelectCommand(): PresetCommand {
         check(checkNotNull(currentStepLiveData.value) > STEP_CHOOSE_COMMAND) {
             "Can't get selected command at current step: ${currentStepLiveData.value}"
         }

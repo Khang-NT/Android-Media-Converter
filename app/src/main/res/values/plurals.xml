@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="select_at_least">
+        <item quantity="one">@string/select_at_least_one</item>
+        <item quantity="other">@string/select_at_least_n</item>
+    </plurals>
+    <plurals name="select_at_most">
+        <item quantity="one">@string/select_at_most_one</item>
+        <item quantity="other">@string/select_at_most_n</item>
+    </plurals>
+</resources>

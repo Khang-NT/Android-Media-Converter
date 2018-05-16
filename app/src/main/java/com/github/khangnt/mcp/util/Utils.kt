@@ -21,6 +21,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.*
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -202,28 +203,6 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(key: String? = null): T
     }
 }
 
+fun String.toUri(): Uri = Uri.parse(this)
 
-fun getSdCardPaths(context: Context): List<String> {
-    val rawSecondaryStorage = catchAll { System.getenv("SECONDARY_STORAGE") } ?: ""
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        val results = java.util.ArrayList<String>()
-        val externalDirs = context.getExternalFilesDirs(null) ?: emptyArray()
-        for (file in externalDirs) {
-            if (!file.path.contains("/Android")) continue
-            val path = file.path.split("/Android")[0]
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                    && Environment.isExternalStorageRemovable(file)
-                    || rawSecondaryStorage.contains(path)) {
-                results.add(path)
-            }
-        }
-        return results
-    } else {
-        if (!TextUtils.isEmpty(rawSecondaryStorage)) {
-            return rawSecondaryStorage.split(":")
-                    .filter { it.isNotEmpty() }
-        }
-    }
-    return emptyList()
-}
+fun <T : Any> T.toWeakRef(): WeakReference<T> = WeakReference(this)

@@ -9,6 +9,9 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVERTISEMENT
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_SELECT_FILES
+import com.github.khangnt.mcp.ui.jobmaker.selectfile.SelectedFilesFragment
+import com.github.khangnt.mcp.ui.jobmaker.selectformat.ChooseCommandFragment
+import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputFragment
 import com.github.khangnt.mcp.util.disableInHalfSecond
 import com.github.khangnt.mcp.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_job_maker.*
@@ -81,7 +84,7 @@ class JobMakerFragment : BaseFragment() {
                 showFragment(tag, reverseAnim) { ChooseCommandFragment() }
             }
             JobMakerViewModel.STEP_CONFIGURE_COMMAND -> {
-                tvTitle.text = getString(jobMakerViewModel.getSelectCommand().shortName)
+                tvTitle.text = jobMakerViewModel.getSelectCommand().getTitle(resources)
                 showFragment(tag, reverseAnim) { ConfigureCommandFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_OUTPUT_FOLDER_AND_REVIEW -> {
@@ -96,17 +99,26 @@ class JobMakerFragment : BaseFragment() {
     }
 
     private fun showFragment(tag: String, reverseAnim: Boolean, createFragment: () -> Fragment) {
-        if (childFragmentManager.findFragmentByTag(tag) == null) {
-            val fragment = createFragment()
-            childFragmentManager.beginTransaction().apply {
-                if (reverseAnim) {
-                    setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-                } else {
-                    setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-                }
-                replace(R.id.fragmentContainer, fragment, tag)
-                commit()
+        val showingFragment = childFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (showingFragment?.tag == tag) {
+            return
+        }
+        childFragmentManager.beginTransaction().apply {
+            if (reverseAnim) {
+                setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            } else {
+                setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
             }
+            val fragment = childFragmentManager.findFragmentByTag(tag) ?: createFragment()
+            if (fragment.isDetached) {
+                attach(fragment)
+            } else {
+                add(R.id.fragmentContainer, fragment, tag)
+            }
+            if (showingFragment != null) {
+                detach(showingFragment)
+            }
+            commit()
         }
     }
 

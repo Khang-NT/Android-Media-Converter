@@ -20,7 +20,6 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
-import com.github.khangnt.mcp.ui.presetcmd.PresetCommandFragment
 import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
@@ -96,7 +95,6 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
         navigationView.menu.findItem(selectedId)?.isChecked = true
         return when (selectedId) {
             R.id.item_nav_job_manager -> JobManagerFragment()
-            R.id.item_nav_preset_command -> PresetCommandFragment()
             else -> throw IllegalArgumentException("Unknown selected fragment $selectedId")
         }
     }
@@ -146,7 +144,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         drawerLayout.closeDrawer(Gravity.START)
         when (item.itemId) {
-            R.id.item_nav_job_manager, R.id.item_nav_preset_command -> {
+            R.id.item_nav_job_manager -> {
                 if (!item.isChecked) replaceFragment(createSelectedFragment(item.itemId))
             }
             R.id.item_nav_about -> AboutActivity.launch(this)
