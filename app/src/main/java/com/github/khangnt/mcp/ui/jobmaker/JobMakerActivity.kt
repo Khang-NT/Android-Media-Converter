@@ -14,6 +14,7 @@ import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOSE_COMMAND
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.doOnPreDraw
+import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.activity_job_maker.*
 import java.io.File
 
@@ -23,6 +24,9 @@ import java.io.File
  */
 
 class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
+
+    private val TIME_INTERVAL = 2000
+    private var mBackPressed: Long = 0
 
     private val bottomSheetBehavior by lazy { catchAll { BottomSheetBehavior.from(bottomSheetArea) } }
     private val fileBrowserFragment by lazy {
@@ -113,9 +117,20 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
     override fun consumeBackPress(): Boolean {
         super.consumeBackPress()
         // hide bottom sheet
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-        // always consume back press event
-        // if user want to exit, they must use back button in toolbar instead
+        if (bottomSheetBehavior?.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+            return true
+        }
+
+        // double tap back button to exit
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            return false
+        } else {
+            toast(getString(R.string.tap_again_to_exit))
+        }
+
+        mBackPressed = System.currentTimeMillis()
+
         return true
     }
 

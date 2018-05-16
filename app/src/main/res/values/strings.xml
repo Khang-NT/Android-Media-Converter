@@ -163,4 +163,5 @@
     <string name="select_at_least_n">You must select at least %d files to choose this option</string>
     <string name="select_at_most_one">You must select at most %d file to choose this option</string>
     <string name="select_at_most_n">You must select at most %d files to choose this option</string>
+    <string name="tap_again_to_exit">Tap back again to exit</string>
 </resources>
