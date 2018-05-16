@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Environment.getExternalStorageDirectory
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOSE_COMMAND
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.doOnPreDraw
-import com.github.khangnt.mcp.util.getSdCardPaths
 import kotlinx.android.synthetic.main.activity_job_maker.*
-import timber.log.Timber
 import java.io.File
 
 /**
@@ -93,7 +91,8 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_file_picker, menu)
         val isKitkat = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
-        menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat && sdCardPath.isNotEmpty()
+        menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat
+                && SingletonInstances.getSdCardPath() != null
         return true
     }
 
@@ -104,38 +103,11 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
                 return true
             }
             R.id.item_goto_sd_card -> {
-                if (sdCardPath.size == 1) {
-                    fileBrowserFragment.goto(sdCardPath[0])
-                } else {
-                    val options = sdCardPath.map { it.absolutePath }.toTypedArray()
-                    var selected = -1
-                    AlertDialog.Builder(this)
-                            .setTitle("Select external path")
-                            .setSingleChoiceItems(options, -1, { _, which ->
-                                selected = which
-                            })
-                            .setPositiveButton(R.string.action_ok, { _, _ ->
-                                if (selected > -1) {
-                                    fileBrowserFragment.goto(sdCardPath[selected])
-                                }
-                            })
-                            .setNegativeButton(R.string.action_cancel, null)
-                            .show()
-                }
+                fileBrowserFragment.goto(checkNotNull(SingletonInstances.getSdCardPath()))
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private val sdCardPath: Array<File> by lazy {
-        // try to find sd card path if any
-        return@lazy try {
-            getSdCardPaths(this).map { File(it) }.toTypedArray()
-        } catch (error: Throwable) {
-            Timber.d(error, "Failed to detect SD card")
-            emptyArray<File>()
-        }
     }
 
     override fun consumeBackPress(): Boolean {

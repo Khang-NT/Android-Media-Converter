@@ -10,6 +10,8 @@ import com.github.khangnt.mcp.db.Migration1To2
 import com.github.khangnt.mcp.db.job.DefaultJobRepository
 import com.github.khangnt.mcp.db.job.JobRepository
 import com.github.khangnt.mcp.ui.prefs.SharedPrefs
+import com.github.khangnt.mcp.util.ExternalStorage
+import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.worker.JobWorkerManager
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -18,6 +20,7 @@ import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * Created by Khang NT on 1/2/18.
@@ -51,6 +54,8 @@ class SingletonInstances private constructor(private val appContext: Context) {
         fun getJobWorkerManager(): JobWorkerManager = INSTANCE.jobWorkerManagerLazy
 
         fun getAppContext() = INSTANCE.appContext
+
+        fun getSdCardPath(): File? = INSTANCE.sdCardPath
     }
 
     private val mainCacheLazy by lazy {
@@ -87,5 +92,16 @@ class SingletonInstances private constructor(private val appContext: Context) {
 
     private val jobWorkerManagerLazy: JobWorkerManager
             by lazy { JobWorkerManager(appContext, jobRepositoryLazy, sharedPrefsLazy) }
+
+    private val sdCardPath by lazy {
+        catchAll { ExternalStorage.getAllStorageLocations() }?.get(ExternalStorage.EXTERNAL_SD_CARD)
+    }
+
+    init {
+        thread {
+            // get SD path async
+            Timber.d("SD card path: %s", sdCardPath)
+        }
+    }
 
 }

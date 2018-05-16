@@ -46,9 +46,7 @@ class FileListViewHolder(
     }
 
     override fun bind(model: FileListModel, pos: Int) {
-        if (model != this.model || pos != this.pos) {
-            this.model = model
-            this.pos = pos
+        if (model !== this.model) {
             when (model.type) {
                 TYPE_FOLDER -> {
                     tvFileName.text = model.path.name
@@ -64,6 +62,8 @@ class FileListViewHolder(
                 }
             }
         }
+        this.model = model
+        this.pos = pos
 
         // check selected state
         setSelected(model.selected)
