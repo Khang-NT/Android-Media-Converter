@@ -6,12 +6,16 @@ import android.arch.lifecycle.ViewModel
 import android.content.ContentResolver
 import android.net.Uri
 import android.os.Environment
+import android.support.annotation.WorkerThread
 import android.support.v4.provider.DocumentFile
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
+import com.github.khangnt.mcp.util.DistinctLiveData
 import com.github.khangnt.mcp.util.listFilesNotNull
 import com.github.khangnt.mcp.util.toUri
 import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Created by Simon Pham on 5/12/18.
@@ -31,23 +35,42 @@ class ChooseOutputViewModel : ViewModel() {
     private val reservedOutputFiles = mutableSetOf<String>()
 
     private val listOutputFileModel = MutableLiveData<List<OutputFileAdapterModel>>()
+    private val processing = DistinctLiveData<Boolean>()
 
     private lateinit var commandConfig: CommandConfig
 
+    private val pendingCount = AtomicInteger(0)
+    private val executor = Executors.newSingleThreadExecutor()
+
     init {
         outputFolderUri = sharedPrefs.lastOutputFolderUri?.toUri() ?: DEFAULT_OUTPUT_FOLDER
-        updateFolderFiles()
-
         listOutputFileModel.value = emptyList()
+
+        processing.setValue(true)
+        executeAsync {
+            updateFolderFiles()
+        }
+    }
+
+    private fun executeAsync(action: () -> Unit) {
+        pendingCount.incrementAndGet()
+        executor.execute {
+            action()
+            // update processing status
+            processing.postValue(pendingCount.decrementAndGet() != 0)
+        }
     }
 
     fun setOutputFolderUri(outputFolderUri: Uri) {
         if (outputFolderUri != this.outputFolderUri) {
             this.outputFolderUri = outputFolderUri
             sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
-            updateFolderFiles()
-            if (this::commandConfig.isInitialized) {
-                updateListOutputFileModel()
+            processing.setValue(true)
+            executeAsync {
+                updateFolderFiles()
+                if (this::commandConfig.isInitialized) {
+                    updateListOutputFileModel()
+                }
             }
         }
     }
@@ -60,6 +83,8 @@ class ChooseOutputViewModel : ViewModel() {
 
     fun getListOutputFile(): LiveData<List<OutputFileAdapterModel>> = listOutputFileModel
 
+    fun getProcessingStatus(): LiveData<Boolean> = processing
+
     fun updateOutput(index: Int, newName: String) {
         val newList = ArrayList(checkNotNull(listOutputFileModel.value))
         val oldModel = newList[index]
@@ -70,7 +95,7 @@ class ChooseOutputViewModel : ViewModel() {
 
         // ensure new file name not cause conflict
         check(!outputFolderFiles.contains(newName) &&
-            !reservedOutputFiles.contains(newName))
+                !reservedOutputFiles.contains(newName))
 
         reservedOutputFiles.remove(oldModel.fileName)
         reservedOutputFiles.add(newName)
@@ -87,12 +112,16 @@ class ChooseOutputViewModel : ViewModel() {
     fun setCommandConfig(commandConfig: CommandConfig) {
         if (!this::commandConfig.isInitialized || this.commandConfig != commandConfig) {
             this.commandConfig = commandConfig
-            updateListOutputFileModel(reset = true)
+            processing.setValue(true)
+            executeAsync {
+                updateListOutputFileModel(reset = true)
+            }
         }
     }
 
     fun getCommandConfig(): CommandConfig = commandConfig
 
+    @WorkerThread
     private fun updateListOutputFileModel(reset: Boolean = false) {
         val currentList = checkNotNull(listOutputFileModel.value)
         val newList = if (reset || currentList.isEmpty()) {
@@ -119,9 +148,10 @@ class ChooseOutputViewModel : ViewModel() {
                 it.copy(isConflict = outputFolderFiles.contains(it.fileName))
             }
         }
-        listOutputFileModel.value = newList
+        listOutputFileModel.postValue(newList)
     }
 
+    @WorkerThread
     private fun updateFolderFiles() {
         outputFolderFiles.clear()
         val listFiles = if (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT) {

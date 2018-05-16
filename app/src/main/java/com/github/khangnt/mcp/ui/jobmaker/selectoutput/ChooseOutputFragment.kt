@@ -27,10 +27,7 @@ import com.github.khangnt.mcp.ui.filepicker.FilePickerActivity
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
-import com.github.khangnt.mcp.util.UriUtils
-import com.github.khangnt.mcp.util.catchAll
-import com.github.khangnt.mcp.util.getViewModel
-import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.util.*
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
@@ -102,6 +99,17 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         updateOutputPath()
 
         recyclerView.adapter = adapter
+
+        chooseOutputViewModel.getProcessingStatus().observe { processing ->
+            if (processing) {
+                progressBar.visible()
+                recyclerView.invisible()
+            } else {
+                progressBar.gone()
+                recyclerView.visible()
+            }
+        }
+
         chooseOutputViewModel.getListOutputFile().observe {
             adapter.setData(it)
         }
@@ -143,6 +151,10 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
     }
 
     override fun onGoToNextStep() {
+        if (chooseOutputViewModel.getProcessingStatus().value == true) {
+            return
+        }
+
         chooseOutputViewModel.getListOutputFile().value!!.forEach {
             if (it.isConflict && !(it.isOverrideAllowed)) {
                 toast(R.string.message_please_resolve_conflict)
