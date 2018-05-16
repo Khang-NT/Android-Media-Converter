@@ -10,7 +10,6 @@ import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
-import io.fabric.sdk.android.services.network.HttpRequest.append
 import kotlinx.android.synthetic.main.fragment_convert_mp4.*
 
 /**
@@ -21,10 +20,6 @@ import kotlinx.android.synthetic.main.fragment_convert_mp4.*
 class Mp4CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
-        fun create(inputFiles: List<String>) = Mp4CmdBuilderFragment().apply {
-            arguments = Bundle().putInputFile(inputFiles)
-        }
-
         // https://trac.ffmpeg.org/wiki/Encode/MPEG-4
         private val mp4VideoQuality = arrayOf(
                 "2", "6", "12", "18", "26"
@@ -43,7 +38,7 @@ class Mp4CmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(Mp4CmdConfig(inputFiles, mp4VideoQuality[spinnerVideoQuality.selectedItemPosition]))
+        onSuccess(Mp4CmdConfig(inputFileUris, mp4VideoQuality[spinnerVideoQuality.selectedItemPosition]))
     }
 }
 
@@ -52,10 +47,10 @@ class Mp4CmdConfig(
         private val videoQuality: String
 ) : CommandConfig(inputFiles) {
 
-    override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
+    override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFiles.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp4")})
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp4")})
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
@@ -68,7 +63,7 @@ class Mp4CmdConfig(
             Job(
                     title = output.title,
                     command = Command(
-                            listOf(inputFiles[index]), output.outputUri, // single input output
+                            listOf(inputFileUris[index]), output.outputUri, // single input output
                             Muxer.MP4, cmdArgs, emptyMap()
                     )
             )

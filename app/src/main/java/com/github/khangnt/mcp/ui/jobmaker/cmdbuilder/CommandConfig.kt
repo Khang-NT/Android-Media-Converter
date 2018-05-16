@@ -10,7 +10,7 @@ import timber.log.Timber
  * Email: khang.neon.1997@gmail.com
  */
 
-abstract class CommandConfig(val inputFiles: List<String>) {
+abstract class CommandConfig(val inputFileUris: List<String>) {
     data class AutoGenOutput(val fileName: String, val fileExt: String)
     data class FinalOutput(val title: String, val outputUri: String)
 
@@ -21,7 +21,7 @@ abstract class CommandConfig(val inputFiles: List<String>) {
     abstract fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job>
 
     protected fun getFileNameFromInputs(index: Int): String {
-        val inputFileName = inputFiles[index].parseInputUri().lastPathSegment?.trim()
+        val inputFileName = inputFileUris[index].parseInputUri().lastPathSegment?.trim()
         if (inputFileName == null || inputFileName.isEmpty()) {
             return "Untitled"
         }

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.dialog.InputDialogFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.filepicker.DIRECTORY_RESULT
@@ -172,8 +173,8 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             val documentFile = DocumentFile.fromTreeUri(requireContext(),
                     chooseOutputViewModel.getOutputFolderUri())
             createFinalOutput = { fileName ->
-                val uri = documentFile.createFile(null, fileName)
-                CommandConfig.FinalOutput(fileName, uri.toString())
+                val file = documentFile.createFile(null, fileName)
+                CommandConfig.FinalOutput(fileName, file.uri.toString())
             }
         } else {
             val folder = File(chooseOutputViewModel.getOutputFolderUri().path)
@@ -186,7 +187,9 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             createFinalOutput(it.fileName)
         }
 
-        jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs)
+        jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs).forEach { job ->
+            SingletonInstances.getJobWorkerManager().addJob(job)
+        }
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
 

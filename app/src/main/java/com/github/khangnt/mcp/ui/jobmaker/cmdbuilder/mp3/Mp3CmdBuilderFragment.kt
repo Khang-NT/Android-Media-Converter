@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.R.id.*
 import com.github.khangnt.mcp.annotation.Encoders
 import com.github.khangnt.mcp.annotation.Mp3Encoder
 import com.github.khangnt.mcp.annotation.Muxer
@@ -20,7 +19,6 @@ import com.github.khangnt.mcp.util.onItemSelected
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import com.github.khangnt.mcp.util.visible
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
-import kotlinx.android.synthetic.main.fragment_convert_mp3.view.*
 import java.lang.IllegalStateException
 
 /**
@@ -31,10 +29,6 @@ import java.lang.IllegalStateException
 class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
-        fun create(inputFiles: List<String>) = Mp3CmdBuilderFragment().apply {
-            arguments = Bundle().putInputFile(inputFiles)
-        }
-
         // https://trac.ffmpeg.org/wiki/Encode/MP3
         private val libMp3LameQuality = arrayOf(
                 "220-260", "190-250", "170-210", "150-195", "140-185",
@@ -92,11 +86,11 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         if (spinnerEncoder.selectedItemPosition == 0) {
             val encoder = Encoders.LIBMP3LAME
             val quality = VBR_MAX - sbQualityLame.progress
-            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.VBR, quality))
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.VBR, quality))
         } else {
             val encoder = Encoders.LIBSHINE
             val quality = CBR_MIN + sbQualityShine.progress
-            onSuccess(Mp3CmdConfig(inputFiles, encoder, QualityType.CBR, quality))
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.CBR, quality))
         }
     }
 }
@@ -114,10 +108,10 @@ class Mp3CmdConfig(
         }
     }
 
-    override fun getNumberOfOutput(): Int = inputFiles.size // 1 input - 1 output
+    override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFiles.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp3") })
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp3") })
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
@@ -134,7 +128,7 @@ class Mp3CmdConfig(
             Job(
                     title = output.title,
                     command = Command(
-                            listOf(inputFiles[index]), output.outputUri, // single input output
+                            listOf(inputFileUris[index]), output.outputUri, // single input output
                             Muxer.MP3, cmdArgs, emptyMap()
                     )
             )
