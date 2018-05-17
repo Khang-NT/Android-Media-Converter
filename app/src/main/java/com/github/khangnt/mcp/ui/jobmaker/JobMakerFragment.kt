@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVERTISEMENT
+import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOSE_COMMAND
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_SELECT_FILES
 import com.github.khangnt.mcp.ui.jobmaker.selectfile.SelectedFilesFragment
 import com.github.khangnt.mcp.ui.jobmaker.selectformat.ChooseCommandFragment
@@ -32,6 +33,7 @@ class JobMakerFragment : BaseFragment() {
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_job_maker, container, false)
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,14 +43,16 @@ class JobMakerFragment : BaseFragment() {
             currentStep = step
         }
 
+        jobMakerViewModel.getSelectedFiles().observe {
+            nSelectedFiles = it.size
+            if (currentStep == STEP_SELECT_FILES || currentStep == STEP_CHOOSE_COMMAND) {
+                tvTitle.text = "$nSelectedFiles file(s) selected"
+            }
+        }
+
         jobMakerViewModel.onResetEvent().observe {
             jobMakerViewModel.setCurrentStep(STEP_SELECT_FILES)
             preventButtonClickToFast()
-        }
-
-        jobMakerViewModel.getSelectedFiles().observe {
-            nSelectedFiles = it.size
-            tvTitle.text = "$nSelectedFiles file(s) selected"
         }
 
         ivBack.setOnClickListener {
