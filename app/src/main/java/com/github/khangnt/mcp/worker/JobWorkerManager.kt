@@ -160,15 +160,15 @@ class JobWorkerManager(
     }
 
     fun cancelJob(jobId: Long) = execute {
-        when(jobId) {
-            prepareThread?.job?.id -> prepareThread?.interrupt()
-            workerThread?.job?.id -> workerThread?.interrupt()
-            else -> {
-                jobRepository.deleteJob(jobId, ignoreError = true).subscribe {
-                    catchAll {
-                        workingPaths.getTempDirForJob(jobId).deleteRecursiveIgnoreError()
-                        workingPaths.getTempDirForJob(jobId).delete()
-                    }
+        if (jobId == prepareThread?.job?.id && prepareThread?.isRunning()!!) {
+            prepareThread?.interrupt()
+        } else if (jobId == workerThread?.job?.id && workerThread?.isRunning()!!) {
+            workerThread?.interrupt()
+        } else {
+            jobRepository.deleteJob(jobId, ignoreError = true).subscribe {
+                catchAll {
+                    workingPaths.getTempDirForJob(jobId).deleteRecursiveIgnoreError()
+                    workingPaths.getTempDirForJob(jobId).delete()
                 }
             }
         }
