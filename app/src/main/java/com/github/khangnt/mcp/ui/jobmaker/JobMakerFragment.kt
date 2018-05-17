@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.ui.jobmaker
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -66,6 +67,7 @@ class JobMakerFragment : BaseFragment() {
         ivNext.disableInHalfSecond()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showStep(step: Int, reverseAnim: Boolean) {
         stepIndicator.setStep(step)
         if (step == STEP_SELECT_FILES || step == STEP_ADVERTISEMENT) {
@@ -94,11 +96,11 @@ class JobMakerFragment : BaseFragment() {
                 showFragment(tag, reverseAnim) { ConfigureCommandFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_OUTPUT_FOLDER_AND_REVIEW -> {
-                tvTitle.text = "Choose output"
+                tvTitle.text = getString(R.string.title_configure_output)
                 showFragment(tag, reverseAnim) { ChooseOutputFragment() }
             }
             JobMakerViewModel.STEP_ADVERTISEMENT -> {
-                tvTitle.text = "Create job success"
+                tvTitle.text = getString(R.string.title_create_job_success)
                 showFragment(tag, reverseAnim) { AdvertiseFragment() }
             }
         }

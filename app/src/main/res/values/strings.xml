@@ -158,6 +158,8 @@
     <string name="message_please_resolve_conflict">Please resolve conflicted files to continue!</string>
 
     <string name="title_convert">Convert %s</string>
+    <string name="title_configure_output">Configure output files</string>
+    <string name="title_create_job_success">Create job success</string>
 
     <string name="select_at_least_one">You must select at least %d file to choose this option</string>
     <string name="select_at_least_n">You must select at least %d files to choose this option</string>
