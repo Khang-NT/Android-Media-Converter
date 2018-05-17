@@ -14,6 +14,8 @@ import com.github.khangnt.mcp.ui.jobmaker.selectformat.ChooseCommandFragment
 import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputFragment
 import com.github.khangnt.mcp.util.disableInHalfSecond
 import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.invisible
+import com.github.khangnt.mcp.util.visible
 import kotlinx.android.synthetic.main.fragment_job_maker.*
 
 
@@ -76,15 +78,19 @@ class JobMakerFragment : BaseFragment() {
         val tag = "step-$step"
         when (step) {
             JobMakerViewModel.STEP_SELECT_FILES -> {
-                tvTitle.text = "Select File"
+                jobMakerViewModel.getSelectedFiles().observe {
+                    tvTitle.text = "${it.size} file(s) selected"
+                }
+                ivNext.visible()
                 showFragment(tag, reverseAnim) { SelectedFilesFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_COMMAND -> {
-                tvTitle.text = "Choose command"
+                ivNext.invisible()
                 showFragment(tag, reverseAnim) { ChooseCommandFragment() }
             }
             JobMakerViewModel.STEP_CONFIGURE_COMMAND -> {
                 tvTitle.text = jobMakerViewModel.getSelectCommand().getTitle(resources)
+                ivNext.visible()
                 showFragment(tag, reverseAnim) { ConfigureCommandFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_OUTPUT_FOLDER_AND_REVIEW -> {
