@@ -24,6 +24,7 @@ class JobMakerFragment : BaseFragment() {
 
     /** Get shared view model via host activity **/
     private val jobMakerViewModel by lazy { requireActivity().getViewModel<JobMakerViewModel>() }
+    private var nSelectedFiles = 0
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -43,6 +44,11 @@ class JobMakerFragment : BaseFragment() {
         jobMakerViewModel.onResetEvent().observe {
             jobMakerViewModel.setCurrentStep(STEP_SELECT_FILES)
             preventButtonClickToFast()
+        }
+
+        jobMakerViewModel.getSelectedFiles().observe {
+            nSelectedFiles = it.size
+            tvTitle.text = "$nSelectedFiles file(s) selected"
         }
 
         ivBack.setOnClickListener {
@@ -80,13 +86,12 @@ class JobMakerFragment : BaseFragment() {
         val tag = "step-$step"
         when (step) {
             JobMakerViewModel.STEP_SELECT_FILES -> {
-                jobMakerViewModel.getSelectedFiles().observe {
-                    tvTitle.text = "${it.size} file(s) selected"
-                }
+                tvTitle.text = "$nSelectedFiles file(s) selected"
                 ivNext.visible()
                 showFragment(tag, reverseAnim) { SelectedFilesFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_COMMAND -> {
+                tvTitle.text = "$nSelectedFiles file(s) selected"
                 ivNext.invisible()
                 showFragment(tag, reverseAnim) { ChooseCommandFragment() }
             }
