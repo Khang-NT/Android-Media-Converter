@@ -15,7 +15,7 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_feedback">Help &amp; feedback</string>
 
-    <string name="empty_job_list">No Job found\nLet create new one via preset command.</string>
+    <string name="empty_job_list">No Job found\nTap (+) button to create a new one.</string>
     <string name="empty_selected_files">No files selected</string>
     <string name="loading_job_list">Loading jobs…</string>
 
