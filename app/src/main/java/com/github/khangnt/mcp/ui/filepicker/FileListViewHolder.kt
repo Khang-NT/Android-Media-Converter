@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.filepicker
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.text.TextUtils
 import android.view.View
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
@@ -33,11 +34,11 @@ class FileListViewHolder(
     private val ivFileIcon = itemView.ivFileIcon
     private val tvFileName = itemView.tvFileName
 
+    private var selected: Boolean? = null
     private var model: FileListModel? = null
     private var pos: Int? = null
 
     init {
-        itemView.isSelected = true
         itemView.setOnClickListener {
             onClickListener(model!!, pos!!)
             setSelected(model!!.selected)
@@ -45,9 +46,7 @@ class FileListViewHolder(
     }
 
     override fun bind(model: FileListModel, pos: Int) {
-        if (model != this.model || pos != this.pos) {
-            this.model = model
-            this.pos = pos
+        if (model !== this.model) {
             when (model.type) {
                 TYPE_FOLDER -> {
                     tvFileName.text = model.path.name
@@ -63,17 +62,24 @@ class FileListViewHolder(
                 }
             }
         }
+        this.model = model
+        this.pos = pos
 
         // check selected state
         setSelected(model.selected)
     }
 
     private fun setSelected(selected: Boolean) {
-        if (selected != tvFileName.isSelected) {
+        if (selected != this.selected) {
+            this.selected = selected
             tvFileName.isSelected = selected
             val drawable: Drawable? = if (selected) {
+                tvFileName.ellipsize = TextUtils.TruncateAt.MARQUEE
                 ContextCompat.getDrawable(itemView.context, R.drawable.ic_tick_green_24dp)
-            } else null
+            } else {
+                tvFileName.ellipsize = TextUtils.TruncateAt.MIDDLE
+                null
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 tvFileName.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,

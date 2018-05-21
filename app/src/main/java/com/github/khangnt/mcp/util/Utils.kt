@@ -1,11 +1,18 @@
 package com.github.khangnt.mcp.util
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.os.Looper
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.github.khangnt.mcp.*
@@ -14,6 +21,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.*
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -137,6 +145,18 @@ fun String.parseInputUri(): Uri {
     }
 }
 
+/**
+ * Parse file name and file extension
+ */
+fun String.parseFileName(): Pair<String, String> {
+    val matchResult = Regex("^(.*)\\.([a-zA-Z0-9]{1,5})\$").find(this)
+    if (matchResult != null) {
+        return Pair(matchResult.groupValues[1], matchResult.groupValues[2])
+    } else {
+        return Pair(this, "" /* No extension */)
+    }
+}
+
 fun String.escapeSingleQuote(): String {
     return replace("'", "'\\''")
 }
@@ -170,3 +190,19 @@ fun viewChangelog(context: Context) {
 fun checkMainThread(method: String) {
     check(Looper.myLooper() == Looper.getMainLooper()) { "Must call $method on main thread" }
 }
+
+inline fun <reified T : ViewModel> FragmentActivity.getViewModel(key: String? = null): T {
+    return ViewModelProviders.of(this, SingletonInstances.getViewModelFactory()).run {
+        key?.let { get(it, T::class.java) } ?: get(T::class.java)
+    }
+}
+
+inline fun <reified T : ViewModel> Fragment.getViewModel(key: String? = null): T {
+    return ViewModelProviders.of(this, SingletonInstances.getViewModelFactory()).run {
+        key?.let { get(it, T::class.java) } ?: get(T::class.java)
+    }
+}
+
+fun String.toUri(): Uri = Uri.parse(this)
+
+fun <T : Any> T.toWeakRef(): WeakReference<T> = WeakReference(this)

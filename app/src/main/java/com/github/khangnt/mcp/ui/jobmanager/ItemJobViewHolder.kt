@@ -245,7 +245,7 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     }
 
     private fun cancelJob(context: Context, job: Job, deleteFile: Boolean) {
-        SingletonInstances.getJobWorkerMangager().cancelJob(job.id)
+        SingletonInstances.getJobWorkerManager().cancelJob(job.id)
         val outputUri = Uri.parse(job.command.output)
         if (deleteFile) {
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {

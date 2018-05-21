@@ -12,17 +12,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/fragment_convert_padding">
 
-        <fragment
-            android:id="@+id/fragmentInputOutput"
-            android:name="com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout="@layout/fragment_single_input_output"/>
-
-
-
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/compressionLevelHeader"
             android:layout_width="wrap_content"
@@ -31,7 +20,7 @@
             android:text="@string/compression_level_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tvCompressionLevel"
@@ -41,7 +30,7 @@
             android:layout_marginStart="@dimen/margin_tiny"
             app:layout_constraintBaseline_toBaselineOf="@+id/compressionLevelHeader"
             app:layout_constraintLeft_toRightOf="@id/compressionLevelHeader"
-            tools:text="5"/>
+            tools:text="5" />
 
         <SeekBar
             android:id="@+id/sbCompressionLevel"
@@ -52,19 +41,7 @@
             android:progress="5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/compressionLevelHeader"/>
+            app:layout_constraintTop_toBottomOf="@id/compressionLevelHeader" />
 
-
-        <Button
-            android:id="@+id/btnStartConversion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:paddingLeft="@dimen/margin_huge"
-            android:paddingRight="@dimen/margin_huge"
-            android:text="@string/start_conversion_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbCompressionLevel"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

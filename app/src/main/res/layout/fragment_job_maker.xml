@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true">
+
+    <View
+        android:id="@+id/peakArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guidelinePeek"/>
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:padding="@dimen/margin_small"
+        android:background="?selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:tint="?colorAccent"
+        app:layout_constraintBottom_toTopOf="@id/guidelinePeek"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:padding="@dimen/margin_small"
+        android:background="?selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_forward_black_24dp"
+        android:tint="?colorAccent"
+        app:layout_constraintBottom_toTopOf="@id/guidelinePeek"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.khangnt.mcp.view.StepIndicator
+        android:id="@+id/stepIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicator_size="8dp"
+        app:indicator_space="4dp"
+        app:indicator_stepCount="5"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+        app:layout_constraintLeft_toRightOf="@+id/ivBack"
+        app:layout_constraintRight_toLeftOf="@+id/ivNext"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:indicator_step="3"
+        tools:layout_editor_absoluteX="164dp" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="?colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainer"
+        app:layout_constraintLeft_toRightOf="@+id/ivBack"
+        app:layout_constraintRight_toLeftOf="@+id/ivNext"
+        app:layout_constraintTop_toBottomOf="@+id/stepIndicator"
+        tools:layout_editor_absoluteX="40dp"
+        tools:text="Select file" />
+
+    <Space
+        android:id="@+id/guidelinePeek"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?actionBarSize"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guidelinePeek" />
+
+</android.support.constraint.ConstraintLayout>

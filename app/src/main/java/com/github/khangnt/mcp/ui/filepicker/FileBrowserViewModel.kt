@@ -122,7 +122,18 @@ class FileBrowserViewModel : ViewModel() {
         }
     }
 
+    fun discardSelectedFiles() {
+        selectedFiles.clear()
+        selectedFileSubject.onNext(Unit)
+    }
+
     fun getSelectedFiles(): List<File> = selectedFilesReadOnly
+
+    fun setSelectedFiles(files: List<File>) {
+        selectedFiles.clear()
+        selectedFiles.addAll(files)
+        selectedFileSubject.onNext(Unit)
+    }
 
     private val fileListComparator: Comparator<FileListModel> = Comparator { f1, f2 ->
         when {

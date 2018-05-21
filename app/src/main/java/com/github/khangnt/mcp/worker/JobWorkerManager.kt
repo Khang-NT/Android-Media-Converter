@@ -1,9 +1,11 @@
 package com.github.khangnt.mcp.worker
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.support.v4.provider.DocumentFile
 import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.db.job.Job
@@ -15,6 +17,7 @@ import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.io.File
 import java.util.concurrent.Executors
 
 
@@ -119,6 +122,21 @@ class JobWorkerManager(
     @Suppress("UNUSED_PARAMETER")
     private fun onJobFailed(job: Job, throwable: Throwable?): Unit = execute {
         onJobDone(job)
+        catchAll {
+            // delete output file if size == 0
+            val outputUri = Uri.parse(job.command.output)
+            if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                val docFile = DocumentFile.fromSingleUri(appContext, outputUri)
+                if (docFile != null && docFile.length() < 10 * 1024L) {
+                    docFile.delete()
+                }
+            } else {
+                val file = File(outputUri.path)
+                if (file.length() < 10 * 1024L) {
+                    file.delete()
+                }
+            }
+        }
         catchAll { workerThread?.join(3000) }
         maybeLaunchWorker()
     }
@@ -142,15 +160,15 @@ class JobWorkerManager(
     }
 
     fun cancelJob(jobId: Long) = execute {
-        when(jobId) {
-            prepareThread?.job?.id -> prepareThread?.interrupt()
-            workerThread?.job?.id -> workerThread?.interrupt()
-            else -> {
-                jobRepository.deleteJob(jobId, ignoreError = true).subscribe {
-                    catchAll {
-                        workingPaths.getTempDirForJob(jobId).deleteRecursiveIgnoreError()
-                        workingPaths.getTempDirForJob(jobId).delete()
-                    }
+        if (jobId == prepareThread?.job?.id && prepareThread?.isRunning()!!) {
+            prepareThread?.interrupt()
+        } else if (jobId == workerThread?.job?.id && workerThread?.isRunning()!!) {
+            workerThread?.interrupt()
+        } else {
+            jobRepository.deleteJob(jobId, ignoreError = true).subscribe {
+                catchAll {
+                    workingPaths.getTempDirForJob(jobId).deleteRecursiveIgnoreError()
+                    workingPaths.getTempDirForJob(jobId).delete()
                 }
             }
         }

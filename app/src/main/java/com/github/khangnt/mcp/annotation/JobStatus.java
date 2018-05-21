@@ -2,6 +2,9 @@ package com.github.khangnt.mcp.annotation;
 
 import android.support.annotation.IntDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static com.github.khangnt.mcp.annotation.JobStatus.COMPLETED;
 import static com.github.khangnt.mcp.annotation.JobStatus.FAILED;
 import static com.github.khangnt.mcp.annotation.JobStatus.PENDING;
@@ -15,6 +18,7 @@ import static com.github.khangnt.mcp.annotation.JobStatus.RUNNING;
  */
 
 @IntDef({PENDING, PREPARING, READY, RUNNING, COMPLETED, FAILED})
+@Retention(RetentionPolicy.SOURCE)
 public @interface JobStatus {
     // database version 1
 //    int RUNNING = 0;
