@@ -30,8 +30,7 @@ import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.util.concurrent.TimeUnit.DAYS
-import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.TimeUnit.*
 
 private const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
 private const val KEY_SELECTED_FRAGMENT = "MainActivity:selectedFragment"
@@ -184,6 +183,8 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
                 && !sharedPrefs.isRated
                 && sharedPrefs.successJobsCount >= 3
                 && System.currentTimeMillis() >= sharedPrefs.delayRateDialogUntil) {
+            sharedPrefs.delayRateDialogUntil =
+                    System.currentTimeMillis() + MILLISECONDS.convert(1, HOURS)
             showRateDialog()
         }
     }
