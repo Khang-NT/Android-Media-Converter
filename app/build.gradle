@@ -147,7 +147,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$androidLifecycleExtensionVersion"
     kapt "android.arch.lifecycle:compiler:$androidLifecycleExtensionVersion"
 
-    final roomVersion = "1.0.0"
+    final roomVersion = "1.1.0"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
