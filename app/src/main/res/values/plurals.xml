@@ -8,4 +8,9 @@
         <item quantity="one">@string/select_at_most_one</item>
         <item quantity="other">@string/select_at_most_n</item>
     </plurals>
+
+    <plurals name="num_selected_file">
+        <item quantity="one">@string/selected_file_one</item>
+        <item quantity="other">@string/selected_file_n</item>
+    </plurals>
 </resources>
