@@ -3,8 +3,8 @@ package com.github.khangnt.mcp.ui.jobmaker.selectformat
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import com.github.khangnt.mcp.ConvertCommand
+import com.github.khangnt.mcp.Gradient
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.disabledColors
 import com.github.khangnt.mcp.ui.common.*
 import kotlinx.android.synthetic.main.item_convert_command.view.*
 
@@ -40,9 +40,9 @@ class ItemConvertCommandViewHolder(
         if (model != currentModel) {
             currentModel = model
             with(model.command) {
-                val gradientColors = if (model.enabled) colors else disabledColors
+                val gradientColor = if (model.enabled) gradient else Gradient.Disabled
                 ivCardBackground.setImageDrawable(
-                        GradientDrawable(GradientDrawable.Orientation.TL_BR, gradientColors))
+                        gradientColor.getDrawable(GradientDrawable.Orientation.TL_BR))
                 tvShortName.alpha = if (model.enabled) 1.0f else 0.5f
                 tvShortName.setText(shortName)
             }
