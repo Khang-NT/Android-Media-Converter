@@ -6,4 +6,6 @@
     <item name="errorState" type="id"/>
     <item name="errorStateRetryView" type="id"/>
     <item name="errorStateReasonTextView" type="id"/>
+
+    <item name="toolbar_slide_drawable" type="id"/>
 </resources>

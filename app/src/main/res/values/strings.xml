@@ -163,4 +163,6 @@
     <string name="select_at_least_n">You must select at least %d files to choose this option</string>
     <string name="select_at_most_one">You must select at most %d file to choose this option</string>
     <string name="select_at_most_n">You must select at most %d files to choose this option</string>
+
+    <string name="new_job_title">New job</string>
 </resources>

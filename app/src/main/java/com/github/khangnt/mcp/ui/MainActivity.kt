@@ -108,6 +108,8 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
                     .also { actionBarDrawerToggle ->
                         drawerLayout.addDrawerListener(actionBarDrawerToggle)
                         actionBarDrawerToggle.syncState()
+                        it.setTag(R.id.toolbar_slide_drawable,
+                                actionBarDrawerToggle.drawerArrowDrawable)
                     }
         }
     }

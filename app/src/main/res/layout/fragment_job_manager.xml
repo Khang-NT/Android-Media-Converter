@@ -9,14 +9,15 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/colorPrimary"
             app:expandedTitleGravity="start|bottom"
+            app:collapsedTitleTextAppearance="@style/ToolbarTitle.Inverse"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/nav_job_manager"
             app:titleEnabled="true">
@@ -31,7 +32,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="@string/nav_job_manager" />
