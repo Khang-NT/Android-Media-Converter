@@ -147,6 +147,7 @@
     <string name="short_name_aac">AAC</string>
     <string name="short_name_flac">FLAC</string>
     <string name="short_name_opus">OPUS</string>
+    <string name="short_name_ogg">OGG</string>
     <string name="short_name_mp4">MP4</string>
     
     <string name="label_cut_length">Cut video/audio length</string>

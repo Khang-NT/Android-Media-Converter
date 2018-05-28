@@ -11,6 +11,7 @@ import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac.AacCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.flac.FlacCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3.Mp3CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4.Mp4CmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.ogg.OggCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.opus.OpusCmdBuilderFragment
 
 private fun colorArrayOf(vararg longValues: Long): IntArray {
@@ -67,6 +68,11 @@ enum class ConvertCommand(
             type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_opus,
             gradient = Gradient.EasyMed,
             fragmentFactory = ::OpusCmdBuilderFragment
+    ),
+    CONVERT_OGG(
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_ogg,
+            gradient = Gradient.Friday,
+            fragmentFactory = ::OggCmdBuilderFragment
     ),
     CONVERT_MP4(
             type = ConvertType.TYPE_ENCODE_VIDEO, shortName = R.string.short_name_mp4,
