@@ -70,7 +70,7 @@ class OggCmdConfig(
                     title = output.title,
                     command = Command(
                             listOf(inputFileUris[index]), output.outputUri, // single input output
-                            Muxer.OPUS, cmdArgs, emptyMap()
+                            Muxer.OGG, cmdArgs, emptyMap()
                     )
             )
         }
