@@ -104,7 +104,8 @@
     <string name="compression_level_header">Compression level:</string>
     <string name="start_conversion_button">Start conversion</string>
 
-    <string name="mp4_video_quality_header">Video quality:</string>
+    <string name="audio_quality_header">Audio quality:</string>
+    <string name="video_quality_header">Video quality:</string>
 
     <string name="open_github">Open Github</string>
     <string name="open_translate_page">Open Translate page</string>

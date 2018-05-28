@@ -2,6 +2,7 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,23 +13,35 @@
         android:padding="@dimen/fragment_convert_padding">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/mp4VideoQualityHeader"
+            android:id="@+id/audioQualityHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/video_quality_header"
+            android:text="@string/audio_quality_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Spinner
-            android:id="@+id/spinnerVideoQuality"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvAudioQuality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/mp4VideoQuality"
-            app:layout_constraintBaseline_toBaselineOf="@+id/mp4VideoQualityHeader"
-            app:layout_constraintStart_toEndOf="@+id/mp4VideoQualityHeader" />
+            android:layout_marginLeft="@dimen/margin_tiny"
+            android:layout_marginStart="@dimen/margin_tiny"
+            app:layout_constraintBaseline_toBaselineOf="@+id/audioQualityHeader"
+            app:layout_constraintLeft_toRightOf="@id/audioQualityHeader"
+            tools:text="10" />
+
+        <SeekBar
+            android:id="@+id/sbAudioQuality"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:max="10"
+            android:progress="10"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/audioQualityHeader" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
