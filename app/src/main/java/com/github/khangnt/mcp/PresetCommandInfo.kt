@@ -26,7 +26,9 @@ enum class Gradient(val colors: IntArray) {
     KokoCaramel(colorArrayOf(0xffd1913c, 0xffffd194)),
     Turquoiseflow(colorArrayOf(0xff136a8a, 0xff267871)),
     SoundCloud(colorArrayOf(0xfffe8c00, 0xfff83600)),
-    Mini(colorArrayOf(0xff30e8bf, 0xffff8235))
+    Mini(colorArrayOf(0xff30e8bf, 0xffff8235)),
+    EasyMed(colorArrayOf(0xffdce35b, 0xff45b649)),
+    Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff))
     ;
 
     fun getDrawable(
