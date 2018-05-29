@@ -102,6 +102,7 @@
     <string name="mp3_encoder_header">MP3 Encoder:</string>
     <string name="quality_header">Quality:</string>
     <string name="compression_level_header">Compression level:</string>
+    <string name="trim_silence_header">Trim audio silence</string>
     <string name="start_conversion_button">Start conversion</string>
 
     <string name="audio_quality_header">Audio quality:</string>

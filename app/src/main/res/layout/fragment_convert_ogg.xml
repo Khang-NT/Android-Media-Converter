@@ -43,5 +43,14 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/audioQualityHeader" />
 
+        <CheckBox
+            android:id="@+id/cbTrimSilence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/trim_silence_header"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sbAudioQuality" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
