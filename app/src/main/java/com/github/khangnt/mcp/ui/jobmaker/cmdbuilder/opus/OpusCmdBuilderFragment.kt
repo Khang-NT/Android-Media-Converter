@@ -44,13 +44,14 @@ class OpusCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(OpusCmdConfig(inputFileUris, sbCompressionLevel.progress))
+        onSuccess(OpusCmdConfig(inputFileUris, sbCompressionLevel.progress, cbTrimSilence.isChecked))
     }
 }
 
 class OpusCmdConfig(
         inputFiles: List<String>,
-        private val compressionLevel: Int
+        private val compressionLevel: Int,
+        private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
@@ -64,6 +65,10 @@ class OpusCmdConfig(
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a $LIBOPUS ")
                 .append("-compression_level $compressionLevel ")
+                .append(when (isTrimSilence) {
+                    true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
+                    false -> ""
+                })
                 .toString()
         return finalFinalOutputs.mapIndexed { index, output ->
             Job(

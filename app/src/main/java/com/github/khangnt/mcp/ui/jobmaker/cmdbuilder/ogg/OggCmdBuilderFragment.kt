@@ -44,13 +44,14 @@ class OggCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(OggCmdConfig(inputFileUris, sbAudioQuality.progress))
+        onSuccess(OggCmdConfig(inputFileUris, sbAudioQuality.progress, cbTrimSilence.isChecked))
     }
 }
 
 class OggCmdConfig(
         inputFiles: List<String>,
-        private val quality: Int
+        private val quality: Int,
+        private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
@@ -64,6 +65,10 @@ class OggCmdConfig(
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a $LIBVORBIS ")
                 .append("-q:a $quality ")
+                .append(when (isTrimSilence) {
+                    true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
+                    false -> ""
+                })
                 .toString()
         return finalFinalOutputs.mapIndexed { index, output ->
             Job(

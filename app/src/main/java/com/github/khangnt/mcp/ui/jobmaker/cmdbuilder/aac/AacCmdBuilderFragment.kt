@@ -51,13 +51,14 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(AacCmdConfig(inputFileUris, CBR_MIN + sbQuality.progress))
+        onSuccess(AacCmdConfig(inputFileUris, CBR_MIN + sbQuality.progress, cbTrimSilence.isChecked))
     }
 }
 
 class AacCmdConfig(
         inputFiles: List<String>,
-        private val quality: Int
+        private val quality: Int,
+        private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
@@ -71,6 +72,10 @@ class AacCmdConfig(
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a aac ")
                 .append("-b:a ${quality}k ")
+                .append(when (isTrimSilence) {
+                    true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
+                    false -> ""
+                })
                 .toString()
         return finalFinalOutputs.mapIndexed { index, output ->
             Job(
