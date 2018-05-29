@@ -80,7 +80,7 @@
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:barrierDirection="end"
+            app:barrierDirection="bottom"
             app:constraint_referenced_ids="sbQualityLame,sbQualityShine" />
 
         <CheckBox
