@@ -176,4 +176,8 @@
     <string name="new_job_title">New job</string>
     <string name="tap_again_to_exit">Tap back again to exit</string>
 
+    <string name="hint_quality_level">The higher the value, the better the quality</string>
+    <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
+    <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
+
 </resources>
