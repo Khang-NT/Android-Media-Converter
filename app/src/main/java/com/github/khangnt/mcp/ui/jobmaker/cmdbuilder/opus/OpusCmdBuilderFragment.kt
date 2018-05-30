@@ -44,7 +44,7 @@ class OpusCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(OpusCmdConfig(inputFileUris, sbAudioQuality.progress, cbTrimSilence.isChecked))
+        onSuccess(OpusCmdConfig(inputFileUris, 10 - sbAudioQuality.progress, cbTrimSilence.isChecked))
     }
 }
 
