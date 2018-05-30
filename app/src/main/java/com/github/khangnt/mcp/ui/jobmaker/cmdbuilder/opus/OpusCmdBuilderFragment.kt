@@ -30,7 +30,7 @@ class OpusCmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sbCompressionLevel.onSeekBarChanged { updateQualityText() }
+        sbAudioQuality.onSeekBarChanged { updateQualityText() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -40,17 +40,17 @@ class OpusCmdBuilderFragment : CommandBuilderFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
-        tvCompressionLevel.text = "${sbCompressionLevel.progress}"
+        tvAudioQuality.text = "${sbAudioQuality.progress}"
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(OpusCmdConfig(inputFileUris, sbCompressionLevel.progress, cbTrimSilence.isChecked))
+        onSuccess(OpusCmdConfig(inputFileUris, sbAudioQuality.progress, cbTrimSilence.isChecked))
     }
 }
 
 class OpusCmdConfig(
         inputFiles: List<String>,
-        private val compressionLevel: Int,
+        private val quality: Int,
         private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
@@ -64,7 +64,7 @@ class OpusCmdConfig(
         check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a $LIBOPUS ")
-                .append("-compression_level $compressionLevel ")
+                .append("-compression_level $quality ")
                 .append(when (isTrimSilence) {
                     true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
                     false -> ""
