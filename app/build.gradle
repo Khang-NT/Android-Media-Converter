@@ -68,15 +68,15 @@ android {
 
     flavorDimensions 'cpuArch'
     productFlavors {
-//        arm {
-//            dimension 'cpuArch'
-//            ndk {
-//                abiFilter 'armeabi'
-//            }
-//
-//            versionCode 0 + _versionCode
-//            versionNameSuffix "-arm"
-//        }
+        arm {
+            dimension 'cpuArch'
+            ndk {
+                abiFilter 'armeabi'
+            }
+
+            versionCode 0 + _versionCode
+            versionNameSuffix "-arm"
+        }
         arm7 {
             dimension 'cpuArch'
             ndk {
@@ -169,14 +169,14 @@ publishConfig {
     packageName = 'com.github.khangnt.mcp'
     track = 'beta'
     apkFiles = files(
-//            "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
+            "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
             "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
             "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
             "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
     )
     mappings = files(
-//            "$buildDir/outputs/mapping/arm/release/mapping.txt",
+            "$buildDir/outputs/mapping/arm/release/mapping.txt",
             "$buildDir/outputs/mapping/arm7/release/mapping.txt",
             "$buildDir/outputs/mapping/arm8/release/mapping.txt",
             "$buildDir/outputs/mapping/x86/release/mapping.txt",
@@ -187,17 +187,19 @@ publishConfig {
 
 afterEvaluate {
     tasks.create("testReleaseUnitTest").dependsOn(
-//            "testArmReleaseUnitTest",
+            "testArmReleaseUnitTest",
             "testArm7ReleaseUnitTest",
             "testArm8ReleaseUnitTest",
             "testX86ReleaseUnitTest",
             "testX86_64ReleaseUnitTest"
     )
     tasks.create("lintRelease").dependsOn(
-//            "lintArmRelease",
+            "lintArmRelease",
             "lintArm7Release",
             "lintArm8Release",
             "lintX86Release",
             "lintX86_64Release"
     )
 }
+
+tasks.findByName("publishApks").dependsOn("assembleRelease")
