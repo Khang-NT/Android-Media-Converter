@@ -187,14 +187,14 @@ publishConfig {
 
 afterEvaluate {
     tasks.create("testReleaseUnitTest").dependsOn(
-            "testArmReleaseUnitTest",
+//            "testArmReleaseUnitTest",
             "testArm7ReleaseUnitTest",
             "testArm8ReleaseUnitTest",
             "testX86ReleaseUnitTest",
             "testX86_64ReleaseUnitTest"
     )
     tasks.create("lintRelease").dependsOn(
-            "lintArmRelease",
+//            "lintArmRelease",
             "lintArm7Release",
             "lintArm8Release",
             "lintX86Release",
