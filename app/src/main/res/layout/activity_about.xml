@@ -221,7 +221,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/contact"
+                        android:id="@+id/privacyPolicy"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="@dimen/margin_tiny"
@@ -231,6 +231,33 @@
                         android:paddingLeft="@dimen/margin_normal"
                         android:paddingRight="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@+id/licenses">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/privacy_policy_black_24dp"
+                            app:tint="@color/gray_600"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:text="@string/privacy_policy"
+                            android:textColor="?android:textColorPrimary"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:paddingRight="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@+id/privacyPolicy">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="24dp"
