@@ -68,15 +68,15 @@ android {
 
     flavorDimensions 'cpuArch'
     productFlavors {
-        arm {
-            dimension 'cpuArch'
-            ndk {
-                abiFilter 'armeabi'
-            }
-
-            versionCode 0 + _versionCode
-            versionNameSuffix "-arm"
-        }
+//        arm {
+//            dimension 'cpuArch'
+//            ndk {
+//                abiFilter 'armeabi'
+//            }
+//
+//            versionCode 0 + _versionCode
+//            versionNameSuffix "-arm"
+//        }
         arm7 {
             dimension 'cpuArch'
             ndk {
@@ -128,7 +128,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     final supportLibVersion = '27.1.0'
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
@@ -169,14 +169,14 @@ publishConfig {
     packageName = 'com.github.khangnt.mcp'
     track = 'beta'
     apkFiles = files(
-            "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
+//            "$buildDir/outputs/apk/arm/release/app-arm-release.apk",
             "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
             "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
             "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
     )
     mappings = files(
-            "$buildDir/outputs/mapping/arm/release/mapping.txt",
+//            "$buildDir/outputs/mapping/arm/release/mapping.txt",
             "$buildDir/outputs/mapping/arm7/release/mapping.txt",
             "$buildDir/outputs/mapping/arm8/release/mapping.txt",
             "$buildDir/outputs/mapping/x86/release/mapping.txt",
