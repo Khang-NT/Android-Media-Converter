@@ -84,11 +84,12 @@ class ChooseCommandFragment : StepFragment() {
             ConvertCommandModel(it, selectedFileCount > 0)
         })
 
-        adapterModels.add(HeaderModel(getString(R.string.header_other_feature)))
-        EditCommand.values().forEach {
-            val range = it.minInputCount..it.maxInputCount
-            adapterModels.add(EditCommandModel(it, selectedFileCount in range))
-        }
+        // TODO: add other features
+//        adapterModels.add(HeaderModel(getString(R.string.header_other_feature)))
+//        EditCommand.values().forEach {
+//            val range = it.minInputCount..it.maxInputCount
+//            adapterModels.add(EditCommandModel(it, selectedFileCount in range))
+//        }
         return adapterModels
     }
 
