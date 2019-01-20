@@ -102,9 +102,11 @@
     <string name="mp3_encoder_header">MP3 Encoder:</string>
     <string name="quality_header">Quality:</string>
     <string name="compression_level_header">Compression level:</string>
+    <string name="trim_silence_header">Trim audio silence</string>
     <string name="start_conversion_button">Start conversion</string>
 
-    <string name="mp4_video_quality_header">Video quality:</string>
+    <string name="audio_quality_header">Audio quality:</string>
+    <string name="video_quality_header">Video quality:</string>
 
     <string name="open_github">Open Github</string>
     <string name="open_translate_page">Open Translate page</string>
@@ -145,6 +147,8 @@
     <string name="short_name_mp3">MP3</string>
     <string name="short_name_aac">AAC</string>
     <string name="short_name_flac">FLAC</string>
+    <string name="short_name_opus">OPUS</string>
+    <string name="short_name_ogg">OGG</string>
     <string name="short_name_mp4">MP4</string>
     
     <string name="label_cut_length">Cut video/audio length</string>
@@ -171,5 +175,9 @@
 
     <string name="new_job_title">New job</string>
     <string name="tap_again_to_exit">Tap back again to exit</string>
+
+    <string name="hint_quality_level">The higher the value, the better the quality</string>
+    <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
+    <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
 
 </resources>

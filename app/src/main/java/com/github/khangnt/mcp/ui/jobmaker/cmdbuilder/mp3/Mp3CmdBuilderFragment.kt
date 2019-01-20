@@ -86,11 +86,11 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         if (spinnerEncoder.selectedItemPosition == 0) {
             val encoder = Encoders.LIBMP3LAME
             val quality = VBR_MAX - sbQualityLame.progress
-            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.VBR, quality))
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.VBR, quality, cbTrimSilence.isChecked))
         } else {
             val encoder = Encoders.LIBSHINE
             val quality = CBR_MIN + sbQualityShine.progress
-            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.CBR, quality))
+            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.CBR, quality, cbTrimSilence.isChecked))
         }
     }
 }
@@ -99,7 +99,8 @@ class Mp3CmdConfig(
         inputFiles: List<String>,
         @Mp3Encoder private val encoder: String,
         @QualityType private val qualityType: Int,
-        private val quality: Int
+        private val quality: Int,
+        private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
     init {
@@ -122,6 +123,10 @@ class Mp3CmdConfig(
                     QualityType.CBR -> "-b:a ${quality}k "
                     QualityType.VBR -> "-q:a $quality "
                     else -> throw IllegalStateException("Unknown quality type: $qualityType")
+                })
+                .append(when (isTrimSilence) {
+                    true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
+                    false -> ""
                 })
                 .toString()
         return finalFinalOutputs.mapIndexed { index, output ->

@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.R.id.sbCompressionLevel
-import com.github.khangnt.mcp.R.id.tvCompressionLevel
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
@@ -45,13 +43,14 @@ class FlacCmdBuilderFragment : CommandBuilderFragment() {
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(FlacCmdConfig(inputFileUris, sbCompressionLevel.progress))
+        onSuccess(FlacCmdConfig(inputFileUris, sbCompressionLevel.progress, cbTrimSilence.isChecked))
     }
 }
 
 class FlacCmdConfig(
         inputFiles: List<String>,
-        private val compressionLevel: Int
+        private val compressionLevel: Int,
+        private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
@@ -65,6 +64,10 @@ class FlacCmdConfig(
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
                 .append("-codec:a flac ")
                 .append("-compression_level $compressionLevel ")
+                .append(when (isTrimSilence) {
+                    true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
+                    false -> ""
+                })
                 .toString()
         return finalFinalOutputs.mapIndexed { index, output ->
             Job(

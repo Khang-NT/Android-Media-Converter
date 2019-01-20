@@ -114,6 +114,23 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        if (jobMakerViewModel.getSelectedFiles().value!!.isNotEmpty()) {
+            // double tap back button to exit
+            if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+                return super.onSupportNavigateUp()
+            } else {
+                toast(getString(R.string.tap_again_to_exit))
+            }
+
+            mBackPressed = System.currentTimeMillis()
+
+            return true
+        } else {
+            return super.onSupportNavigateUp()
+        }
+    }
+
     override fun consumeBackPress(): Boolean {
         super.consumeBackPress()
         // hide bottom sheet

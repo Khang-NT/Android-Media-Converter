@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
@@ -12,35 +13,35 @@
         android:padding="@dimen/fragment_convert_padding">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/qualityHeader"
+            android:id="@+id/audioQualityHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/quality_header"
+            android:text="@string/audio_quality_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvQualityValue"
+            android:id="@+id/tvAudioQuality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_tiny"
             android:layout_marginStart="@dimen/margin_tiny"
-            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
-            app:layout_constraintLeft_toRightOf="@+id/qualityHeader"
-            tools:text="128 - 172 kbps" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/audioQualityHeader"
+            app:layout_constraintLeft_toRightOf="@id/audioQualityHeader"
+            tools:text="10" />
 
         <SeekBar
-            android:id="@+id/sbQuality"
+            android:id="@+id/sbAudioQuality"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:max="9"
-            android:progress="9"
+            android:max="10"
+            android:progress="10"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qualityHeader" />
+            app:layout_constraintTop_toBottomOf="@id/audioQualityHeader" />
 
         <TextView
             android:id="@+id/qualityLevelHint"
@@ -52,7 +53,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sbQuality" />
+            app:layout_constraintTop_toBottomOf="@id/sbAudioQuality" />
 
         <CheckBox
             android:id="@+id/cbTrimSilence"

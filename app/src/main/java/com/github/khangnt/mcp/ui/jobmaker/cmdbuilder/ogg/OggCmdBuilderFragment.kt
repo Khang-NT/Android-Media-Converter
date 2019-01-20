@@ -1,4 +1,4 @@
-package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac
+package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.ogg
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,38 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.annotation.Encoders.LIBVORBIS
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.onSeekBarChanged
-import kotlinx.android.synthetic.main.fragment_convert_aac.*
+import kotlinx.android.synthetic.main.fragment_convert_ogg.*
 
 /**
- * Created by Khang NT on 4/10/18.
- * Email: khang.neon.1997@gmail.com
+ * Created by Simon Pham on 5/28/18.
+ * Email: simonpham.dn@gmail.com
  */
 
-class AacCmdBuilderFragment : CommandBuilderFragment() {
-
-    companion object {
-        private const val CBR_MIN = 45  // 45 kbps
-        private const val CBR_MAX = 320 // 320 kbps
-        private const val CBR_RECOMMEND = 256
-    }
+class OggCmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_convert_aac, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_convert_ogg, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sbQuality.max = CBR_MAX - CBR_MIN
-        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
-        sbQuality.onSeekBarChanged { updateQualityText() }
+        sbAudioQuality.onSeekBarChanged { updateQualityText() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -47,15 +40,15 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateQualityText() {
-        tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
+        tvAudioQuality.text = "${sbAudioQuality.progress}"
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(AacCmdConfig(inputFileUris, CBR_MIN + sbQuality.progress, cbTrimSilence.isChecked))
+        onSuccess(OggCmdConfig(inputFileUris, sbAudioQuality.progress, cbTrimSilence.isChecked))
     }
 }
 
-class AacCmdConfig(
+class OggCmdConfig(
         inputFiles: List<String>,
         private val quality: Int,
         private val isTrimSilence: Boolean
@@ -64,14 +57,14 @@ class AacCmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "aac") })
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "ogg") })
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
         check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
-                .append("-codec:a aac ")
-                .append("-b:a ${quality}k ")
+                .append("-codec:a $LIBVORBIS ")
+                .append("-q:a $quality ")
                 .append(when (isTrimSilence) {
                     true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
                     false -> ""
@@ -82,7 +75,7 @@ class AacCmdConfig(
                     title = output.title,
                     command = Command(
                             listOf(inputFileUris[index]), output.outputUri, // single input output
-                            Muxer.IPOD, cmdArgs, emptyMap()
+                            Muxer.OGG, cmdArgs, emptyMap()
                     )
             )
         }
