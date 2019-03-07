@@ -76,6 +76,10 @@ class AboutActivity : BaseActivity() {
                     .show()
         }
 
+        privacyPolicy.setOnClickListener {
+            openUrl(this, PRIVACY_POLICY_URL, getString(R.string.privacy_policy))
+        }
+
         contact.setOnClickListener {
             sendEmail(this)
         }
