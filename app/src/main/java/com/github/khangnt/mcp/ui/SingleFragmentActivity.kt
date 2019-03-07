@@ -55,7 +55,7 @@ abstract class SingleFragmentActivity : BaseActivity() {
      * @see [getFragmentContainerId]
      */
     protected open fun onCreateLayout(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_single_fragment)
+        setContentView(R.layout.single_fragment)
     }
 
     /**
@@ -63,6 +63,6 @@ abstract class SingleFragmentActivity : BaseActivity() {
      */
     @IdRes
     protected open fun getFragmentContainerId(): Int {
-        return R.id.fragment_container
+        return R.id.fragmentContainer
     }
 }

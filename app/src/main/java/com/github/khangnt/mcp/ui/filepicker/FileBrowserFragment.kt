@@ -1,65 +1,65 @@
 package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
-import android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
+import com.github.khangnt.mcp.ui.common.MixAdapter
+import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.onTextSizeChanged
+import com.github.khangnt.mcp.util.toast
+import kotlinx.android.synthetic.main.fragment_file_browser.*
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
-/**
- * Created by Khang NT on 1/31/18.
- * Email: khang.neon.1997@gmail.com
- */
 
-private const val KEY_MAX_FILE_CAN_SELECT = "FileBrowserFragment:max_file_can_select"
-private const val KEY_REMOVE_OLDEST = "FileBrowserFragment:remove_oldest"
+private const val KEY_LIMIT_SELECT_COUNT = "FileBrowserFragment:limit_select_count"
 private const val KET_START_UP_DIR = "FileBrowserFragment:start_up_directory"
 
-private const val KEY_SELECTED_FILE_LIST = "FileBrowserFragment:selected_file_list"
-private const val KEY_CURRENT_DIR = "FileBrowserFragment:current_dir"
 
-class FileBrowserFragment : BaseFragment(), FileListFragment.CallbackDeclare {
+class FileBrowserFragment : BaseFragment() {
+
+    interface Callbacks {
+        fun onSelectFilesChanged(files: List<File>)
+        fun onCurrentDirectoryChanged(directory: File)
+        fun allowChangeSelectedFile(): Boolean
+    }
 
     companion object {
         fun newInstance(
-                startUpDir: File,
-                maxFileCanSelect: Int = 1,
-                removeOldest: Boolean = true
-        ): FileBrowserFragment {
-            return FileBrowserFragment().apply {
-                arguments = Bundle().apply {
-                    putString(KET_START_UP_DIR, startUpDir.absolutePath)
-                    putInt(KEY_MAX_FILE_CAN_SELECT, maxFileCanSelect)
-                    putBoolean(KEY_REMOVE_OLDEST, removeOldest)
-                }
+                startUpDirectory: File,
+                limitSelectCount: Int = 1
+        ) = FileBrowserFragment().apply {
+            arguments = Bundle().apply {
+                putString(KET_START_UP_DIR, startUpDirectory.absolutePath)
+                putInt(KEY_LIMIT_SELECT_COUNT, limitSelectCount)
             }
         }
     }
 
-    val maxFileCanSelect by lazy { arguments!!.getInt(KEY_MAX_FILE_CAN_SELECT) }
-    val removeOldest by lazy { arguments!!.getBoolean(KEY_REMOVE_OLDEST) }
-    val startUpDir by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
+    private val limitSelectCount: Int by lazy { arguments!!.getInt(KEY_LIMIT_SELECT_COUNT) }
+    private val startUpDirectory by lazy { File(arguments!!.getString(KET_START_UP_DIR)) }
 
-    var onSelectedFilesChanged: ((fragment: FileBrowserFragment, files: List<File>) -> Unit)? = null
-    var onDirChanged: ((fragment: FileBrowserFragment, file: File) -> Unit)? = null
-
-    private val selectedFiles = mutableListOf<File>()
-    private val selectedFilesReadOnly = Collections.unmodifiableList(selectedFiles)
-
-    private var currentDir: File? = null
+    private val viewModel by lazy { getViewModel<FileBrowserViewModel>() }
+    private val adapter: MixAdapter by lazy {
+        MixAdapter.Builder {
+            withModel<FileListModel> {
+                FileListViewHolder.Factory {
+                    onClickListener = { model, _ -> onFileClick(model) }
+                }
+            }
+        }.build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (selectedFiles.isEmpty() && savedInstanceState !== null) {
-            val list = savedInstanceState.getStringArrayList(KEY_SELECTED_FILE_LIST)
-                    ?: emptyList<String>()
-            selectedFiles.addAll(list.map { File(it) })
+        if (viewModel.getCurrentDirectory() == null) {
+            viewModel.setCurrentDirectory(startUpDirectory)
+            getCallbacks()?.onCurrentDirectoryChanged(startUpDirectory)
         }
     }
 
@@ -71,89 +71,116 @@ class FileBrowserFragment : BaseFragment(), FileListFragment.CallbackDeclare {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState !== null) {
-            currentDir = File(savedInstanceState.getString(KEY_CURRENT_DIR))
+        with(recyclerViewContainer) {
+            onRefreshListener = { viewModel.reload(); true }
+            getRecyclerView().adapter = adapter
+            getRecyclerView().layoutManager = LinearLayoutManager(requireContext())
         }
+        viewModel.getFileModels().observe {
+            adapter.setData(it)
+            recyclerViewContainer.setShowEmptyState(it.isEmpty())
+        }
+        viewModel.getStatus().observe {
+            recyclerViewContainer.setStatus(it)
+        }
+    }
 
-        if (currentDir === null) {
-            goto(startUpDir)
+    private fun onFileClick(model: FileListModel) {
+        if (model.type == TYPE_FOLDER) {
+            viewModel.setCurrentDirectory(model.path)
+            getCallbacks()?.onCurrentDirectoryChanged(model.path)
+        } else if (model.type == TYPE_CREATE_FOLDER) {
+            showCreateFolderDialog()
+        } else if (getCallbacks()?.allowChangeSelectedFile() != false) {
+            if (model.selected) {
+                // unselected it
+                viewModel.unselectedFile(model.path)
+                getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+            } else {
+                val isFull = viewModel.getSelectedFiles().size == limitSelectCount
+                if (isFull && limitSelectCount != 1) {
+                    toast(getString(R.string.hint_limit_file_select_count, limitSelectCount))
+                } else {
+                    if (isFull && limitSelectCount == 1) {
+                        viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
+                    }
+                    viewModel.selectFile(model.path)
+                    getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+                }
+            }
+        } else {
+            toast(R.string.message_disallow_change_selected_files)
         }
     }
 
     fun goto(dir: File) {
         if (dir.isFile) {
             goto(dir.parentFile)
-        } else if (currentDir != dir) {
-            val oldDir = currentDir
-            currentDir = dir
-            val existsFragment = childFragmentManager.findFragmentByTag(dir.absolutePath)
-            if (existsFragment is FileListFragment) { // implicit check !== null
-                childFragmentManager.popBackStack(dir.absolutePath, POP_BACK_STACK_INCLUSIVE)
-            } else {
-                val fragment = FileListFragment.newInstance(dir)
-                showFragment(oldDir, dir, fragment)
-            }
-
-            onDirChanged?.invoke(this, dir)
-        }
-    }
-
-    override fun onFileItemClick(fragment: FileListFragment, item: File): Boolean {
-        return if (item.isDirectory) {
-            goto(item)
-            false
-        } else if (selectedFiles.remove(item)) {
-            // discard select
-            onSelectedFilesChanged()
-            true
-        } else if (selectedFiles.size < maxFileCanSelect) {
-            // remember this file is selected
-            selectedFiles.add(item)
-            onSelectedFilesChanged()
-            true
-        } else if (removeOldest && selectedFiles.isNotEmpty()) {
-            // exceed max file can select -> remove oldest file
-            selectedFiles.removeAt(0)
-            selectedFiles.add(item)
-            onSelectedFilesChanged()
-            true
         } else {
-            // does nothing
-            false
+            viewModel.setCurrentDirectory(dir)
+            getCallbacks()?.onCurrentDirectoryChanged(dir)
         }
     }
 
-    override fun getCheckedFiles(): List<File> = selectedFilesReadOnly
-
-    fun getCurrentDir(): File? = currentDir
-
-    private fun showFragment(oldDir: File?, dir: File, fileListFragment: FileListFragment) {
-        childFragmentManager.beginTransaction()
-                .replace(R.id.fileListContainer, fileListFragment, dir.absolutePath)
-                .apply { oldDir?.let { addToBackStack(it.absolutePath) } }
-                .commitAllowingStateLoss()
+    fun reset() {
+        viewModel.discardSelectedFiles()
+        getCallbacks()?.onSelectFilesChanged(emptyList())
     }
 
-    private fun onSelectedFilesChanged() {
-        onSelectedFilesChanged?.invoke(this, selectedFilesReadOnly)
+    fun getCurrentDirectory(): File = viewModel.getCurrentDirectory() ?: startUpDirectory
+
+    fun getSelectedFiles() = viewModel.getSelectedFiles()
+
+    fun setSelectedFiles(files: List<File>) = viewModel.setSelectedFiles(files)
+
+    private fun getCallbacks(): Callbacks? {
+        return (activity as? Callbacks) ?: (parentFragment as Callbacks)
     }
 
     override fun onBackPressed(): Boolean {
-        val count = childFragmentManager.backStackEntryCount
-        if (count > 0) {
-            // pop top stack
-            goto(File(childFragmentManager.getBackStackEntryAt(count - 1).name))
+        viewModel.goBack()?.let {
+            getCallbacks()?.onCurrentDirectoryChanged(it)
             return true
         }
         return super.onBackPressed()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(KEY_CURRENT_DIR, currentDir?.absolutePath)
-        outState.putStringArrayList(KEY_SELECTED_FILE_LIST,
-                ArrayList(selectedFiles.map { it.absolutePath }))
-    }
+    private fun showCreateFolderDialog() {
+        val editText = EditText(context!!)
+        val padding = resources.getDimensionPixelSize(R.dimen.margin_normal)
+        editText.hint = getString(R.string.hint_type_folder_name)
 
+        AlertDialog.Builder(context!!)
+                .setView(editText)
+                .setTitle(R.string.create_new_folder)
+                .setPositiveButton(R.string.action_ok, null)
+                .setNegativeButton(R.string.action_cancel, null)
+                .show()
+                .apply {
+                    val okButton = getButton(AlertDialog.BUTTON_POSITIVE)
+                    okButton.isEnabled = false
+                    editText.onTextSizeChanged { length -> okButton.isEnabled = length in 1..49 }
+                    (editText.layoutParams as? ViewGroup.MarginLayoutParams)
+                            ?.setMargins(padding, padding, padding, padding)
+
+                    okButton.setOnClickListener {
+                        val folderName = editText.text.toString()
+                        val newFolderPath = File(viewModel.getCurrentDirectory(), folderName)
+                        try {
+                            if (newFolderPath.exists()) {
+                                toast(R.string.folder_exists)
+                            } else if (!newFolderPath.mkdir()) {
+                                toast(R.string.create_folder_failed)
+                            } else {
+                                toast(getString(R.string.create_folder_success, folderName))
+                                viewModel.reload()
+                                dismiss()
+                            }
+                        } catch (error: Throwable) {
+                            toast(error.message)
+                        }
+                    }
+                }
+    }
 
 }

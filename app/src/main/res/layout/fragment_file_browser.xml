@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fileListContainer"
+<com.github.khangnt.mcp.view.RecyclerViewContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recyclerViewContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    app:rv_paddingHorizontal="@dimen/margin_small"
+    app:rv_emptyText="@string/permission_denied"
+    app:rv_showReloadOnEmpty="false" />

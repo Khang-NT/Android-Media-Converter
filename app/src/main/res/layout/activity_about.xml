@@ -71,7 +71,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="@string/app_name"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/text_huge"/>
+                android:textSize="@dimen/text_size_heading"/>
 
             <TextView
                 android:id="@+id/tvAppVersion"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintBottom_toBottomOf="@+id/ivAppIcon"
                 app:layout_constraintLeft_toRightOf="@+id/ivAppIcon"
                 app:layout_constraintTop_toTopOf="parent"
@@ -350,7 +350,7 @@
                             android:layout_toRightOf="@+id/ivTranslate"
                             android:text="@string/translate_summary"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_small"/>
+                            android:textSize="@dimen/text_size_small"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -400,7 +400,7 @@
                             android:layout_toRightOf="@+id/ivBug"
                             android:text="@string/report_bugs_summary"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_small"/>
+                            android:textSize="@dimen/text_size_small"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -450,7 +450,7 @@
                             android:layout_toRightOf="@+id/ivEmailFeedback"
                             android:text="@string/feedback_summary"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_small"/>
+                            android:textSize="@dimen/text_size_small"/>
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>

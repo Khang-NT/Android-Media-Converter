@@ -13,23 +13,24 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
-import com.github.khangnt.mcp.*
+import com.github.khangnt.mcp.BuildConfig
+import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
+import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
-import com.github.khangnt.mcp.ui.presetcmd.PresetCommandFragment
 import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
 import com.github.khangnt.mcp.util.viewChangelog
-import com.github.khangnt.mcp.worker.ACTION_JOB_STATUS_CHANGED
+import com.github.khangnt.mcp.worker.ACTION_JOB_DONE
 import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.util.concurrent.TimeUnit.DAYS
-import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.TimeUnit.*
 
 private const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
 private const val KEY_SELECTED_FRAGMENT = "MainActivity:selectedFragment"
@@ -93,7 +94,6 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
         navigationView.menu.findItem(selectedId)?.isChecked = true
         return when (selectedId) {
             R.id.item_nav_job_manager -> JobManagerFragment()
-            R.id.item_nav_preset_command -> PresetCommandFragment()
             else -> throw IllegalArgumentException("Unknown selected fragment $selectedId")
         }
     }
@@ -107,13 +107,15 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
                     .also { actionBarDrawerToggle ->
                         drawerLayout.addDrawerListener(actionBarDrawerToggle)
                         actionBarDrawerToggle.syncState()
+                        it.setTag(R.id.toolbar_slide_drawable,
+                                actionBarDrawerToggle.drawerArrowDrawable)
                     }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(jobStatusChangedReceiver, IntentFilter(ACTION_JOB_STATUS_CHANGED))
+        registerReceiver(jobStatusChangedReceiver, IntentFilter(ACTION_JOB_DONE))
     }
 
     override fun onPause() {
@@ -143,7 +145,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         drawerLayout.closeDrawer(Gravity.START)
         when (item.itemId) {
-            R.id.item_nav_job_manager, R.id.item_nav_preset_command -> {
+            R.id.item_nav_job_manager -> {
                 if (!item.isChecked) replaceFragment(createSelectedFragment(item.itemId))
             }
             R.id.item_nav_about -> AboutActivity.launch(this)
@@ -174,22 +176,24 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
                 .show()
     }
 
-    private fun onJobStatusChanged(jobId: Long, @JobStatus jobStatus: Int) {
-        Timber.d("onJobStatusChanged called($jobId, $jobStatus)")
+    private fun onJobDone(jobId: Long, @JobStatus jobStatus: Int) {
+        Timber.d("onJobDone called($jobId, $jobStatus)")
         val sharedPrefs = SingletonInstances.getSharedPrefs()
         if (jobStatus == JobStatus.COMPLETED
                 && !sharedPrefs.isRated
                 && sharedPrefs.successJobsCount >= 3
                 && System.currentTimeMillis() >= sharedPrefs.delayRateDialogUntil) {
+            sharedPrefs.delayRateDialogUntil =
+                    System.currentTimeMillis() + MILLISECONDS.convert(1, HOURS)
             showRateDialog()
         }
     }
 
     inner class JobStatusChangedReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val jobId = intent.getLongExtra(EXTRA_JOB_ID, ID_UNSET)
+            val jobId = intent.getLongExtra(EXTRA_JOB_ID, 0)
             val jobStatus = intent.getIntExtra(EXTRA_JOB_STATUS, -1)
-            onJobStatusChanged(jobId, jobStatus)
+            onJobDone(jobId, jobStatus)
         }
     }
 }

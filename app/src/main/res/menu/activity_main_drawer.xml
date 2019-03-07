@@ -7,10 +7,6 @@
         android:id="@+id/nav_group_1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/item_nav_preset_command"
-            android:icon="@drawable/console"
-            android:title="@string/nav_preset_commands"/>
-        <item
             android:id="@+id/item_nav_job_manager"
             android:icon="@drawable/ic_job_manager_black_24dp"
             android:title="@string/nav_job_manager"

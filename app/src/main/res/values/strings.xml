@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Media Converter</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation menu</string>
+    <string name="navigation_drawer_close">Close navigation menu</string>
 
-    <string name="action_settings">Settings</string>
     <string name="nav_header_app_title">Media Converter Pro</string>
     <string name="notification_channel_converter">Converter Service</string>
     <string name="notification_channel_converter_des">Notification show when service is running in background</string>
@@ -15,13 +14,13 @@
     <string name="nav_job_manager">Job manager</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_feedback">Help &amp; feedback</string>
-    <string name="close_drawer_des">Close side menu</string>
-    <string name="open_drawer_des">Open side menu</string>
 
-    <string name="job_list_empty_message">No Job found\nLet create new one via preset command.</string>
-    <string name="job_list_load_error_message">Load Job failed</string>
+    <string name="empty_job_list">No Job found\nTap (+) button to create a new one.</string>
+    <string name="empty_selected_files">No files selected</string>
+    <string name="loading_job_list">Loading jobs…</string>
+
     <string name="file_list_load_error_message">Load file list failed</string>
-    <string name="preset_command_load_error_message">Load preset commands failed</string>
+
     <string name="retry">Retry</string>
 
     <string name="fork_on_github">Fork on Github</string>
@@ -55,7 +54,9 @@
     <string name="create_new_folder">New folder</string>
     <string name="permission_denied">Permission denied</string>
     <string name="hint_type_folder_name">Folder name</string>
+    <string name="hint_file_name">File name</string>
     <string name="folder_exists">Folder exists</string>
+    <string name="file_exists">File name exists</string>
     <string name="create_folder_failed">Create folder failed, please check folder name.</string>
     <string name="create_folder_success">Create folder \'%s\' success</string>
     <string name="select">Select</string>
@@ -68,8 +69,8 @@
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
 
-    <string name="error_can_not_create_output_file">Can\'t create output file: %s</string>
-    <string name="error_input_text_empty">Input can\'t empty</string>
+    <string name="error_can_not_create_output_file">Can\'t create output file, please try again or change output folder</string>
+    <string name="error_input_too_short">Input too short</string>
     <string name="error_file_not_exists">This path doesn\'t exists</string>
     <string name="error_not_a_file">This is not a file</string>
     <string name="error_invalid_url">Invalid URL</string>
@@ -77,7 +78,7 @@
     <string name="error_file_name_empty">Please set file name</string>
 
     <string name="dialog_error_file_exists">File name exists</string>
-    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override it?</string>
+    <string name="dialog_error_file_exists_message">The file name \"%s\" already exists.\nDo you want to override or rename it?</string>
     <string name="action_override">Override</string>
     <string name="action_rename">Rename</string>
 
@@ -102,9 +103,11 @@
     <string name="mp3_encoder_header">MP3 Encoder:</string>
     <string name="quality_header">Quality:</string>
     <string name="compression_level_header">Compression level:</string>
+    <string name="trim_silence_header">Trim audio silence</string>
     <string name="start_conversion_button">Start conversion</string>
 
-    <string name="mp4_video_quality_header">Video quality:</string>
+    <string name="audio_quality_header">Audio quality:</string>
+    <string name="video_quality_header">Video quality:</string>
 
     <string name="open_github">Open Github</string>
     <string name="open_translate_page">Open Translate page</string>
@@ -132,4 +135,50 @@
     <string name="question">Question</string>
 
     <string name="close">Close</string>
+
+    <string name="header_running_job">Running %s</string>
+    <string name="header_preparing_job">Preparing</string>
+    <string name="header_ready_job">Ready</string>
+    <string name="header_pending_job">Pending</string>
+    <string name="header_finished_job">Finished</string>
+    <string name="header_convert_to_other_format">Convert to other format</string>
+    <string name="header_other_feature">Other features</string>
+
+    <string name="hint_limit_file_select_count">You can\'t select more than %d files</string>
+    <string name="short_name_mp3">MP3</string>
+    <string name="short_name_aac">AAC</string>
+    <string name="short_name_flac">FLAC</string>
+    <string name="short_name_opus">OPUS</string>
+    <string name="short_name_ogg">OGG</string>
+    <string name="short_name_mp4">MP4</string>
+    
+    <string name="label_cut_length">Cut video/audio length</string>
+    <string name="label_merge_audio">Merge to single audio file</string>
+    <string name="label_merge_video">Merge to single video file</string>
+    <string name="label_resize_video">Resize video file</string>
+    <string name="label_video_speed">Speeding up/slowing down video</string>
+
+    <string name="message_disallow_change_selected_files">You can\'t change selected files</string>
+    <string name="message_please_select_an_option">Please select an option</string>
+    <string name="message_please_resolve_conflict">Please resolve conflicted files to continue!</string>
+
+    <string name="title_convert">Convert %s</string>
+    <string name="title_configure_output">Configure output files</string>
+    <string name="title_create_job_success">Create job success</string>
+
+    <string name="select_at_least_one">You must select at least %d file to choose this option</string>
+    <string name="select_at_least_n">You must select at least %d files to choose this option</string>
+    <string name="select_at_most_one">You must select at most %d file to choose this option</string>
+    <string name="select_at_most_n">You must select at most %d files to choose this option</string>
+
+    <string name="selected_file_one">%d file selected</string>
+    <string name="selected_file_n">%d files selected</string>
+
+    <string name="new_job_title">New job</string>
+    <string name="tap_again_to_exit">Tap back again to exit</string>
+
+    <string name="hint_quality_level">The higher the value, the better the quality</string>
+    <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
+    <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
+
 </resources>

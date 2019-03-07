@@ -25,7 +25,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:textColor="@color/file_name_text_colors"
-        android:textSize="@dimen/text_big"
+        android:textSize="@dimen/text_size_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/ivFileIcon"
         app:layout_constraintRight_toRightOf="parent"

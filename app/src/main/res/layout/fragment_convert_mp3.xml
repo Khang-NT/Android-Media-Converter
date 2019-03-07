@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
@@ -8,18 +7,10 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutMp3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/fragment_convert_padding">
-
-        <fragment
-            android:id="@+id/fragmentInputOutput"
-            android:name="com.github.khangnt.mcp.ui.presetcmd.common.SingleInputOutputFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout="@layout/fragment_single_input_output" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/mp3EncoderHeader"
@@ -30,7 +21,7 @@
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragmentInputOutput" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/spinnerEncoder"
@@ -61,27 +52,70 @@
             tools:text="128 - 172 kbps" />
 
         <SeekBar
-            android:id="@+id/sbQuality"
+            android:id="@+id/sbQualityLame"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:max="9"
-            android:progress="9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader" />
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
+            tools:max="9"
+            tools:progress="9" />
 
+        <SeekBar
+            android:id="@+id/sbQualityShine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
+            tools:layout_marginTop="40dp"
+            tools:max="275"
+            tools:progress="211"
+            tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/btnStartConversion"
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:paddingLeft="@dimen/margin_huge"
-            android:paddingRight="@dimen/margin_huge"
-            android:text="@string/start_conversion_button"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="sbQualityLame,sbQualityShine" />
+
+        <TextView
+            android:id="@+id/qualityLevelHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="@string/hint_quality_level"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sbQuality" />
+            app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+        <CheckBox
+            android:id="@+id/cbTrimSilence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/trim_silence_header"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/qualityLevelHint" />
+
+        <TextView
+            android:id="@+id/trimSilenceHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="@string/hint_trim_silence"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbTrimSilence" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

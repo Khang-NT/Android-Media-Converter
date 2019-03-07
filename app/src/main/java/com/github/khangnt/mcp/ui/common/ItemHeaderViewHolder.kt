@@ -1,8 +1,6 @@
 package com.github.khangnt.mcp.ui.common
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import com.github.khangnt.mcp.R
 import kotlinx.android.synthetic.main.item_header.view.*
@@ -13,19 +11,23 @@ import kotlinx.android.synthetic.main.item_header.view.*
  */
 
 
-open class HeaderModel(val header: String) : AdapterModel, HasIdString {
-    override val idString: String = header
+class HeaderModel(val header: String) : AdapterModel, HasIdLong {
+    override val idLong: Long by lazy { IdGenerator.idFor(header) }
 }
 
-open class ItemHeaderViewHolder<in T : HeaderModel>(itemView: View) : CustomViewHolder<T>(itemView) {
-    val tvHeader: TextView = itemView.tvHeader
+class ItemHeaderViewHolder(itemView: View) : CustomViewHolder<HeaderModel>(itemView) {
+    private val tvHeader: TextView = itemView.tvHeader
 
-    override fun bind(model: T, pos: Int) {
+    override fun bind(model: HeaderModel, pos: Int) {
         tvHeader.text = model.header
     }
 
-    object Factory : ViewHolderFactory {
-        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
-                ItemHeaderViewHolder<HeaderModel>(inflater.inflate(R.layout.item_header, parent, false))
+    class Factory : ViewHolderFactory {
+        override val layoutRes: Int = R.layout.item_header
+
+        override fun create(itemView: View): CustomViewHolder<*> {
+            return ItemHeaderViewHolder(itemView)
+        }
     }
+
 }

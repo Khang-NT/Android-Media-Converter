@@ -1,6 +1,8 @@
 package com.github.khangnt.mcp.ui
 
 import android.app.Activity
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -36,6 +38,10 @@ abstract class BaseFragment : RxFragment() {
 
     protected fun getActivitySupportActionBar(): ActionBar? {
         return (activity as? AppCompatActivity)?.supportActionBar
+    }
+
+    protected fun <T> LiveData<T>.observe(action: (T) -> Unit) {
+        observe(this@BaseFragment, Observer { it?.let(action) })
     }
 
 }

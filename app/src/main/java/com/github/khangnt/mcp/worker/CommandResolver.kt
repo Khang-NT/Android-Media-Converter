@@ -6,7 +6,7 @@ import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.FFMPEG_SIZE_FILE
 import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
 import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
-import com.github.khangnt.mcp.job.Command
+import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.escapeSingleQuote
 import timber.log.Timber

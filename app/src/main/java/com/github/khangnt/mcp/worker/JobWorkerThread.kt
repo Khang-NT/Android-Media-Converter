@@ -4,11 +4,11 @@ import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
 import com.github.khangnt.mcp.annotation.JobStatus
-import com.github.khangnt.mcp.annotation.JobStatus.RUNNING
+import com.github.khangnt.mcp.db.job.Job
+import com.github.khangnt.mcp.db.job.JobRepository
 import com.github.khangnt.mcp.exception.UnhappyExitCodeException
 import com.github.khangnt.mcp.getKnownReasonOf
-import com.github.khangnt.mcp.job.Job
-import com.github.khangnt.mcp.job.JobManager
+import com.github.khangnt.mcp.misc.RunningJobStatus
 import com.github.khangnt.mcp.reportNonFatal
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
@@ -20,9 +20,9 @@ import java.io.*
 private const val MAX_LOG_FILE_SIZE = 50 * 1024 // 50 KB
 
 class JobWorkerThread(
-        private val appContext: Context,
-        private var job: Job,
-        private val jobManager: JobManager,
+        val appContext: Context,
+        var job: Job,
+        private val jobRepository: JobRepository,
         private val onCompleteListener: (Job) -> Unit,
         private val onErrorListener: (Job, Throwable?) -> Unit,
         private val workingPaths: WorkingPaths = makeWorkingPaths(appContext)
@@ -44,6 +44,10 @@ class JobWorkerThread(
 
     override fun run() {
         Timber.d("Start working on job: ${job.title}")
+
+        if (job.status != JobStatus.RUNNING) {
+            updateJob(status = JobStatus.RUNNING, block = true)
+        }
 
         jobTempDir = try {
             workingPaths.getTempDirForJob(job.id)
@@ -77,7 +81,7 @@ class JobWorkerThread(
 
         if (process === null) return  // error happened
 
-        val loggerThread = LoggerThread(process.errorStream, jobManager)
+        val loggerThread = LoggerThread(process.errorStream)
         loggerThread.start()
 
         // wait process complete
@@ -116,7 +120,7 @@ class JobWorkerThread(
         }
 
         // Convert successful, now copy temp output to real target output
-        job = jobManager.updateJobStatus(job, RUNNING, "Convert success, copying output...")
+        updateJob(statusDetail = "Convert success, copying output...", block = false)
         var tempIs: InputStream? = null
         var destOs: OutputStream? = null
         try {
@@ -137,7 +141,8 @@ class JobWorkerThread(
                 System.currentTimeMillis() - startTime, job.command.output)
 
         // completed
-        job = jobManager.updateJobStatus(job, JobStatus.COMPLETED)
+        updateJob(status = JobStatus.COMPLETED, block = true)
+        isAlive
         onCompleteListener(job)
         catchAll {
             UriUtils.getPathFromUri(appContext, Uri.parse(commandResolver.command.output))
@@ -166,7 +171,7 @@ class JobWorkerThread(
 
     private fun onError(error: Throwable, message: String) {
         val errorDetail = getKnownReasonOf(error, appContext, message)
-        job = jobManager.updateJobStatus(job, JobStatus.FAILED, errorDetail)
+        updateJob(status = JobStatus.FAILED, statusDetail = errorDetail, block = true)
         onErrorListener(job, error)
 
         // clean up temp folder
@@ -176,7 +181,16 @@ class JobWorkerThread(
         reportNonFatal(error, "JobWorkerThread#onError", message)
     }
 
-    private inner class LoggerThread(val input: InputStream, val jobManager: JobManager) : Thread() {
+    private fun updateJob(status: Int = JobStatus.RUNNING, statusDetail: String? = null, block: Boolean) {
+        job = job.copy(status = status, statusDetail = statusDetail)
+        if (block) {
+            jobRepository.updateJob(job, ignoreError = false).blockingAwait()
+        } else {
+            jobRepository.updateJob(job, ignoreError = true).subscribe()
+        }
+    }
+
+    private inner class LoggerThread(val input: InputStream) : Thread() {
 
         private val regex = Regex("(\\w+=\\s*([^\\s]+))")
         private val durationRe = Regex("Duration:\\s(\\d\\d:\\d\\d:\\d\\d)")
@@ -188,7 +202,7 @@ class JobWorkerThread(
 
 
         init {
-            jobManager.recordLiveLog("")
+            RunningJobStatus.postUpdate("")
         }
 
         override fun run() {
@@ -233,14 +247,15 @@ class JobWorkerThread(
                         }
 
                         if (durationSeconds !== null && durationSeconds!! > 0 && time !== null) {
-                            val percent = (parseDurationString(time!!) ?: 0) * 100 / durationSeconds!!
+                            val percent = (parseDurationString(time!!)
+                                    ?: 0) * 100 / durationSeconds!!
                             stringBuilder.append(" $percent%")
                         } else if (bitrate !== null) {
                             stringBuilder.append(" br=").append(bitrate)
                         }
 
                         if (!stringBuilder.isBlank()) {
-                            jobManager.recordLiveLog(stringBuilder.toString())
+                            RunningJobStatus.postUpdate(stringBuilder.toString())
                         }
                         Timber.d(line)
                         catchAll<Unit>(printLog = true) {
@@ -257,7 +272,7 @@ class JobWorkerThread(
                 logFileOutputStream?.appendln("[...]\n$skippedLine lines was skipped\n[...]\n$lastLine")
             }
             logFileOutputStream.closeQuietly()
-            jobManager.recordLiveLog("")
+            RunningJobStatus.postUpdate("")
         }
 
         /**

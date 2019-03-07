@@ -19,4 +19,9 @@
     <color name="custom_activity_on_crash_primary_dark">#B71C1C</color>
     <color name="custom_activity_on_crash_accent">#FF5252</color>
 
+    <color name="green">#3cba54</color>
+    <color name="yellow">#f4c20d</color>
+    <color name="red">#db3236</color>
+    <color name="blue">#4885ed</color>
+
 </resources>

@@ -16,6 +16,7 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 def keyStorePass = hasProperty("key_store_password") ? key_store_password : ""
@@ -29,6 +30,12 @@ android {
         versionCode 1
         versionName "0.8.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -130,12 +137,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    final supportLibVersion = '27.1.0'
+    final supportLibVersion = '27.1.1'
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:cardview-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    final androidLifecycleExtensionVersion = "1.1.1"
+    implementation "android.arch.lifecycle:extensions:$androidLifecycleExtensionVersion"
+    kapt "android.arch.lifecycle:compiler:$androidLifecycleExtensionVersion"
+
+    final roomVersion = "1.1.0"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
+
 
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
@@ -147,7 +163,7 @@ dependencies {
 
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
 
@@ -159,8 +175,8 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 apply from: 'publish.gradle'
@@ -173,14 +189,14 @@ publishConfig {
             "$buildDir/outputs/apk/arm7/release/app-arm7-release.apk",
             "$buildDir/outputs/apk/arm8/release/app-arm8-release.apk",
             "$buildDir/outputs/apk/x86/release/app-x86-release.apk",
-            "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk",
+            "$buildDir/outputs/apk/x86_64/release/app-x86_64-release.apk"
     )
     mappings = files(
             "$buildDir/outputs/mapping/arm/release/mapping.txt",
             "$buildDir/outputs/mapping/arm7/release/mapping.txt",
             "$buildDir/outputs/mapping/arm8/release/mapping.txt",
             "$buildDir/outputs/mapping/x86/release/mapping.txt",
-            "$buildDir/outputs/mapping/x86_64/release/mapping.txt",
+            "$buildDir/outputs/mapping/x86_64/release/mapping.txt"
     )
     serviceAccountJson = 'app/service_account.json'
 }

@@ -2,7 +2,8 @@ package com.github.khangnt.mcp.ui.common
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Created by Khang NT on 1/5/18.
@@ -15,34 +16,19 @@ interface HasIdLong {
     val idLong: Long
 }
 
-interface HasIdString {
-    val idString: String
-}
-
 abstract class CustomViewHolder<in T : AdapterModel>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(model: T, pos: Int)
+
+    open fun onAttachedToWindow() = Unit
+
+    open fun onDetachedFromWindow() = Unit
 }
 
-class IdGenerator private constructor(initValue: Int) {
-    companion object {
-        const val SCOPE_GLOBAL = "Global"
-        const val DEFAULT_INIT_VALUE = 100_000
+object IdGenerator {
+    private val atomicInt = AtomicLong(999999)
+    private val map = ConcurrentHashMap<String, Long>()
 
-        private val sInstances = mutableMapOf<String, IdGenerator>()
-
-        fun scope(scopeName: String, initValue: Int = 100_000): IdGenerator {
-            synchronized(sInstances) {
-                return sInstances.getOrPut(scopeName, { IdGenerator(initValue) })
-            }
-        }
-    }
-
-    private val atomicInt = AtomicInteger(initValue)
-    private val map = mutableMapOf<String, Int>()
-
-    fun idFor(stringValue: String): Int {
-        return map.getOrPut(stringValue) {
-            atomicInt.getAndIncrement()
-        }
+    fun idFor(stringValue: String): Long {
+        return map.getOrPut(stringValue) { atomicInt.getAndIncrement() }
     }
 }

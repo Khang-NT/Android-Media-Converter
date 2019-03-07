@@ -12,17 +12,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
+import android.support.v4.provider.DocumentFile
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.util.SparseArray
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.annotation.JobStatus.*
-import com.github.khangnt.mcp.job.Job
+import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.CustomViewHolder
 import com.github.khangnt.mcp.ui.common.HasIdLong
@@ -30,7 +30,6 @@ import com.github.khangnt.mcp.ui.common.ViewHolderFactory
 import com.github.khangnt.mcp.util.UriUtils
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.toast
-import com.github.khangnt.mcp.worker.ConverterService
 import com.github.khangnt.mcp.worker.makeWorkingPaths
 import kotlinx.android.synthetic.main.item_job.view.*
 import java.io.File
@@ -75,9 +74,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
         }
     }
 
-    object Factory : ViewHolderFactory {
-        override fun invoke(inflater: LayoutInflater, parent: ViewGroup): CustomViewHolder<*> =
-                ItemJobViewHolder(inflater.inflate(R.layout.item_job, parent, false))
+    class Factory : ViewHolderFactory {
+        override val layoutRes: Int = R.layout.item_job
+        override fun create(itemView: View): CustomViewHolder<*> = ItemJobViewHolder(itemView)
     }
 
     private val context = itemView.context
@@ -246,11 +245,16 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     }
 
     private fun cancelJob(context: Context, job: Job, deleteFile: Boolean) {
-        ConverterService.cancelJob(context, jobId = job.id)
+        SingletonInstances.getJobWorkerManager().cancelJob(job.id)
         val outputUri = Uri.parse(job.command.output)
         if (deleteFile) {
             if (outputUri.scheme == ContentResolver.SCHEME_CONTENT) {
-                catchAll { context.contentResolver.delete(outputUri, null, null) }
+                catchAll {
+                    if (DocumentFile.isDocumentUri(context, outputUri)) {
+                        DocumentFile.fromSingleUri(context, outputUri)?.delete()
+                    }
+                    context.contentResolver.delete(outputUri, null, null)
+                }
             } else if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
                 catchAll { File(outputUri.path).delete() }
             }

@@ -4,9 +4,9 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import com.github.khangnt.mcp.annotation.JobStatus
+import com.github.khangnt.mcp.db.job.Job
+import com.github.khangnt.mcp.db.job.JobRepository
 import com.github.khangnt.mcp.getKnownReasonOf
-import com.github.khangnt.mcp.job.Job
-import com.github.khangnt.mcp.job.JobManager
 import com.github.khangnt.mcp.reportNonFatal
 import com.github.khangnt.mcp.util.deleteRecursiveIgnoreError
 import com.liulishuo.filedownloader.BaseDownloadTask
@@ -28,9 +28,9 @@ private const val DOWNLOAD_TASK_UPDATE_INTERVAL = 500
  * JobPrepareThread was created to download/copy inputs to temp folder, where ffmpeg can read directly.
  */
 class JobPrepareThread(
-        private val appContext: Context,
-        private var job: Job,
-        private val jobManager: JobManager,
+        val appContext: Context,
+        var job: Job,
+        private val jobRepository: JobRepository,
         private val onCompleteListener: (Job) -> Unit,
         private val onErrorListener: (Job, Throwable?) -> Unit,
         private val workingPaths: WorkingPaths = makeWorkingPaths(appContext)
@@ -58,7 +58,7 @@ class JobPrepareThread(
                     // content:// can't be recognized by any ffmpeg protocol
                     val inputCopyTo = makeInputTempFile(jobTempDir!!, index)
                     Timber.d("Copy input $index to $inputCopyTo")
-                    job = jobManager.updateJobStatus(job, JobStatus.PREPARING, "Copying input $index")
+                    updateJob(statusDetail = "Copying input $index", block = true)
                     try {
                         contentResolver.openInputStream(inputUri).use { inputStream ->
                             val outputStream = contentResolver.openOutputStream(Uri.fromFile(inputCopyTo))
@@ -74,7 +74,7 @@ class JobPrepareThread(
                 "http", "https" -> { // ffmpeg not compiled to support http/https protocol
                     val inputDownloadTo = makeInputTempFile(jobTempDir!!, index).absolutePath
                     Timber.d("Download input $index to $inputDownloadTo")
-                    job = jobManager.updateJobStatus(job, JobStatus.PREPARING, "Downloading input $index")
+                    updateJob(statusDetail = "Downloading input $index", block = true)
                     val downloadTask = FileDownloader.getImpl().create(input)
                             .setForceReDownload(true)
                             .setPath(inputDownloadTo)
@@ -86,7 +86,7 @@ class JobPrepareThread(
                                     val percent = if (totalBytes > 0) (soFarBytes * 100 / totalBytes) else -1
                                     val percentString = if (percent > 0) "$percent%" else ""
                                     val status = "Downloading input $index\n${speed}KB/s $percentString"
-                                    job = jobManager.updateJobStatus(job, JobStatus.PREPARING, status)
+                                    updateJob(statusDetail = status, block = false)
                                 }
                             })
                     downloadTask.start()
@@ -123,13 +123,22 @@ class JobPrepareThread(
 
         // prepared -> ready to convert
         Timber.d("Prepared ${job.id} - ${job.title}")
-        job = jobManager.updateJobStatus(job, JobStatus.READY)
+        updateJob(status = JobStatus.READY, block = true)
         onCompleteListener(job)
+    }
+
+    private fun updateJob(status: Int = JobStatus.PREPARING, statusDetail: String? = null, block: Boolean) {
+        job = job.copy(status = status, statusDetail = statusDetail)
+        if (block) {
+            jobRepository.updateJob(job, ignoreError = false).blockingAwait()
+        } else {
+            jobRepository.updateJob(job, ignoreError = true).subscribe()
+        }
     }
 
     private fun onError(error: Throwable, message: String) {
         val errorDetail = getKnownReasonOf(error, appContext, message)
-        job = jobManager.updateJobStatus(job, JobStatus.FAILED, errorDetail)
+        updateJob(status = JobStatus.FAILED, statusDetail = errorDetail, block = true)
         onErrorListener(job, error)
 
         // clean up temp dir

@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.*
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 
@@ -26,14 +27,19 @@ fun isRtl(context: Context): Boolean {
 }
 
 fun TextView.onTextSizeChanged(listener: (length: Int) -> Unit): TextWatcher {
-    val textWatcher: TextWatcher = object : TextWatcher {
-        var length = this@onTextSizeChanged.length()
+    var length = this.length()
+    return onTextChanged {
+        if (it.length != length) {
+            length = it.length
+            listener(length)
+        }
+    }
+}
 
+fun TextView.onTextChanged(listener: (text: CharSequence) -> Unit): TextWatcher {
+    val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
-            if (s.length != length) {
-                length = s.length
-                listener(length)
-            }
+            listener(text)
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -47,6 +53,8 @@ fun TextView.onTextSizeChanged(listener: (length: Int) -> Unit): TextWatcher {
     addTextChangedListener(textWatcher)
     return textWatcher
 }
+
+
 
 private fun showToast(context: Context, message: String?, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(context, message ?: "null", duration).show()
@@ -130,4 +138,19 @@ fun getSpanCount(minWidth: Int, columnSpace: Int = 0): Int {
         spanCount++
     }
     return spanCount
+}
+
+fun View.doOnPreDraw(action: () -> Unit) {
+    viewTreeObserver.addOnPreDrawListener(object: ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            action()
+            viewTreeObserver.removeOnPreDrawListener(this)
+            return true
+        }
+    })
+}
+
+fun View.disableInHalfSecond() {
+    isEnabled = false
+    postDelayed({ isEnabled = true }, 500)
 }

@@ -14,6 +14,7 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import com.github.khangnt.mcp.util.catchAll
 import kotlinx.android.synthetic.main.activity_file_picker.*
@@ -41,7 +42,7 @@ private const val KEY_BTN_SELECT_ENABLED = "key:btnSelectEnabled"
 const val FILES_RESULT = "FilePickerActivity:files_result"
 const val DIRECTORY_RESULT = "FilePickerActivity:directory_result"
 
-class FilePickerActivity : SingleFragmentActivity() {
+class FilePickerActivity : SingleFragmentActivity(), FileBrowserFragment.Callbacks {
 
     companion object {
         fun pickFolderIntent(
@@ -109,21 +110,8 @@ class FilePickerActivity : SingleFragmentActivity() {
         }
 
         val fileBrowserFragment = fragment as FileBrowserFragment
-        fileBrowserFragment.onSelectedFilesChanged = { _, files ->
-            check(isPickFile == true)
-            btnSelect.isEnabled = files.size == maxFileCanPick
-        }
-        fileBrowserFragment.onDirChanged = { _, dir ->
-            pathIndicatorView.setPath(dir)
-            if (!isPickFile) {
-                btnSelect.isEnabled = catchAll {
-                    (!ensureReadable || dir.canRead())
-                            && (!ensureWritable || dir.canWrite())
-                } ?: false
-            }
-        }
-        pathIndicatorView.onPathClick = { _, dir ->
-            fileBrowserFragment.goto(dir)
+        pathIndicatorView.onPathClick = { _, directory ->
+            fileBrowserFragment.goto(directory)
         }
 
         btnCancel.setOnClickListener { finish() }
@@ -131,14 +119,31 @@ class FilePickerActivity : SingleFragmentActivity() {
             val result = Intent()
             if (isPickFile) {
                 result.putStringArrayListExtra(FILES_RESULT,
-                        ArrayList(fileBrowserFragment.getCheckedFiles().map { it.absolutePath }))
+                        ArrayList(fileBrowserFragment.getSelectedFiles().map { it.absolutePath }))
             } else {
-                result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDir()!!.absolutePath)
+                result.putExtra(DIRECTORY_RESULT, fileBrowserFragment.getCurrentDirectory().absolutePath)
             }
             setResult(Activity.RESULT_OK, result)
             finish()
         }
     }
+
+    override fun onSelectFilesChanged(files: List<File>) {
+        check(isPickFile)
+        btnSelect.isEnabled = files.size == maxFileCanPick
+    }
+
+    override fun onCurrentDirectoryChanged(directory: File) {
+        pathIndicatorView.setPath(directory)
+        if (!isPickFile) {
+            btnSelect.isEnabled = catchAll {
+                (!ensureReadable || directory.canRead())
+                        && (!ensureWritable || directory.canWrite())
+            } ?: false
+        }
+    }
+
+    override fun allowChangeSelectedFile(): Boolean = true
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -158,7 +163,8 @@ class FilePickerActivity : SingleFragmentActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_file_picker, menu)
         val isKitkat = SDK_INT == Build.VERSION_CODES.KITKAT
-        menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat && sdCardPath.isNotEmpty()
+        menu.findItem(R.id.item_goto_sd_card).isVisible = !isKitkat
+                && SingletonInstances.getSdCardPath() != null
         return true
     }
 
@@ -171,61 +177,11 @@ class FilePickerActivity : SingleFragmentActivity() {
             }
             R.id.item_goto_sd_card -> {
                 val fragment = (getContentFragment() as? FileBrowserFragment)
-                if (sdCardPath.size == 1) {
-                    fragment?.goto(sdCardPath[0])
-                } else {
-                    val options = sdCardPath.map { it.absolutePath }.toTypedArray()
-                    val selected = arrayOf(-1)
-                    AlertDialog.Builder(this)
-                            .setTitle("Select external path")
-                            .setSingleChoiceItems(options, -1, { _, which ->
-                                selected[0] = which
-                            })
-                            .setPositiveButton(R.string.action_ok, { _, _ ->
-                                if (selected[0] > -1) {
-                                    fragment?.goto(sdCardPath[selected[0]])
-                                }
-                            })
-                            .setNegativeButton(R.string.action_cancel, null)
-                            .show()
-                }
+                fragment?.goto(checkNotNull(SingletonInstances.getSdCardPath()))
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private val sdCardPath: Array<File> by lazy {
-        // try to find sd card path if any
-        return@lazy try {
-            getStorageDirectories().map { File(it) }.toTypedArray()
-        } catch (error: Throwable) {
-            Timber.d(error, "Failed to detect SD card")
-            emptyArray<File>()
-        }
-    }
-
-    private fun getStorageDirectories(): List<String> {
-        val rawSecondaryStorage = catchAll { System.getenv("SECONDARY_STORAGE") } ?: ""
-
-        if (SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val results = ArrayList<String>()
-            val externalDirs = applicationContext.getExternalFilesDirs(null) ?: emptyArray()
-            for (file in externalDirs) {
-                if (!file.path.contains("/Android")) continue
-                val path = file.path.split("/Android")[0]
-                if (SDK_INT >= LOLLIPOP && Environment.isExternalStorageRemovable(file)
-                        || rawSecondaryStorage.contains(path)) {
-                    results.add(path)
-                }
-            }
-            return results
-        } else {
-            if (!TextUtils.isEmpty(rawSecondaryStorage)) {
-                return rawSecondaryStorage.split(":")
-                        .filter { it.isNotEmpty() }
-            }
-        }
-        return emptyList()
-    }
 }
