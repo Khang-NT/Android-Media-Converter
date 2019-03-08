@@ -55,7 +55,7 @@ class Mp4CmdConfig(
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
         check(finalFinalOutputs.size == getNumberOfOutput())
-        val cmdArgs = StringBuffer("-hide_banner -map_metadata 0:g")
+        val cmdArgs = StringBuffer("-hide_banner -map_metadata 0:g ")
                 .append("-map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt ")
                 .append("-q:v $videoQuality")
                 .toString()
