@@ -32,10 +32,10 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         // https://trac.ffmpeg.org/wiki/Encode/MP3
         private val libMp3LameQuality = arrayOf(
                 "220-260", "190-250", "170-210", "150-195", "140-185",
-                "120-150", "100-130", "80-120", "70-105", "45-85"
+                "120-150", "100-130", "80-120", "70-105", "48-85"
         )
 
-        private const val CBR_MIN = 45  // 45 kbps
+        private const val CBR_MIN = 48  // 48 kbps
         private const val CBR_MAX = 320 // 320 kbps
         private const val CBR_RECOMMEND = 256
 
@@ -112,7 +112,7 @@ class Mp3CmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp3") })
+        return List(inputFileUris.size) { i -> AutoGenOutput(getFileNameFromInputs(i), "mp3") }
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
