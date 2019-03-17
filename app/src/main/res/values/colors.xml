@@ -24,4 +24,14 @@
     <color name="red">#db3236</color>
     <color name="blue">#4885ed</color>
 
+    <color name="secondary_text_material_default_dark">#b3ffffff</color>
+    <color name="secondary_text_material_default_light">#8a000000</color>
+    <color name="secondary_text_material_disabled_dark">#36ffffff</color>
+    <color name="secondary_text_material_disabled_light">#24000000</color>
+
+    <color name="primary_text_material_default_dark">#ffffffff</color>
+    <color name="primary_text_material_default_light">#de000000</color>
+    <color name="primary_text_material_disabled_dark">#4Dffffff</color>
+    <color name="primary_text_material_disabled_light">#39000000</color>
+
 </resources>
