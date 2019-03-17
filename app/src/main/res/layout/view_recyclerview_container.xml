@@ -36,7 +36,7 @@
             android:minLines="0"
             android:paddingLeft="@dimen/margin_huge"
             android:paddingRight="@dimen/margin_huge"
-            android:textColor="?android:textColorPrimary"
+            android:textColor="@color/primary_text_material_light"
             android:textSize="@dimen/text_size_subtitle"
             tools:text="List is empty" />
 

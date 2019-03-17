@@ -48,7 +48,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="?android:textColorPrimary"
+                android:textColor="@color/primary_text_material_light"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 tools:text="Hello world.mp3" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"
-                app:tint="?android:textColorSecondary" />
+                app:tint="@color/secondary_text_material_light" />
         </LinearLayout>
 
         <View

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
@@ -31,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:background="@color/colorPrimary"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -39,7 +38,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/nav_feedback"/>
+                app:title="@string/nav_feedback" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -62,7 +61,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_launcher_round_high_res"/>
+                android:src="@drawable/ic_launcher_round_high_res" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,20 +69,20 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="@string/app_name"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/text_size_heading"/>
+                android:textColor="@color/primary_text_material_light"
+                android:textSize="@dimen/text_size_heading" />
 
             <TextView
                 android:id="@+id/tvAppVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="@color/secondary_text_material_light"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintBottom_toBottomOf="@+id/ivAppIcon"
                 app:layout_constraintLeft_toRightOf="@+id/ivAppIcon"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Version: 0.7.0-arm7-4000"/>
+                tools:text="Version: 0.7.0-arm7-4000" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -96,19 +95,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/margin_normal"
-                    android:paddingTop="@dimen/margin_normal">
+                    android:paddingTop="@dimen/margin_normal"
+                    android:paddingBottom="@dimen/margin_normal">
 
                     <TextView
                         android:id="@+id/tvGeneral"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginTop="@dimen/margin_tiny"
                         android:layout_marginBottom="@dimen/margin_tiny"
                         android:text="@string/general"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
 
                     <LinearLayout
@@ -128,15 +127,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_history_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/changelog"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -156,15 +155,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/star"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/rate_us"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -182,15 +181,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/github_circle"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/fork_on_github"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -209,15 +208,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/file_document_box"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/licenses"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -236,15 +235,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/privacy_policy_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/privacy_policy"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -263,15 +262,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_email_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:text="@string/contact_us"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -288,19 +287,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/margin_normal"
-                    android:paddingTop="@dimen/margin_normal">
+                    android:paddingTop="@dimen/margin_normal"
+                    android:paddingBottom="@dimen/margin_normal">
 
                     <TextView
                         android:id="@+id/tvSupport"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginLeft="@dimen/margin_normal"
                         android:layout_marginTop="@dimen/margin_tiny"
                         android:layout_marginBottom="@dimen/margin_tiny"
                         android:text="@string/support_development"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
 
                     <RelativeLayout
@@ -312,45 +311,45 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:minHeight="48dp"
-                        android:paddingBottom="@dimen/margin_tiny"
                         android:paddingLeft="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny"
                         android:paddingRight="@dimen/margin_normal"
-                        android:paddingTop="@dimen/margin_tiny">
+                        android:paddingBottom="@dimen/margin_tiny">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:id="@+id/ivTranslate"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_translate_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:id="@+id/tvTranslateTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivTranslate"
                             android:layout_toRightOf="@+id/ivTranslate"
                             android:text="@string/translate_title"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvTranslateTitle"
-                            android:layout_marginBottom="@dimen/margin_tiny"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginBottom="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivTranslate"
                             android:layout_toRightOf="@+id/ivTranslate"
                             android:text="@string/translate_summary"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_size_small"/>
+                            android:textColor="@color/secondary_text_material_light"
+                            android:textSize="@dimen/text_size_small" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -362,45 +361,45 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:minHeight="48dp"
-                        android:paddingBottom="@dimen/margin_tiny"
                         android:paddingLeft="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny"
                         android:paddingRight="@dimen/margin_normal"
-                        android:paddingTop="@dimen/margin_tiny">
+                        android:paddingBottom="@dimen/margin_tiny">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:id="@+id/ivBug"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_bug_report_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:id="@+id/tvBugReport"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivBug"
                             android:layout_toRightOf="@+id/ivBug"
                             android:text="@string/report_bugs_title"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvBugReport"
-                            android:layout_marginBottom="@dimen/margin_tiny"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginBottom="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivBug"
                             android:layout_toRightOf="@+id/ivBug"
                             android:text="@string/report_bugs_summary"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_size_small"/>
+                            android:textColor="@color/secondary_text_material_light"
+                            android:textSize="@dimen/text_size_small" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -412,45 +411,45 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:minHeight="48dp"
-                        android:paddingBottom="@dimen/margin_tiny"
                         android:paddingLeft="@dimen/margin_normal"
+                        android:paddingTop="@dimen/margin_tiny"
                         android:paddingRight="@dimen/margin_normal"
-                        android:paddingTop="@dimen/margin_tiny">
+                        android:paddingBottom="@dimen/margin_tiny">
 
                         <android.support.v7.widget.AppCompatImageView
                             android:id="@+id/ivEmailFeedback"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_send_black_24dp"
-                            app:tint="@color/gray_600"/>
+                            app:tint="@color/gray_600" />
 
                         <TextView
                             android:id="@+id/tvEmailFeedback"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivEmailFeedback"
                             android:layout_toRightOf="@+id/ivEmailFeedback"
                             android:text="@string/feedback_title"
-                            android:textColor="?android:textColorPrimary"/>
+                            android:textColor="@color/primary_text_material_light" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvEmailFeedback"
-                            android:layout_marginBottom="@dimen/margin_tiny"
-                            android:layout_marginLeft="@dimen/margin_normal"
                             android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_normal"
+                            android:layout_marginBottom="@dimen/margin_tiny"
                             android:layout_toEndOf="@+id/ivEmailFeedback"
                             android:layout_toRightOf="@+id/ivEmailFeedback"
                             android:text="@string/feedback_summary"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/text_size_small"/>
+                            android:textColor="@color/secondary_text_material_light"
+                            android:textSize="@dimen/text_size_small" />
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -481,30 +480,30 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:tabGravity="center"
-                            app:tabIndicatorColor="?android:textColorPrimaryInverse"
+                            app:tabIndicatorColor="@color/primary_text_material_dark"
                             app:tabIndicatorHeight="2dp"
                             app:tabPaddingEnd="@dimen/margin_normal"
                             app:tabPaddingStart="@dimen/margin_normal"
-                            app:tabSelectedTextColor="?android:textColorPrimaryInverse"
-                            app:tabTextColor="?android:textColorSecondaryInverse">
+                            app:tabSelectedTextColor="@color/primary_text_material_dark"
+                            app:tabTextColor="@color/secondary_text_material_dark">
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabFeatureRequest"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/feature_request"/>
+                                android:text="@string/feature_request" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabBugReport"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/bug_report"/>
+                                android:text="@string/bug_report" />
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/tabQuestion"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/question"/>
+                                android:text="@string/question" />
                         </android.support.design.widget.TabLayout>
                     </FrameLayout>
 
@@ -526,7 +525,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="top"
                             android:inputType="textCapSentences|textMultiLine"
-                            android:minLines="7"/>
+                            android:minLines="7" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -536,13 +535,13 @@
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
                         android:text="@string/send_feedback"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/textInputLayout"
                         app:layout_constraintStart_toStartOf="@id/textInputLayout"
-                        app:layout_constraintTop_toBottomOf="@id/textInputLayout"/>
+                        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
 
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
