@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.transition.Fade
 import android.support.transition.Slide
 import android.support.transition.TransitionManager
@@ -47,13 +48,13 @@ class AboutActivity : BaseActivity() {
             appBarLayout.totalScrollRange
         }
 
-        appBarLayout.addOnOffsetChangedListener { _, offset ->
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset ->
             if (scrollRange + offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
             }
-        }
+        })
 
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 

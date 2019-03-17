@@ -170,7 +170,7 @@ fun Context.checkFileExists(folderUri: Uri, fileName: String): Uri? {
         return File(folderUri.path, fileName).let { if (it.exists()) Uri.fromFile(it) else null }
     } else catchAll {
         val documentTree = DocumentFile.fromTreeUri(this, folderUri)
-        documentTree.findFile(fileName).uri
+        documentTree!!.findFile(fileName)!!.uri
     }
 }
 

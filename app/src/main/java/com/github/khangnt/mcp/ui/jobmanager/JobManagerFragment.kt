@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.ui.jobmanager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -67,13 +68,13 @@ class JobManagerFragment : BaseFragment() {
         collapsingToolbar.statusBarScrim = gradient.getDrawable()
         val scrollRange by lazy { appBarLayout.totalScrollRange }
         val drawable = toolbar.getTag(R.id.toolbar_slide_drawable) as DrawerArrowDrawable
-        appBarLayout.addOnOffsetChangedListener { _, offset ->
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset: Int ->
             if (scrollRange + offset == 0) {
                 drawable.color = Color.WHITE
             } else if (offset == 0) {
                 drawable.color = Color.BLACK
             }
-        }
+        })
 
 
         with(recyclerViewContainer) {

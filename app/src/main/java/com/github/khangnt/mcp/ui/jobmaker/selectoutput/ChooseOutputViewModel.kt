@@ -68,7 +68,8 @@ class ChooseOutputViewModel : ViewModel() {
             executeAsync {
                 this.outputFolderUri = if (outputFolderUri != null &&
                         (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT &&
-                                DocumentFile.fromTreeUri(appContext, outputFolderUri).exists()
+                                DocumentFile.fromTreeUri(appContext, outputFolderUri) != null
+                                && DocumentFile.fromTreeUri(appContext, outputFolderUri)!!.exists()
                                 || File(outputFolderUri.path).exists())) {
                     outputFolderUri
                 } else {
@@ -163,13 +164,15 @@ class ChooseOutputViewModel : ViewModel() {
     @WorkerThread
     private fun updateFolderFiles() {
         outputFolderFiles.clear()
-        val listFiles = if (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT) {
-            DocumentFile.fromTreeUri(SingletonInstances.getAppContext(), outputFolderUri)
+        val listFiles = if (outputFolderUri.scheme == ContentResolver.SCHEME_CONTENT
+                && DocumentFile.fromTreeUri(SingletonInstances.getAppContext(), outputFolderUri
+                ) != null) {
+            DocumentFile.fromTreeUri(SingletonInstances.getAppContext(), outputFolderUri)!!
                     .listFiles().map { it.name }
         } else {
             File(outputFolderUri.path).listFilesNotNull().map { it.name }
         }
-        outputFolderFiles.addAll(listFiles)
+        outputFolderFiles.addAll(listFiles as Collection<String>)
     }
 
 }

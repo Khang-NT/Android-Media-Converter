@@ -177,7 +177,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             val documentFile = DocumentFile.fromTreeUri(requireContext(),
                     outputFolderUri)
             createFinalOutput = { fileName ->
-                val file = documentFile.createFile(null, fileName)
+                val file = documentFile?.createFile("", fileName)
                 if (file == null) {
                     toast(R.string.error_can_not_create_output_file)
                     throw IllegalStateException()

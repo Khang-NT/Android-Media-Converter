@@ -70,7 +70,7 @@ class SelectedFilesFragment : StepFragment() {
 
         override fun isLongPressDragEnabled(): Boolean = false
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) = Unit
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
 
         override fun getMovementFlags(
                 recyclerView: RecyclerView,
@@ -80,7 +80,7 @@ class SelectedFilesFragment : StepFragment() {
         }
 
         override fun onMove(
-                recyclerView: RecyclerView?,
+                recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
         ): Boolean {
@@ -92,7 +92,7 @@ class SelectedFilesFragment : StepFragment() {
             return true
         }
 
-        override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?) {
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             // update selected files
             if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
