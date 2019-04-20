@@ -1,10 +1,12 @@
 package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.v7.widget.ThemedSpinnerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.SpinnerAdapter
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.Encoders
 import com.github.khangnt.mcp.annotation.Mp3Encoder
@@ -14,10 +16,6 @@ import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
-import com.github.khangnt.mcp.util.gone
-import com.github.khangnt.mcp.util.onItemSelected
-import com.github.khangnt.mcp.util.onSeekBarChanged
-import com.github.khangnt.mcp.util.visible
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
 import java.lang.IllegalStateException
 
@@ -30,16 +28,10 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MP3
-        private val libMp3LameQuality = arrayOf(
-                "220-260", "190-250", "170-210", "150-195", "140-185",
-                "120-150", "100-130", "80-120", "70-105", "48-85"
+        private val mp3CbrBitrate = arrayOf(
+                320, 256, 224, 192, 96,
+                80, 64, 48, 32
         )
-
-        private const val CBR_MIN = 48  // 48 kbps
-        private const val CBR_MAX = 320 // 320 kbps
-        private const val CBR_RECOMMEND = 256
-
-        private const val VBR_MAX = 9
     }
 
     override fun onCreateView(
@@ -50,48 +42,26 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sbQualityLame.max = VBR_MAX
-        sbQualityLame.progress = VBR_MAX
-        sbQualityShine.max = CBR_MAX - CBR_MIN
-        sbQualityShine.progress = CBR_RECOMMEND - CBR_MIN
 
-        sbQualityLame.onSeekBarChanged { updateQualityText() }
-        sbQualityShine.onSeekBarChanged { updateQualityText() }
-        spinnerEncoder.onItemSelected { position ->
-            when (position) {
-                0 -> { // libMp3lame
-                    sbQualityLame.visible()
-                    sbQualityShine.gone()
-                }
-                1 -> { // libShine
-                    sbQualityShine.visible()
-                    sbQualityLame.gone()
-                }
-            }
-            updateQualityText()
-        }
-    }
+        val mp3VbrAdapter = ArrayAdapter.createFromResource(context!!, R.array.mp3VbrBitrate, android.R.layout.simple_spinner_item)
+        val mp3CbrAdapter = ArrayAdapter.createFromResource(context!!, R.array.mp3CbrBitrate, android.R.layout.simple_spinner_item)
+        mp3VbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mp3CbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-
-    @SuppressLint("SetTextI18n")
-    private fun updateQualityText() {
-        if (spinnerEncoder.selectedItemPosition == 0 && sbQualityLame.progress <= 9) {
-            tvQualityValue.text = "${libMp3LameQuality[VBR_MAX - sbQualityLame.progress]} kbps"
-        } else {
-            tvQualityValue.text = "${sbQualityShine.progress + CBR_MIN} kbps"
+        rgBitrateType.setOnCheckedChangeListener { _, checkedId ->
+            spinnerBitrate.adapter = if (checkedId == R.id.radioVbr) mp3VbrAdapter else mp3CbrAdapter
         }
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        if (spinnerEncoder.selectedItemPosition == 0) {
-            val encoder = Encoders.LIBMP3LAME
-            val quality = VBR_MAX - sbQualityLame.progress
-            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.VBR, quality, cbTrimSilence.isChecked))
-        } else {
-            val encoder = Encoders.LIBSHINE
-            val quality = CBR_MIN + sbQualityShine.progress
-            onSuccess(Mp3CmdConfig(inputFileUris, encoder, QualityType.CBR, quality, cbTrimSilence.isChecked))
-        }
+        val isVbrChecked = rgBitrateType.checkedRadioButtonId == R.id.radioVbr
+        val qualityType = if (isVbrChecked) QualityType.VBR else QualityType.CBR
+        val quality = if (isVbrChecked)
+            spinnerBitrate.selectedItemPosition else mp3CbrBitrate[spinnerBitrate.selectedItemPosition]
+        val encoder = if (spinnerEncoder.selectedItemPosition == 0)
+            Encoders.LIBMP3LAME else Encoders.LIBSHINE
+
+        onSuccess(Mp3CmdConfig(inputFileUris, encoder, qualityType, quality, cbTrimSilence.isChecked))
     }
 }
 
