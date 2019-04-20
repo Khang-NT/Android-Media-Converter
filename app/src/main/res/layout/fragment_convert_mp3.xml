@@ -55,8 +55,6 @@
                 android:id="@+id/radioVbr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginLeft="@dimen/margin_normal"
                 android:checked="true"
                 android:text="@string/bitrate_type_vbr" />
 
@@ -96,8 +94,6 @@
             android:id="@+id/spinnerBitrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_tiny"
-            android:layout_marginLeft="@dimen/margin_tiny"
             android:entries="@array/mp3VbrBitrate"
             app:layout_constraintBaseline_toBaselineOf="@+id/bitrateHeader"
             app:layout_constraintLeft_toRightOf="@id/bitrateHeader" />
