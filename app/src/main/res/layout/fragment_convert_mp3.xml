@@ -32,56 +32,75 @@
             app:layout_constraintStart_toEndOf="@id/mp3EncoderHeader" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/qualityHeader"
+            android:id="@+id/bitrateTypeHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/quality_header"
+            android:text="@string/bitrate_type_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mp3EncoderHeader" />
 
+        <RadioGroup
+            android:id="@+id/rgBitrateType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/bitrateTypeHeader"
+            app:layout_constraintStart_toEndOf="@id/bitrateTypeHeader"
+            app:layout_constraintTop_toTopOf="@id/bitrateTypeHeader">
+
+            <RadioButton
+                android:id="@+id/radioVbr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:checked="true"
+                android:text="@string/bitrate_type_vbr" />
+
+            <RadioButton
+                android:id="@+id/radioCbr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:text="@string/bitrate_type_cbr" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/qualityTypeHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="@string/hint_quality_type"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rgBitrateType" />
+
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvQualityValue"
+            android:id="@+id/bitrateHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_tiny"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/bitrate_header"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qualityTypeHint" />
+
+        <Spinner
+            android:id="@+id/spinnerBitrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_tiny"
-            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
-            app:layout_constraintLeft_toRightOf="@id/qualityHeader"
-            tools:text="128 - 172 kbps" />
-
-        <SeekBar
-            android:id="@+id/sbQualityLame"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
-            tools:max="9"
-            tools:progress="9" />
-
-        <SeekBar
-            android:id="@+id/sbQualityShine"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityHeader"
-            tools:layout_marginTop="40dp"
-            tools:max="275"
-            tools:progress="211"
-            tools:visibility="visible" />
-
-        <android.support.constraint.Barrier
-            android:id="@+id/barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="sbQualityLame,sbQualityShine" />
+            android:layout_marginLeft="@dimen/margin_tiny"
+            android:entries="@array/mp3VbrBitrate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/bitrateHeader"
+            app:layout_constraintLeft_toRightOf="@id/bitrateHeader" />
 
         <TextView
             android:id="@+id/qualityLevelHint"
@@ -93,7 +112,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier" />
+            app:layout_constraintTop_toBottomOf="@id/spinnerBitrate" />
 
         <CheckBox
             android:id="@+id/cbTrimSilence"

@@ -12,12 +12,12 @@
         android:padding="@dimen/fragment_convert_padding">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/qualityHeader"
+            android:id="@+id/bitrateHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/quality_header"
             android:textColor="?attr/colorAccent"
+            android:text="@string/bitrate_header"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_tiny"
             android:layout_marginStart="@dimen/margin_tiny"
-            app:layout_constraintBaseline_toBaselineOf="@+id/qualityHeader"
-            app:layout_constraintLeft_toRightOf="@+id/qualityHeader"
+            app:layout_constraintBaseline_toBaselineOf="@+id/bitrateHeader"
+            app:layout_constraintLeft_toRightOf="@+id/bitrateHeader"
             tools:text="128 - 172 kbps" />
 
         <SeekBar
@@ -40,7 +40,7 @@
             android:progress="9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qualityHeader" />
+            app:layout_constraintTop_toBottomOf="@+id/bitrateHeader" />
 
         <TextView
             android:id="@+id/qualityLevelHint"

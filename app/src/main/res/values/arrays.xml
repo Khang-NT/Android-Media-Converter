@@ -4,6 +4,30 @@
         <item>Libmp3lame (High quality)</item>
         <item>Libshine (High speed)</item>
     </string-array>
+    <string-array name="mp3VbrBitrate">
+        <item>220–260 kbps</item>
+        <item>190–250 kbps</item>
+        <item>170–210 kbps</item>
+        <item>150–195 kbps</item>
+        <item>140–185 kbps</item>
+        <item>120–150 kbps</item>
+        <item>100–130 kbps</item>
+        <item>80–120 kbps</item>
+        <item>70–105 kbps</item>
+        <item>45–85 kbps</item>
+    </string-array>
+    <string-array name="mp3CbrBitrate">
+        <item>320 kbps</item>
+        <item>256 kbps</item>
+        <item>224 kbps</item>
+        <item>192 kbps</item>
+        <item>128 kbps</item>
+        <item>96 kbps</item>
+        <item>80 kbps</item>
+        <item>64 kbps</item>
+        <item>48 kbps</item>
+        <item>32 kbps</item>
+    </string-array>
     <string-array name="mp4VideoQuality">
         <item>Ultra quality (~95%)</item>
         <item>High quality (~80%)</item>
