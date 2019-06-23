@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -74,8 +75,10 @@ class JobManagerFragment : BaseFragment() {
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset: Int ->
             if (scrollRange + offset == 0) {
                 drawable.color = Color.WHITE
+                toolbar.overflowIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 drawable.color = Color.BLACK
+                toolbar.overflowIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
             }
         })
 
@@ -127,6 +130,7 @@ class JobManagerFragment : BaseFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
         inflater?.inflate(R.menu.fragment_job_manager, menu)
     }
 
