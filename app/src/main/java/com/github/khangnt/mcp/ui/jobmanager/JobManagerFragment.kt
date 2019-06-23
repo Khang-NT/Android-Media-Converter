@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,18 @@ class JobManagerFragment : BaseFragment() {
 
         createJobFab.setOnClickListener {
             startActivity(Intent(requireContext(), JobMakerActivity::class.java))
+        }
+
+        recyclerViewContainer.getRecyclerView().onFlingListener = object : RecyclerView.OnFlingListener() {
+            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+                if (velocityY < 0) {
+                    createJobFab.show()
+                } else if (velocityY > 0) {
+                    createJobFab.hide()
+                }
+                return false
+            }
+
         }
     }
 

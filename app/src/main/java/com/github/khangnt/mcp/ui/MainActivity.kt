@@ -29,7 +29,6 @@ import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit.*
 
 private const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
@@ -161,18 +160,18 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
         AlertDialog.Builder(this)
                 .setTitle(R.string.rate_us_title)
                 .setMessage(R.string.rate_us_message)
-                .setPositiveButton(R.string.rate_us_love_it, { _, _ ->
+                .setPositiveButton(R.string.rate_us_love_it) { _, _ ->
                     openPlayStore(this, PLAY_STORE_PACKAGE)
                     getSharedPrefs().isRated = true
-                })
-                .setNeutralButton(R.string.rate_us_not_now, { _, _ ->
+                }
+                .setNeutralButton(R.string.rate_us_not_now) { _, _ ->
                     // don't show this dialog again, until next day
                     getSharedPrefs().delayRateDialogUntil =
                             System.currentTimeMillis() + MILLISECONDS.convert(1, DAYS)
-                })
-                .setNegativeButton(R.string.rate_us_never, { _, _ ->
+                }
+                .setNegativeButton(R.string.rate_us_never) { _, _ ->
                     getSharedPrefs().isRated = true
-                })
+                }
                 .show()
     }
 
