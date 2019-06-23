@@ -7,9 +7,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.github.khangnt.mcp.Gradient
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
@@ -59,6 +57,7 @@ class JobManagerFragment : BaseFragment() {
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_job_manager, container, false).apply {
         setActivitySupportActionBar(findViewById(R.id.toolbar))
+        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,4 +123,16 @@ class JobManagerFragment : BaseFragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.fragment_job_manager, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_clear_finished_jobs -> {
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
