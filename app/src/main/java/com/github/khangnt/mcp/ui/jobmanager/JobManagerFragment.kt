@@ -114,7 +114,8 @@ class JobManagerFragment : BaseFragment() {
             override fun onFling(velocityX: Int, velocityY: Int): Boolean {
                 if (velocityY < 0) {
                     createJobFab.show()
-                } else if (velocityY > 0) {
+                } else if (velocityY > 0
+                        && viewModel.getAdapterModel().value.orEmpty().isNotEmpty()) {
                     createJobFab.hide()
                 }
                 return false
