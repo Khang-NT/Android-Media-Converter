@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="aacVbrBitrate">
+        <item>96–112 kbps/channel</item>
+        <item>64–72 kbps/channel</item>
+        <item>48–56 kbps/channel</item>
+        <item>32–40 kbps/channel</item>
+        <item>20–32 kbps/channel</item>
+    </string-array>
     <string-array name="mp3Encoders">
         <item>Libmp3lame (High quality)</item>
         <item>Libshine (High speed)</item>
