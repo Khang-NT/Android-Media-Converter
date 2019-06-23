@@ -16,7 +16,7 @@
         <item>70–105 kbps</item>
         <item>45–85 kbps</item>
     </string-array>
-    <string-array name="mp3CbrBitrate">
+    <string-array name="cbrBitrate">
         <item>320 kbps</item>
         <item>256 kbps</item>
         <item>224 kbps</item>

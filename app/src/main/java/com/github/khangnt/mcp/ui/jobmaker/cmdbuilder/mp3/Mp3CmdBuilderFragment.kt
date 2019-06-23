@@ -25,7 +25,7 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MP3
-        private val mp3CbrBitrate = arrayOf(
+        private val cbrBitrate = arrayOf(
                 320, 256, 224, 192, 128,
                 96, 80, 64, 48, 32
         )
@@ -42,13 +42,13 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
 
         val mp3VbrAdapter = ArrayAdapter.createFromResource(context!!,
                 R.array.mp3VbrBitrate, android.R.layout.simple_spinner_item)
-        val mp3CbrAdapter = ArrayAdapter.createFromResource(context!!,
-                R.array.mp3CbrBitrate, android.R.layout.simple_spinner_item)
+        val cbrAdapter = ArrayAdapter.createFromResource(context!!,
+                R.array.cbrBitrate, android.R.layout.simple_spinner_item)
         mp3VbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        mp3CbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        cbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         rgBitrateType.setOnCheckedChangeListener { _, checkedId ->
-            spinnerBitrate.adapter = if (checkedId == R.id.radioVbr) mp3VbrAdapter else mp3CbrAdapter
+            spinnerBitrate.adapter = if (checkedId == R.id.radioVbr) mp3VbrAdapter else cbrAdapter
         }
     }
 
@@ -56,7 +56,7 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         val isVbrChecked = rgBitrateType.checkedRadioButtonId == R.id.radioVbr
         val qualityType = if (isVbrChecked) QualityType.VBR else QualityType.CBR
         val quality = if (isVbrChecked)
-            spinnerBitrate.selectedItemPosition else mp3CbrBitrate[spinnerBitrate.selectedItemPosition]
+            spinnerBitrate.selectedItemPosition else cbrBitrate[spinnerBitrate.selectedItemPosition]
         val encoder = if (spinnerEncoder.selectedItemPosition == 0)
             Encoders.LIBMP3LAME else Encoders.LIBSHINE
 
