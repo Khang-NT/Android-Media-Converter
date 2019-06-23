@@ -14,14 +14,23 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/item_select_all"
+        android:id="@+id/item_multi_select"
         android:icon="@drawable/select_all_24dp"
-        android:title="@string/select_all"
-        app:showAsAction="never" />
+        android:title=""
+        app:showAsAction="always">
 
-    <item
-        android:id="@+id/item_deselect_all"
-        android:icon="@drawable/deselect_all_24dp"
-        android:title="@string/deselect_all"
-        app:showAsAction="never" />
+        <menu>
+            <item
+                android:id="@+id/item_select_all"
+                android:icon="@drawable/select_all_24dp"
+                android:title="@string/select_all"
+                app:showAsAction="collapseActionView|withText" />
+
+            <item
+                android:id="@+id/item_deselect_all"
+                android:icon="@drawable/deselect_all_24dp"
+                android:title="@string/deselect_all"
+                app:showAsAction="collapseActionView|withText" />
+        </menu>
+    </item>
 </menu>
