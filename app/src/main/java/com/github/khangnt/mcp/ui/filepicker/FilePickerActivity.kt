@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
@@ -18,7 +15,6 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import com.github.khangnt.mcp.util.catchAll
 import kotlinx.android.synthetic.main.activity_file_picker.*
-import timber.log.Timber
 import java.io.File
 import java.util.*
 
