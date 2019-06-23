@@ -1,12 +1,10 @@
 package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3
 
 import android.os.Bundle
-import android.support.v7.widget.ThemedSpinnerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.annotation.Encoders
 import com.github.khangnt.mcp.annotation.Mp3Encoder
@@ -17,7 +15,6 @@ import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
-import java.lang.IllegalStateException
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -29,8 +26,8 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MP3
         private val mp3CbrBitrate = arrayOf(
-                320, 256, 224, 192, 96,
-                80, 64, 48, 32
+                320, 256, 224, 192, 128,
+                96, 80, 64, 48, 32
         )
     }
 
@@ -43,8 +40,10 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mp3VbrAdapter = ArrayAdapter.createFromResource(context!!, R.array.mp3VbrBitrate, android.R.layout.simple_spinner_item)
-        val mp3CbrAdapter = ArrayAdapter.createFromResource(context!!, R.array.mp3CbrBitrate, android.R.layout.simple_spinner_item)
+        val mp3VbrAdapter = ArrayAdapter.createFromResource(context!!,
+                R.array.mp3VbrBitrate, android.R.layout.simple_spinner_item)
+        val mp3CbrAdapter = ArrayAdapter.createFromResource(context!!,
+                R.array.mp3CbrBitrate, android.R.layout.simple_spinner_item)
         mp3VbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mp3CbrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
