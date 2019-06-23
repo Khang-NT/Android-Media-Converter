@@ -11,6 +11,8 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.BaseActivity
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserFragment
+import com.github.khangnt.mcp.ui.filepicker.FileBrowserViewModel
+import com.github.khangnt.mcp.ui.filepicker.TYPE_FILE
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOSE_COMMAND
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.doOnPreDraw
@@ -108,6 +110,14 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
             }
             R.id.item_goto_sd_card -> {
                 fileBrowserFragment.goto(checkNotNull(SingletonInstances.getSdCardPath()))
+                return true
+            }
+            R.id.item_select_all -> {
+                fileBrowserFragment.selectAllFilesInCurrentFolder()
+                return true
+            }
+            R.id.item_deselect_all -> {
+                fileBrowserFragment.deselectAllFilesInCurrentFolder()
                 return true
             }
         }

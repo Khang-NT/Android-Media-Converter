@@ -65,6 +65,8 @@
     <string name="user_denied_permission">Permissions were not granted. Please click retry and grant permission to access this folder.</string>
     <string name="go_to_sd_card">Go to SD card</string>
     <string name="go_to_phone_storage">Go to phone\'s storage</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>

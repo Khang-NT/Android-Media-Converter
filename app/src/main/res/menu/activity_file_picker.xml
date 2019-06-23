@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_goto_internal_storage"
         android:icon="@drawable/cellphone_24dp"
         android:title="@string/go_to_phone_storage"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/item_goto_sd_card"
-        android:title="@string/go_to_sd_card"
         android:icon="@drawable/sd_24dp"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/go_to_sd_card"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/item_select_all"
+        android:icon="@drawable/select_all_24dp"
+        android:title="@string/select_all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item_deselect_all"
+        android:icon="@drawable/deselect_all_24dp"
+        android:title="@string/deselect_all"
+        app:showAsAction="never" />
 </menu>
