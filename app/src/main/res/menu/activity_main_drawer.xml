@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:showIn="navigation_view">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group
         android:id="@+id/nav_group_1"
         android:checkableBehavior="single">
         <item
             android:id="@+id/item_nav_job_manager"
+            android:checked="true"
             android:icon="@drawable/ic_job_manager_black_24dp"
-            android:title="@string/nav_job_manager"
-            android:checked="true"/>
+            android:title="@string/nav_job_manager" />
     </group>
 
     <group
@@ -20,11 +20,11 @@
             android:id="@+id/item_nav_setting"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/nav_settings"
-            android:enabled="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/item_nav_about"
             android:icon="@drawable/ic_help_black_24dp"
-            android:title="@string/nav_feedback"/>
+            android:title="@string/nav_feedback" />
     </group>
 
 </menu>
