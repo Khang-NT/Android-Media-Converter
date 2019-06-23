@@ -170,9 +170,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_confirm_delete_job_output)
                     .setMessage(context.getString(R.string.dialog_confirm_delete_job_output_mess, path))
-                    .setPositiveButton(R.string.action_yes, { _, _ ->
+                    .setPositiveButton(R.string.action_yes) { _, _ ->
                         cancelJob(context, job, true)
-                    })
+                    }
                     .setNegativeButton(R.string.action_cancel, null)
                     .show()
         }

@@ -16,6 +16,7 @@ import java.util.concurrent.Executors.newSingleThreadExecutor
 interface JobRepository {
     fun addJob(job: Job): Single<Job>
     fun deleteJob(jobId: Long, ignoreError: Boolean): Completable
+    fun deleteFinishedJobs(ignoreError: Boolean): Completable
     fun nextReadyJob(): Single<Optional<Job>>
     fun nextPendingJob(): Single<Optional<Job>>
     fun updateJob(job: Job, ignoreError: Boolean): Completable
@@ -38,6 +39,12 @@ class DefaultJobRepository(private val jobDao: JobDao) : JobRepository {
 
     override fun deleteJob(jobId: Long, ignoreError: Boolean): Completable =
             Completable.fromAction { jobDao.deleteJob(jobId) }
+                    .doOnComplete { completedJobListChangeIf(true) }
+                    .run { if (ignoreError) onErrorComplete() else this }
+                    .subscribeOn(singleThreadScheduler)
+
+    override fun deleteFinishedJobs(ignoreError: Boolean): Completable =
+            Completable.fromAction { jobDao.deleteFinishedJobs() }
                     .doOnComplete { completedJobListChangeIf(true) }
                     .run { if (ignoreError) onErrorComplete() else this }
                     .subscribeOn(singleThreadScheduler)

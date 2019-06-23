@@ -130,6 +130,8 @@ class JobManagerFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_clear_finished_jobs -> {
+                SingletonInstances.getJobWorkerManager().clearFinishedJobs()
+                toast("Cleared all finished jobs!")
                 return true
             }
         }

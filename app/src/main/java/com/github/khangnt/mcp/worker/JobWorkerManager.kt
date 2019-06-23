@@ -175,6 +175,11 @@ class JobWorkerManager(
         maybeLaunchWorker()
     }
 
+    fun clearFinishedJobs() = execute {
+        jobRepository.deleteFinishedJobs(true).subscribe()
+        maybeLaunchWorker()
+    }
+
     private fun Thread?.isRunning(): Boolean = this != null && isAlive && !isInterrupted
 
 }

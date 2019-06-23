@@ -29,6 +29,9 @@ interface JobDao {
     @Query("DELETE FROM jobs_v2 WHERE _id == :jobId")
     fun deleteJob(jobId: Long)
 
+    @Query("DELETE FROM jobs_v2 WHERE status == $COMPLETED OR status == $FAILED")
+    fun deleteFinishedJobs()
+
     @Query("SELECT * FROM jobs_v2 WHERE status == $READY ORDER BY _id ASC LIMIT 1")
     fun getReadyJob(): Single<Job>
 
