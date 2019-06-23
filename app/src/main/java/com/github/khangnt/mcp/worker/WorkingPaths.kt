@@ -3,6 +3,7 @@ package com.github.khangnt.mcp.worker
 import android.content.Context
 import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.util.ensureDirExists
+import com.github.khangnt.mcp.util.isLocked
 import com.github.khangnt.mcp.util.listFilesNotNull
 import java.io.File
 
@@ -24,6 +25,11 @@ data class WorkingPaths(
     fun getListJobTempDir(): Array<File> = jobTempRootDir.listFilesNotNull()
 
     fun getLogFileOfJob(jobId: Long): File = File(jobLogRootDir, "$jobId.log")
+
+    fun getAllLogFiles(): List<File> {
+        return jobLogRootDir.listFilesNotNull()
+                .filter { file -> file.isFile && file.extension == "log" && !file.isLocked() }
+    }
 }
 
 /**

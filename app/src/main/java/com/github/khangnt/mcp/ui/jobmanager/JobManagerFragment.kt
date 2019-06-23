@@ -18,8 +18,11 @@ import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerActivity
+import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.worker.makeWorkingPaths
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import java.util.*
 
@@ -131,6 +134,10 @@ class JobManagerFragment : BaseFragment() {
         when (item.itemId) {
             R.id.item_clear_finished_jobs -> {
                 SingletonInstances.getJobWorkerManager().clearFinishedJobs()
+                // delete all logs
+                catchAll {
+                    makeWorkingPaths(context!!).getAllLogFiles().forEach { log -> log.delete() }
+                }
                 toast("Cleared all finished jobs!")
                 return true
             }

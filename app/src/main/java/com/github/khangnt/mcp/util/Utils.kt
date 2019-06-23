@@ -5,14 +5,11 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
 import android.os.Looper
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.github.khangnt.mcp.*
@@ -22,6 +19,8 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.io.*
 import java.lang.ref.WeakReference
+import java.nio.channels.FileChannel
+import java.nio.channels.OverlappingFileLockException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -125,6 +124,20 @@ fun File.deleteRecursiveIgnoreError() {
         listFilesNotNull().forEach { it.deleteRecursiveIgnoreError() }
     }
     catchAll { this.delete() }
+}
+
+fun File.isLocked(): Boolean {
+    val channel: FileChannel = RandomAccessFile(this, "rw").channel
+
+    var lock = channel.lock()
+    return try {
+        lock = channel.tryLock()
+        false
+    } catch (e: OverlappingFileLockException) {
+        true
+    } finally {
+        lock.release()
+    }
 }
 
 fun File.deleteIgnoreError() {
