@@ -69,6 +69,11 @@
             android:process=":error_activity"
             android:theme="@style/CustomActivityOnCrashTheme" />
 
+        <activity
+            android:name=".ui.prefs.SettingsActivity"
+            android:label="@string/nav_settings"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
+
     </application>
 
 </manifest>
