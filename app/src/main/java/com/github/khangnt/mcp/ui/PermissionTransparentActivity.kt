@@ -49,7 +49,8 @@ class PermissionTransparentActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.any { it != PERMISSION_GRANTED }) {
-            toast(permissionDeniedMess ?: getString(R.string.permission_not_granted), Toast.LENGTH_LONG)
+            toast(permissionDeniedMess
+                    ?: getString(R.string.permission_not_granted), Toast.LENGTH_LONG)
         } else {
             catchAll { pendingIntent?.send() }
         }

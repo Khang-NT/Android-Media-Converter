@@ -8,8 +8,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import android.os.PowerManager
-import android.support.annotation.MainThread
-import android.support.v4.app.NotificationCompat
+import androidx.annotation.MainThread
+import androidx.core.app.NotificationCompat
 import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.CONVERTER_NOTIFICATION_ID
 import com.github.khangnt.mcp.R
@@ -137,7 +137,7 @@ class ConverterService : Service() {
             ACTION_START_FOREGROUND -> Unit // already on foreground
             ACTION_STOP_FOREGROUND -> stopForeground()
 
-        /****************************** CALLED BY EXTERNAL APP ******************************/
+            /****************************** CALLED BY EXTERNAL APP ******************************/
             ACTION_ADD_JOB -> {
                 if (!hasWriteStoragePermission(this)) {
                     if (!hasWriteStoragePermission(this)) {

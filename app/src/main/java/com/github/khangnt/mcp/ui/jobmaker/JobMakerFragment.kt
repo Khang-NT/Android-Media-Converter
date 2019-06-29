@@ -2,10 +2,10 @@ package com.github.khangnt.mcp.ui.jobmaker
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVERTISEMENT

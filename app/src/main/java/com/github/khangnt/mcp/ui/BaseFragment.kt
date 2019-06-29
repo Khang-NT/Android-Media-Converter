@@ -1,11 +1,11 @@
 package com.github.khangnt.mcp.ui
 
 import android.app.Activity
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import timber.log.Timber
 
 

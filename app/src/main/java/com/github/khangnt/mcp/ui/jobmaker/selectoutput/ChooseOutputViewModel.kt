@@ -1,14 +1,14 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.ContentResolver
 import android.net.Uri
 import android.os.Environment
-import android.support.annotation.WorkerThread
-import android.support.v4.provider.DocumentFile
+import androidx.annotation.WorkerThread
+import androidx.documentfile.provider.DocumentFile
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.DistinctLiveData
@@ -170,7 +170,7 @@ class ChooseOutputViewModel : ViewModel() {
             DocumentFile.fromTreeUri(SingletonInstances.getAppContext(), outputFolderUri)!!
                     .listFiles().map { it.name }
         } else {
-            File(outputFolderUri.path).listFilesNotNull().map { it.name }
+            File(outputFolderUri.path!!).listFilesNotNull().map { it.name }
         }
         outputFolderFiles.addAll(listFiles as Collection<String>)
     }

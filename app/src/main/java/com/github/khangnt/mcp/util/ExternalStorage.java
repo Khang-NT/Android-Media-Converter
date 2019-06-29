@@ -1,7 +1,8 @@
 package com.github.khangnt.mcp.util;
 
 import android.os.Environment;
-import android.support.annotation.WorkerThread;
+
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,10 +21,7 @@ public class ExternalStorage {
      */
     public static boolean isAvailable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
     public static String getSdCardPath() {
@@ -35,10 +33,7 @@ public class ExternalStorage {
      */
     public static boolean isWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
 
     }
 

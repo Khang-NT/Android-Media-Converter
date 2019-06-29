@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayoutMp3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/fragment_convert_padding">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mp3EncoderHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/mp3EncoderHeader"
             app:layout_constraintStart_toEndOf="@id/mp3EncoderHeader" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/bitrateTypeHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rgBitrateType" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/bitrateHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,5 +132,5 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cbTrimSilence" />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

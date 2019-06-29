@@ -1,17 +1,17 @@
 package com.github.khangnt.mcp.util
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Looper
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.provider.DocumentFile
-import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.appcompat.app.AlertDialog
+import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.github.khangnt.mcp.*
 import io.reactivex.Observable
 import org.json.JSONArray

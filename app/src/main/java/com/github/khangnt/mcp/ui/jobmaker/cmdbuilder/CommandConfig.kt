@@ -2,7 +2,6 @@ package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder
 
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.util.parseFileName
-import com.github.khangnt.mcp.util.parseInputUri
 import com.github.khangnt.mcp.util.toUri
 import timber.log.Timber
 

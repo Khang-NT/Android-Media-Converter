@@ -1,6 +1,5 @@
 package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder
 
-import android.os.Bundle
 import com.github.khangnt.mcp.ui.BaseFragment
 import java.util.*
 

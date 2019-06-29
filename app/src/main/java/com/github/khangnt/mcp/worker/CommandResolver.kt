@@ -5,8 +5,8 @@ import android.net.Uri
 import com.github.khangnt.mcp.FFMPEG_FILE
 import com.github.khangnt.mcp.FFMPEG_SIZE_FILE
 import com.github.khangnt.mcp.FFMPEG_TEMP_OUTPUT_FILE
-import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
 import com.github.khangnt.mcp.db.job.Command
+import com.github.khangnt.mcp.exception.FFmpegBinaryPrepareException
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.escapeSingleQuote
 import timber.log.Timber
@@ -14,7 +14,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 
 /**
  * Created by Khang NT on 1/1/18.
@@ -80,7 +79,7 @@ data class CommandResolver(
         }
 
         private fun formatFileUri(uri: Uri): String {
-            return "file://${uri.path.escapeSingleQuote()}"
+            return "file://${uri.path?.escapeSingleQuote()}"
         }
     }
 

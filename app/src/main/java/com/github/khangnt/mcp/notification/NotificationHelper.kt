@@ -7,7 +7,7 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.os.Build
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.github.khangnt.mcp.CONVERTER_NOTIFICATION_CHANNEL
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.MainActivity

@@ -1,11 +1,11 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectfile
 
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel

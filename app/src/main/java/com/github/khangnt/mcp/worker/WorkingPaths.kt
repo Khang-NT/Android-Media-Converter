@@ -40,7 +40,7 @@ data class WorkingPaths(
 fun makeWorkingPaths(context: Context): WorkingPaths {
     val fileDir = context.getDir(APP_FILE_FOLDER, Context.MODE_PRIVATE)
     val tempDir: File = try {
-        context.getExternalFilesDir(APP_TEMP_FOLDER).ensureDirExists()
+        context.getExternalFilesDir(APP_TEMP_FOLDER)!!.ensureDirExists()
     } catch (ignore: Throwable) {
         // fallback to fileDir anyway
         context.getDir(APP_TEMP_FOLDER, Context.MODE_PRIVATE)

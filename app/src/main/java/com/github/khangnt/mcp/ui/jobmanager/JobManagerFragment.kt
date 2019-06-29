@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.graphics.drawable.DrawerArrowDrawable
-import android.support.v7.view.menu.MenuBuilder
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.Gradient
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
@@ -26,6 +25,7 @@ import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.makeWorkingPaths
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import java.util.*
 

@@ -50,7 +50,7 @@ class Mp4CmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp4")})
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "mp4") })
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {

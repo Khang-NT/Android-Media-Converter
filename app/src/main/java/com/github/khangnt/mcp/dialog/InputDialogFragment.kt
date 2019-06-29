@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.util.onTextChanged
-import kotlin.math.max
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class InputDialogFragment : DialogFragment() {
 
@@ -57,7 +56,7 @@ class InputDialogFragment : DialogFragment() {
 
     private fun getCallbacks(): Callbacks {
         return (activity as? Callbacks) ?: (parentFragment as? Callbacks)
-            ?: throw IllegalStateException(
+        ?: throw IllegalStateException(
                 "Parent activity/fragment must implement InputDialogFragment.Callbacks")
     }
 
@@ -70,7 +69,8 @@ class InputDialogFragment : DialogFragment() {
                         textInputEditText.text.toString())
             }
             if (negativeButText != null || cancelable) {
-                setNegativeButton(negativeButText ?: getString(R.string.action_cancel)) { dialog, _ ->
+                setNegativeButton(negativeButText
+                        ?: getString(R.string.action_cancel)) { dialog, _ ->
                     dialog.cancel()
                 }
             }
@@ -133,7 +133,7 @@ class InputDialogFragment : DialogFragment() {
         fun setMaxLines(maxLines: Int) = apply { bundle.putInt(ARG_MAX_LINES, maxLines) }
 
         fun setExtra(key: String, value: Any) = apply {
-            when(value) {
+            when (value) {
                 is Int -> bundle.putInt(key, value)
                 is String -> bundle.putString(key, value)
                 else -> RuntimeException("Add type ${value.javaClass} here")

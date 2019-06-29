@@ -57,7 +57,7 @@ class OpusCmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "opus")})
+        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "opus") })
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {

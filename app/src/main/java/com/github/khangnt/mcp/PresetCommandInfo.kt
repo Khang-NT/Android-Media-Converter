@@ -2,9 +2,9 @@ package com.github.khangnt.mcp
 
 import android.content.res.Resources
 import android.graphics.drawable.GradientDrawable
-import android.support.annotation.DrawableRes
-import android.support.annotation.IntRange
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.IntRange
+import androidx.annotation.StringRes
 import com.github.khangnt.mcp.annotation.ConvertType
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac.AacCmdBuilderFragment
@@ -48,7 +48,7 @@ enum class ConvertCommand(
         @ConvertType val type: Int, @StringRes val shortName: Int, val gradient: Gradient,
         val fragmentFactory: () -> CommandBuilderFragment
 
-): PresetCommand {
+) : PresetCommand {
     CONVERT_MP3(
             type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_mp3,
             gradient = Gradient.SublimeLight,
@@ -97,7 +97,7 @@ enum class EditCommand(
         @IntRange(from = 1) val maxInputCount: Int,
         val fragmentFactory: () -> CommandBuilderFragment
 
-): PresetCommand {
+) : PresetCommand {
     CUT_LENGTH(
             label = R.string.label_cut_length, iconRes = R.drawable.ic_content_cut_black_24dp,
             gradient = Gradient.Piglet,

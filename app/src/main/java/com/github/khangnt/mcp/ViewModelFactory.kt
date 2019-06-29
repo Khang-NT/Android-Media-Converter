@@ -1,13 +1,12 @@
 package com.github.khangnt.mcp
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.github.khangnt.mcp.ui.filepicker.FileBrowserViewModel
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputViewModel
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerViewModel
-import java.lang.IllegalArgumentException
 
 /**
  * Created by Khang NT on 4/3/18.

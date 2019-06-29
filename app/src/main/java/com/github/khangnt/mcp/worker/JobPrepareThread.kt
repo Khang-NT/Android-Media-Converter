@@ -16,7 +16,6 @@ import com.liulishuo.filedownloader.model.FileDownloadStatus
 import timber.log.Timber
 import java.io.BufferedOutputStream
 import java.io.File
-import java.lang.Exception
 
 private const val DOWNLOAD_TASK_UPDATE_INTERVAL = 500
 
@@ -62,8 +61,8 @@ class JobPrepareThread(
                     try {
                         contentResolver.openInputStream(inputUri).use { inputStream ->
                             val outputStream = contentResolver.openOutputStream(Uri.fromFile(inputCopyTo))
-                            BufferedOutputStream(outputStream).use { bufferedOutputStream ->
-                                inputStream.copyTo(bufferedOutputStream)
+                            BufferedOutputStream(outputStream!!).use { bufferedOutputStream ->
+                                inputStream!!.copyTo(bufferedOutputStream)
                             }
                         }
                     } catch (anyError: Throwable) {

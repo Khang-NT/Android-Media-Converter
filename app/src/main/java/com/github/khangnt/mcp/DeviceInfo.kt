@@ -32,7 +32,7 @@ import android.os.Build
 import java.util.*
 
 class DeviceInfo(context: Context) {
-    private val versionCode: Int
+    private val versionCode: Long
     private val versionName: String?
     private val buildVersion = Build.VERSION.INCREMENTAL
     private val releaseVersion = Build.VERSION.RELEASE
@@ -64,14 +64,18 @@ class DeviceInfo(context: Context) {
     init {
         var packageInfo: PackageInfo?
         try {
-            packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0)
+            packageInfo = context.packageManager
+                    .getPackageInfo(context.packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
             packageInfo = null
         }
 
         if (packageInfo != null) {
-            versionCode = packageInfo.versionCode
+            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo.longVersionCode
+            } else {
+                packageInfo.versionCode.toLong()
+            }
             versionName = packageInfo.versionName
         } else {
             versionCode = -1

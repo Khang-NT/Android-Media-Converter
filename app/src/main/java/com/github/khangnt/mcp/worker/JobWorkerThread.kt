@@ -32,7 +32,7 @@ class JobWorkerThread(
             return try {
                 val field = process.javaClass.getDeclaredField("pid")
                 field.isAccessible = true
-                field?.getInt(process)
+                field.getInt(process)
             } catch (ignore: Throwable) {
                 null
             }

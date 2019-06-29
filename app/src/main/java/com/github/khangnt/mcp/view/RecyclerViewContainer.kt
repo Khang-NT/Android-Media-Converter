@@ -1,16 +1,16 @@
 package com.github.khangnt.mcp.view
 
 import android.content.Context
-import android.support.annotation.MainThread
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.MainThread
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.getKnownReasonOf
 import com.github.khangnt.mcp.ui.common.Status
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.view_recyclerview_container.view.*
 
 class RecyclerViewContainer @JvmOverloads constructor(

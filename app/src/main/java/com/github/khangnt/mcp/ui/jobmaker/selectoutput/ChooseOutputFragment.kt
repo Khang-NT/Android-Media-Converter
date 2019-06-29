@@ -9,12 +9,11 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.provider.DocumentFile
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.documentfile.provider.DocumentFile
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.dialog.InputDialogFragment
@@ -25,7 +24,6 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.*
-import io.fabric.sdk.android.services.network.HttpRequest.post
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
 import kotlin.concurrent.thread
@@ -244,13 +242,13 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 .setTitle(R.string.dialog_error_file_exists)
                 .setMessage(getString(R.string.dialog_error_file_exists_message, currentFileName))
                 .setCancelable(true)
-                .setPositiveButton(R.string.action_rename, { _, _ ->
+                .setPositiveButton(R.string.action_rename) { _, _ ->
                     // show rename dialog
                     onEdit(index, currentFileName)
-                })
-                .setNegativeButton(R.string.action_override, { _, _ ->
+                }
+                .setNegativeButton(R.string.action_override) { _, _ ->
                     chooseOutputViewModel.updateOutput(index, allowOverride = true)
-                })
+                }
                 .setNeutralButton(R.string.action_cancel, null)
                 .show()
     }

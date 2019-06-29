@@ -1,12 +1,12 @@
 package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter

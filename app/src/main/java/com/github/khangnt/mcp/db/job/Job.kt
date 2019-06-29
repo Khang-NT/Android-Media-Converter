@@ -1,9 +1,9 @@
 package com.github.khangnt.mcp.db.job
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.github.khangnt.mcp.annotation.JobStatus
 
 @Entity(tableName = "jobs_v2", indices = [Index("status")])

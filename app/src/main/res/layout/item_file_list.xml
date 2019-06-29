@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivFileIcon"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -36,4 +36,4 @@
         tools:drawableRight="@drawable/ic_tick_green_24dp"
         tools:text="Folder abc xyz" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

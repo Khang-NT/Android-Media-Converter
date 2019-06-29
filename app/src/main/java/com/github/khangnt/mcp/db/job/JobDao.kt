@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.db.job
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -20,7 +20,7 @@ interface JobDao {
         ORDER BY status DESC, _id ASC""")
     fun getIncompleteJobs(): Flowable<List<Job>>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertJob(job: Job): Long
 
     @Update

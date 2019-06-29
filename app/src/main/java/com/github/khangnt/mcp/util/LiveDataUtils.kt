@@ -1,9 +1,9 @@
 package com.github.khangnt.mcp.util
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 //
 //class DistinctLiveData<T> : MediatorLiveData<T>() {
@@ -30,12 +30,12 @@ class LiveEvent : LiveData<Any>() {
     }
 
     @MainThread
-    override fun observe(owner: LifecycleOwner, observer: Observer<Any>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<in Any>) {
         super.observe(owner, createObserverWrapper(observer))
     }
 
     @MainThread
-    override fun observeForever(observer: Observer<Any>) {
+    override fun observeForever(observer: Observer<in Any>) {
         super.observeForever(createObserverWrapper(observer))
     }
 

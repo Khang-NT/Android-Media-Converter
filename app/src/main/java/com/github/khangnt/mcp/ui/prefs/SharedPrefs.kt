@@ -3,7 +3,7 @@ package com.github.khangnt.mcp.ui.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.github.khangnt.mcp.R
 
 class SharedPrefs(private val mContext: Context) {
@@ -50,7 +50,7 @@ class SharedPrefs(private val mContext: Context) {
     }
 
     private fun getStringSet(@StringRes keyRes: Int): Set<String> {
-        return mPrefs.getStringSet(mContext.getString(keyRes), emptySet())
+        return mPrefs.getStringSet(mContext.getString(keyRes), emptySet()) as Set<String>
     }
 
     private fun putBoolean(@StringRes keyRes: Int, value: Boolean) {

@@ -2,9 +2,9 @@ package com.github.khangnt.mcp.ui.filepicker
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
 import kotlinx.android.synthetic.main.item_file_list.view.*
@@ -91,9 +91,10 @@ class FileListViewHolder(
         }
     }
 
-    class Factory(init: Factory.() -> Unit): ViewHolderFactory {
+    class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_file_list
         lateinit var onClickListener: (model: FileListModel, pos: Int) -> Unit
+
         init {
             init()
         }

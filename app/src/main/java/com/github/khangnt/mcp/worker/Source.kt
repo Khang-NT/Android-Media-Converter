@@ -102,7 +102,7 @@ class HttpSourceInput(
         context: Context,
         private val request: Request,
         private val okHttpClient: OkHttpClient = SingletonInstances.getOkHttpClient()
-): SourceInputStream {
+) : SourceInputStream {
     constructor(context: Context, url: String) : this(context, Request.Builder().url(url).build())
 
     private val wifiWakeLock: WifiManager.WifiLock
