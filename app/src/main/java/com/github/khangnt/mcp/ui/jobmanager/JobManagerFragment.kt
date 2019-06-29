@@ -132,9 +132,9 @@ class JobManagerFragment : BaseFragment() {
     }
 
     @SuppressLint("RestrictedApi")
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        menu?.clear()
-        inflater?.inflate(R.menu.fragment_job_manager, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.fragment_job_manager, menu)
         if (menu is MenuBuilder) {
             menu.setOptionalIconsVisible(true)
         }

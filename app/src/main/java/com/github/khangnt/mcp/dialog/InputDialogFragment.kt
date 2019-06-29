@@ -41,8 +41,8 @@ class InputDialogFragment : DialogFragment() {
         arguments?.getInt(ARG_MAX_LINES, 1) ?: 1
     }
 
-    private val textInputLayout by lazy { dialog.findViewById<TextInputLayout>(R.id.textInputLayout) }
-    private val textInputEditText by lazy { dialog.findViewById<TextInputEditText>(R.id.editText) }
+    private val textInputLayout by lazy { dialog?.findViewById<TextInputLayout>(R.id.textInputLayout) }
+    private val textInputEditText by lazy { dialog?.findViewById<TextInputEditText>(R.id.editText) }
 
     private lateinit var inputText: String
 
@@ -66,7 +66,7 @@ class InputDialogFragment : DialogFragment() {
             setCancelable(cancelable)
             setPositiveButton(positiveButText) { _, _ ->
                 getCallbacks().onInputEntered(this@InputDialogFragment,
-                        textInputEditText.text.toString())
+                        textInputEditText?.text.toString())
             }
             if (negativeButText != null || cancelable) {
                 setNegativeButton(negativeButText
@@ -81,29 +81,29 @@ class InputDialogFragment : DialogFragment() {
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
-        textInputLayout.isErrorEnabled = enableError
-        textInputLayout.hint = hint
+        textInputLayout?.isErrorEnabled = enableError
+        textInputLayout?.hint = hint
         if (maxLines != 1) {
-            textInputEditText.setSingleLine(false)
-            textInputEditText.maxLines = maxLines
-            textInputEditText.minLines = Math.max(3, maxLines)
+            textInputEditText?.setSingleLine(false)
+            textInputEditText?.maxLines = maxLines
+            textInputEditText?.minLines = Math.max(3, maxLines)
         }
-        textInputEditText.setText(inputText)
+        textInputEditText?.setText(inputText)
         dialog as AlertDialog
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
 
-        textInputEditText.onTextChanged { text ->
+        textInputEditText?.onTextChanged { text ->
             inputText = text.toString()
             if (enableError) {
                 val error = checkInputCallback?.getInputError(this, inputText)
-                textInputLayout.error = error
+                textInputLayout?.error = error
                 positiveButton.isEnabled = error == null
             }
         }
         positiveButton.isEnabled = checkInputCallback?.getInputError(this, inputText) == null
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         getCallbacks().onInputCancelled(this@InputDialogFragment)
     }
