@@ -42,4 +42,22 @@
         <item>Low quality (~40%)</item>
         <item>Draft (~15%)</item>
     </string-array>
+    <string-array name="cleanUpInterval">
+        <item>Never</item>
+        <item>Every day</item>
+        <item>Every 3 days</item>
+        <item>Every 7 days</item>
+        <item>Every 15 days</item>
+        <item>Every 30 days</item>
+        <item>Every 90 days</item>
+    </string-array>
+    <string-array name="cleanUpIntervalValues">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>7</item>
+        <item>15</item>
+        <item>30</item>
+        <item>90</item>
+    </string-array>
 </resources>
