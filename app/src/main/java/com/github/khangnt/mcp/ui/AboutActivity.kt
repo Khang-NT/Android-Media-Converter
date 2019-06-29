@@ -39,7 +39,6 @@ class AboutActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val scrollRange by lazy {
             // decrease scrim visible height (-1/4)
