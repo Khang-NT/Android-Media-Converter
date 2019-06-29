@@ -188,4 +188,18 @@
     <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
     <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
 
+    <string name="title_category_command_configs">Command Configurations</string>
+    <string name="title_remember_command_summary_off">Load default configurations</string>
+    <string name="title_remember_command_summary_on">Restore last output command configurations</string>
+    <string name="title_remember_command">Remember command configs</string>
+    <string name="title_restore_default_commands">Restore command configs to default</string>
+    <string name="title_default_output_folder">Default output folder</string>
+    <string name="title_category_file_browser">File Browser</string>
+    <string name="title_exclude_file_extension">Exclude file extensions</string>
+    <string name="title_hide_excluded_files_summary_off">Show excluded files but make them unselectable</string>
+    <string name="title_hide_excluded_files_summary_on">Hide excluded files from file browser</string>
+    <string name="title_hide_excluded_files">Hide excluded files</string>
+    <string name="title_category_miscellaneous">Miscellaneous</string>
+    <string name="title_auto_clear">Auto clear logs and finished jobs</string>
+
 </resources>

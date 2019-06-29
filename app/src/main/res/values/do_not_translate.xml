@@ -5,4 +5,10 @@
     <string name="pref_key_rate_dialog_delay" translatable="false">rate_dialog_delay</string>
     <string name="pref_key_last_output_folder" translatable="false">last_output_folder</string>
     <string name="pref_key_last_version_code" translatable="false">last_version_code</string>
+    <string name="pref_key_remember_commands" translatable="false">remember_commands</string>
+    <string name="pref_key_restore_default_commands" translatable="false">restore_default_commands</string>
+    <string name="pref_key_default_output_folder" translatable="false">default_output_folder</string>
+    <string name="pref_key_excluded_file_extensions" translatable="false">excluded_file_extensions</string>
+    <string name="pref_key_hide_excluded_files" translatable="false">hide_excluded_files</string>
+    <string name="pref_key_clean_up_interval" translatable="false">clean_up_interval</string>
 </resources>

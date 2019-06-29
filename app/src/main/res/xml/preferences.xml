@@ -3,46 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <PreferenceCategory android:title="Command Configurations">
+    <PreferenceCategory android:title="@string/title_category_command_configs">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="pref_key_remember_commands"
-            android:summaryOff="Load default configurations"
-            android:summaryOn="Restore last output command configurations"
-            android:title="Remember command configs" />
+            android:key="@string/pref_key_remember_commands"
+            android:summaryOff="@string/title_remember_command_summary_off"
+            android:summaryOn="@string/title_remember_command_summary_on"
+            android:title="@string/title_remember_command" />
 
         <Preference
-            android:key="pref_key_restore_default_commands"
-            android:title="Restore command configs to default" />
+            android:key="@string/pref_key_restore_default_commands"
+            android:title="@string/title_restore_default_commands" />
 
         <Preference
-            android:key="pref_key_default_output_folder"
-            android:title="Default output folder"
+            android:key="@string/pref_key_default_output_folder"
+            android:title="@string/title_default_output_folder"
             tools:summary="/storage/emulated/0/MediaConverterPro" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="File Browser">
+    <PreferenceCategory android:title="@string/title_category_file_browser">
         <EditTextPreference
-            android:key="pref_key_excluded_file_extensions"
-            android:title="Exclude file extensions"
+            android:key="@string/pref_key_excluded_file_extensions"
+            android:title="@string/title_exclude_file_extension"
             app:useSimpleSummaryProvider="true" />
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="pref_key_hide_excluded_files"
-            android:summaryOff="Show excluded files but make them unselectable"
-            android:summaryOn="Hide excluded files from file browser"
-            android:title="Hide excluded files" />
+            android:key="@string/pref_key_hide_excluded_files"
+            android:summaryOff="@string/title_hide_excluded_files_summary_off"
+            android:summaryOn="@string/title_hide_excluded_files_summary_on"
+            android:title="@string/title_hide_excluded_files" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Miscellaneous">
+    <PreferenceCategory android:title="@string/title_category_miscellaneous">
         <ListPreference
             android:defaultValue="30"
             android:dialogTitle=""
             android:entries="@array/cleanUpInterval"
             android:entryValues="@array/cleanUpIntervalValues"
-            android:key="pref_key_clean_up_interval"
-            android:title="Auto clear logs and finished jobs"
+            android:key="@string/pref_key_clean_up_interval"
+            android:title="@string/title_auto_clear"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>
