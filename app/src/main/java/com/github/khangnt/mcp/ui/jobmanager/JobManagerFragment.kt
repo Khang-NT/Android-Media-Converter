@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.graphics.drawable.DrawableCompat
@@ -143,12 +144,19 @@ class JobManagerFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_clear_finished_jobs -> {
-                SingletonInstances.getJobWorkerManager().clearFinishedJobs()
-                // delete all logs
-                catchAll {
-                    makeWorkingPaths(context!!).getAllLogFiles().forEach { log -> log.delete() }
-                }
-                toast("Cleared all finished jobs!")
+                AlertDialog.Builder(context!!)
+                        .setMessage(R.string.message_clear_finished_jobs)
+                        .setPositiveButton(R.string.action_ok) { _, _ ->
+                            SingletonInstances.getJobWorkerManager().clearFinishedJobs()
+                            // delete all logs
+                            catchAll {
+                                makeWorkingPaths(context!!).getAllLogFiles()
+                                        .forEach { log -> log.delete() }
+                            }
+                            toast(getString(R.string.message_cleared_all_finished_jobs))
+                        }
+                        .setNegativeButton(R.string.action_cancel, null)
+                        .show()
                 return true
             }
         }
