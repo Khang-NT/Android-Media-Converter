@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
@@ -13,6 +14,7 @@ import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import kotlinx.android.synthetic.main.fragment_convert_flac.*
+import org.json.JSONObject
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -20,6 +22,8 @@ import kotlinx.android.synthetic.main.fragment_convert_flac.*
  */
 
 class FlacCmdBuilderFragment : CommandBuilderFragment() {
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -30,6 +34,29 @@ class FlacCmdBuilderFragment : CommandBuilderFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sbCompressionLevel.onSeekBarChanged { updateQualityText() }
+
+        // restore command configs
+        if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
+            val lastConfig = JSONObject(sharedPrefs.lastFlacConfigs)
+            val compressionLevel = lastConfig.optInt("compressionLevel",
+                    sbCompressionLevel.progress)
+            val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
+                    cbTrimSilence.isChecked)
+
+            sbCompressionLevel.progress = compressionLevel
+            cbTrimSilence.isChecked = isTrimSilence
+        }
+    }
+
+    override fun onDestroyView() {
+        // save command configs
+        if (sharedPrefs.rememberCommandConfig) {
+            val lastConfig = JSONObject()
+            lastConfig.put("compressionLevel", sbCompressionLevel.progress)
+            lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
+            sharedPrefs.lastFlacConfigs = lastConfig.toString()
+        }
+        super.onDestroyView()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
