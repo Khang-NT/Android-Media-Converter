@@ -29,6 +29,14 @@ class SharedPrefs(private val mContext: Context) {
         get() = getInt(R.string.pref_key_last_version_code, 0)
         set(lastVersionCode) = putInt(R.string.pref_key_last_version_code, lastVersionCode)
 
+    var rememberCommandConfig: Boolean
+        get() = getBoolean(R.string.pref_key_remember_commands, true)
+        set(rememberCommandConfig) = putBoolean(R.string.pref_key_remember_commands, rememberCommandConfig)
+
+    var lastMp3Configs: String?
+        get() = getString(R.string.pref_key_last_mp3_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_mp3_configs, commandConfigs)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

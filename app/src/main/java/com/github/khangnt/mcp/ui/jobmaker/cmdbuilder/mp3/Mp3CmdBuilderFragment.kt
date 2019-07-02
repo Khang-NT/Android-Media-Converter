@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.Encoders
 import com.github.khangnt.mcp.annotation.Mp3Encoder
 import com.github.khangnt.mcp.annotation.Muxer
@@ -15,6 +16,7 @@ import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import kotlinx.android.synthetic.main.fragment_convert_mp3.*
+import org.json.JSONObject
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -22,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_convert_mp3.*
  */
 
 class Mp3CmdBuilderFragment : CommandBuilderFragment() {
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MP3
@@ -50,6 +54,37 @@ class Mp3CmdBuilderFragment : CommandBuilderFragment() {
         rgBitrateType.setOnCheckedChangeListener { _, checkedId ->
             spinnerBitrate.adapter = if (checkedId == R.id.radioVbr) mp3VbrAdapter else cbrAdapter
         }
+
+        // restore command configs
+        if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
+            val lastConfig = JSONObject(sharedPrefs.lastMp3Configs)
+            val encoder = lastConfig.optInt("encoder",
+                    spinnerEncoder.selectedItemPosition)
+            val isVbrChecked = lastConfig.optBoolean("isVbrChecked",
+                    rgBitrateType.checkedRadioButtonId == R.id.radioVbr)
+            val spinnerBitratePos = lastConfig.optInt("spinnerBitratePos",
+                    spinnerBitrate.selectedItemPosition)
+            val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
+                    cbTrimSilence.isChecked)
+
+            spinnerEncoder.setSelection(encoder)
+            rgBitrateType.check(if (isVbrChecked) R.id.radioVbr else R.id.radioCbr)
+            spinnerBitrate.setSelection(spinnerBitratePos)
+            cbTrimSilence.isChecked = isTrimSilence
+        }
+    }
+
+    override fun onDestroyView() {
+        // save command configs
+        if (sharedPrefs.rememberCommandConfig) {
+            val lastConfig = JSONObject()
+            lastConfig.put("encoder", spinnerEncoder.selectedItemPosition)
+            lastConfig.put("isVbrChecked", rgBitrateType.checkedRadioButtonId == R.id.radioVbr)
+            lastConfig.put("spinnerBitratePos", spinnerBitrate.selectedItemPosition)
+            lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
+            sharedPrefs.lastMp3Configs = lastConfig.toString()
+        }
+        super.onDestroyView()
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
