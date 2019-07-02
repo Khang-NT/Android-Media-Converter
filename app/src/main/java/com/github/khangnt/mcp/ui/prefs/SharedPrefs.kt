@@ -45,6 +45,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_flac_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_flac_configs, commandConfigs)
 
+    var lastMp4Configs: String?
+        get() = getString(R.string.pref_key_last_mp4_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_mp4_configs, commandConfigs)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

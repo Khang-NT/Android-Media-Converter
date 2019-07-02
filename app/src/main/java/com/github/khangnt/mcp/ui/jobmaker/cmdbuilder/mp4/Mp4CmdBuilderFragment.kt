@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import kotlinx.android.synthetic.main.fragment_convert_mp4.*
+import org.json.JSONObject
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -18,6 +20,8 @@ import kotlinx.android.synthetic.main.fragment_convert_mp4.*
  */
 
 class Mp4CmdBuilderFragment : CommandBuilderFragment() {
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
         // https://trac.ffmpeg.org/wiki/Encode/MPEG-4
@@ -35,6 +39,24 @@ class Mp4CmdBuilderFragment : CommandBuilderFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         spinnerVideoQuality.setSelection(1)
+
+        // restore command configs
+        if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
+            val lastConfig = JSONObject(sharedPrefs.lastMp4Configs)
+            val spinnerVideoQualityPos = lastConfig.optInt("spinnerVideoQualityPos", 1)
+
+            spinnerVideoQuality.setSelection(spinnerVideoQualityPos)
+        }
+    }
+
+    override fun onDestroyView() {
+        // save command configs
+        if (sharedPrefs.rememberCommandConfig) {
+            val lastConfig = JSONObject()
+            lastConfig.put("spinnerVideoQualityPos", spinnerVideoQuality.selectedItemPosition)
+            sharedPrefs.lastMp4Configs = lastConfig.toString()
+        }
+        super.onDestroyView()
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
