@@ -37,6 +37,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_mp3_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_mp3_configs, commandConfigs)
 
+    var lastAacConfigs: String?
+        get() = getString(R.string.pref_key_last_aac_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_aac_configs, commandConfigs)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }
