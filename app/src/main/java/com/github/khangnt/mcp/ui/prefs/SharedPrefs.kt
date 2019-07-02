@@ -49,6 +49,14 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_mp4_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_mp4_configs, commandConfigs)
 
+    var lastOggConfigs: String?
+        get() = getString(R.string.pref_key_last_ogg_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_ogg_configs, commandConfigs)
+
+    var lastOpusConfigs: String?
+        get() = getString(R.string.pref_key_last_opus_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_opus_configs, commandConfigs)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

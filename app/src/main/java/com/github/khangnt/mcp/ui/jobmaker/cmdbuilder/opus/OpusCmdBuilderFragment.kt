@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.Encoders.LIBOPUS
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
@@ -14,6 +15,7 @@ import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.onSeekBarChanged
 import kotlinx.android.synthetic.main.fragment_convert_opus.*
+import org.json.JSONObject
 
 /**
  * Created by Simon Pham on 5/28/18.
@@ -21,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_convert_opus.*
  */
 
 class OpusCmdBuilderFragment : CommandBuilderFragment() {
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -31,6 +35,29 @@ class OpusCmdBuilderFragment : CommandBuilderFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sbAudioQuality.onSeekBarChanged { updateQualityText() }
+
+        // restore command configs
+        if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
+            val lastConfig = JSONObject(sharedPrefs.lastOpusConfigs)
+            val audioQuality = lastConfig.optInt("audioQuality",
+                    sbAudioQuality.progress)
+            val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
+                    cbTrimSilence.isChecked)
+
+            sbAudioQuality.progress = audioQuality
+            cbTrimSilence.isChecked = isTrimSilence
+        }
+    }
+
+    override fun onDestroyView() {
+        // save command configs
+        if (sharedPrefs.rememberCommandConfig) {
+            val lastConfig = JSONObject()
+            lastConfig.put("audioQuality", sbAudioQuality.progress)
+            lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
+            sharedPrefs.lastOpusConfigs = lastConfig.toString()
+        }
+        super.onDestroyView()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -57,7 +84,7 @@ class OpusCmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "opus") })
+        return List(inputFileUris.size) { i -> AutoGenOutput(getFileNameFromInputs(i), "opus") }
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
