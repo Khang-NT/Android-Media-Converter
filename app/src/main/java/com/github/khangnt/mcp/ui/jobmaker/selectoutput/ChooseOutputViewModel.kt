@@ -76,7 +76,6 @@ class ChooseOutputViewModel : ViewModel() {
                     DEFAULT_OUTPUT_FOLDER
                 }
                 outputFolderUriLiveData.postValue(this.outputFolderUri)
-                sharedPrefs.lastOutputFolderUri = this.outputFolderUri.toString()
                 updateFolderFiles()
                 if (this::commandConfig.isInitialized) {
                     updateListOutputFileModel()

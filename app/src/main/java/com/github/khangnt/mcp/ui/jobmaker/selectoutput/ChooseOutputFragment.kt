@@ -37,6 +37,8 @@ import kotlin.concurrent.thread
 class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         InputDialogFragment.CheckInputCallback {
 
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
+
     companion object {
         private const val RC_PICK_DOCUMENT_TREE = 2
         private const val RC_PICK_FOLDER = 3
@@ -81,7 +83,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
 
         edOutputPath.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                val intent = Intent(ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra("android.content.extra.SHOW_ADVANCED", true)
                 try {
                     startActivityForResult(intent, RC_PICK_DOCUMENT_TREE)
@@ -196,6 +198,10 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 // abort
                 return
             }
+        }
+
+        if (cbSetDefaultOutputFolder.isChecked) {
+            sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
         }
 
         jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs).forEach { job ->

@@ -14,11 +14,6 @@
         <Preference
             android:key="@string/pref_key_restore_default_commands"
             android:title="@string/title_restore_default_commands" />
-
-        <Preference
-            android:key="@string/pref_key_default_output_folder"
-            android:title="@string/title_default_output_folder"
-            tools:summary="/storage/emulated/0/MediaConverterPro" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_category_file_browser">

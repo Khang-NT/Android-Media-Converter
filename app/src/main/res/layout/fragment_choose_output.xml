@@ -10,11 +10,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/margin_normal"
-        android:paddingRight="@dimen/margin_normal"
         android:paddingTop="@dimen/margin_small"
+        android:paddingRight="@dimen/margin_normal"
+        app:layout_constraintBottom_toTopOf="@id/cbSetDefaultOutputFolder"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
 
         <EditText
             android:id="@+id/edOutputPath"
@@ -31,16 +33,27 @@
             android:textIsSelectable="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/cbSetDefaultOutputFolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:text="@string/title_set_as_default_output_folder"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilOutputFolder" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tilOutputFolder"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -48,7 +61,7 @@
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilOutputFolder"
+        app:layout_constraintTop_toBottomOf="@+id/cbSetDefaultOutputFolder"
         tools:listitem="@layout/item_output_files" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
