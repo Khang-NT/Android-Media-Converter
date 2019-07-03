@@ -204,5 +204,7 @@
 
     <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
     <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>
+    <string name="message_restore_default_commands">Are you sure to restore default command configs</string>
+    <string name="message_restored_default_commands_success">Restored default command configs successfully!</string>
 
 </resources>
