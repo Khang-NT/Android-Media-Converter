@@ -54,7 +54,8 @@ class FileBrowserViewModel : ViewModel() {
                     directory.listFilesNotNull().forEach {
                         val type = when {
                             it.isDirectory -> TYPE_FOLDER
-                            excludedFileExtensions!!.contains(it.extension, true) -> TYPE_FILE_EXCLUDED
+                            excludedFileExtensions!!.contains(it.extension, true)
+                                    && it.extension.isNotEmpty() -> TYPE_FILE_EXCLUDED
                             else -> TYPE_FILE
                         }
                         if (type != TYPE_FILE_EXCLUDED || !hideExcludedFiles) {
