@@ -1,5 +1,6 @@
 package com.github.khangnt.mcp.db.job
 
+import android.annotation.SuppressLint
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.util.Optional
 import com.github.khangnt.mcp.util.asOptional
@@ -73,6 +74,7 @@ class DefaultJobRepository(private val jobDao: JobDao) : JobRepository {
     override fun getIncompleteJobs(): Flowable<List<Job>> = jobDao.getIncompleteJobs()
             .subscribeOn(singleThreadScheduler)
 
+    @SuppressLint("WrongConstant")
     override fun getJobsByStatus(vararg status: Int): Single<List<Job>> =
             jobDao.getJobByStatus(*status)
                     .subscribeOn(singleThreadScheduler)
