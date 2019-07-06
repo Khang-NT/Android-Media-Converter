@@ -18,9 +18,9 @@
 
     <PreferenceCategory android:title="@string/title_category_file_browser">
         <EditTextPreference
+            android:defaultValue="@string/default_excluded_file_extension"
             android:key="@string/pref_key_excluded_file_extensions"
             android:title="@string/title_exclude_file_extension"
-            android:defaultValue="@string/default_excluded_file_extension"
             app:useSimpleSummaryProvider="true" />
 
         <CheckBoxPreference
@@ -31,14 +31,14 @@
             android:title="@string/title_hide_excluded_files" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_category_miscellaneous">
-        <ListPreference
-            android:defaultValue="30"
-            android:dialogTitle=""
-            android:entries="@array/cleanUpInterval"
-            android:entryValues="@array/cleanUpIntervalValues"
-            android:key="@string/pref_key_clean_up_interval"
-            android:title="@string/title_auto_clear"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    <!--<PreferenceCategory android:title="@string/title_category_miscellaneous">-->
+        <!--<ListPreference-->
+            <!--android:defaultValue="30"-->
+            <!--android:dialogTitle=""-->
+            <!--android:entries="@array/cleanUpInterval"-->
+            <!--android:entryValues="@array/cleanUpIntervalValues"-->
+            <!--android:key="@string/pref_key_clean_up_interval"-->
+            <!--android:title="@string/title_auto_clear"-->
+            <!--app:useSimpleSummaryProvider="true" />-->
+    <!--</PreferenceCategory>-->
 </PreferenceScreen>
