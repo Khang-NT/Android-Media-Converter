@@ -29,6 +29,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.content.pm.PackageInfoCompat
 import java.util.*
 
 class DeviceInfo(context: Context) {
@@ -71,11 +72,7 @@ class DeviceInfo(context: Context) {
         }
 
         if (packageInfo != null) {
-            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                packageInfo.longVersionCode
-            } else {
-                packageInfo.versionCode.toLong()
-            }
+            versionCode = PackageInfoCompat.getLongVersionCode(packageInfo)
             versionName = packageInfo.versionName
         } else {
             versionCode = -1
