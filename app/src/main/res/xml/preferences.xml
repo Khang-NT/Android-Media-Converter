@@ -20,6 +20,7 @@
         <EditTextPreference
             android:key="@string/pref_key_excluded_file_extensions"
             android:title="@string/title_exclude_file_extension"
+            android:defaultValue="@string/default_excluded_file_extension"
             app:useSimpleSummaryProvider="true" />
 
         <CheckBoxPreference
