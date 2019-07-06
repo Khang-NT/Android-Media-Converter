@@ -57,6 +57,14 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_opus_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_opus_configs, commandConfigs)
 
+    var excludedFileExtensions: String?
+        get() = getString(R.string.pref_key_excluded_file_extensions, "")
+        set(fileExtensions) = putString(R.string.pref_key_excluded_file_extensions, fileExtensions)
+
+    var hideExcludedFiles: Boolean
+        get() = getBoolean(R.string.pref_key_hide_excluded_files, false)
+        set(hideExcludedFiles) = putBoolean(R.string.pref_key_hide_excluded_files, hideExcludedFiles)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

@@ -18,6 +18,7 @@ import java.io.File
 const val TYPE_FOLDER = 0
 const val TYPE_FILE = 1
 const val TYPE_CREATE_FOLDER = 2
+const val TYPE_FILE_EXCLUDED = 3
 
 data class FileListModel(
         val path: File,
@@ -47,12 +48,24 @@ class FileListViewHolder(
 
     override fun bind(model: FileListModel, pos: Int) {
         if (model !== this.model) {
+            itemView.isEnabled = true
+            tvFileName.alpha = 1.0f
+            ivFileIcon.alpha = 1.0f
+
             when (model.type) {
                 TYPE_FOLDER -> {
                     tvFileName.text = model.path.name
                     ivFileIcon.setImageResource(R.drawable.ic_folder_black_24dp)
                 }
                 TYPE_FILE -> {
+                    tvFileName.text = model.path.name
+                    ivFileIcon.setImageResource(R.drawable.ic_file_black_24dp)
+                }
+                TYPE_FILE_EXCLUDED -> {
+                    itemView.isEnabled = false
+                    tvFileName.alpha = 0.6f
+                    ivFileIcon.alpha = 0.6f
+
                     tvFileName.text = model.path.name
                     ivFileIcon.setImageResource(R.drawable.ic_file_black_24dp)
                 }
