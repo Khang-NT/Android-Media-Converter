@@ -202,6 +202,7 @@
     <string name="title_category_miscellaneous">Miscellaneous</string>
     <string name="title_auto_clear">Auto clear logs and finished jobs</string>
     <string name="title_set_as_default_output_folder">Set as default output folder</string>
+    <string name="title_start">START</string>
 
     <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
     <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>
