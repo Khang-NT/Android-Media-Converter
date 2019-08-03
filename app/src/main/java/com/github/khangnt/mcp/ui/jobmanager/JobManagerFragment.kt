@@ -1,13 +1,16 @@
 package com.github.khangnt.mcp.ui.jobmanager
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.graphics.drawable.DrawerArrowDrawable
-import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.Gradient
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
@@ -18,8 +21,12 @@ import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerActivity
+import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.toast
+import com.github.khangnt.mcp.worker.makeWorkingPaths
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import java.util.*
 
@@ -57,6 +64,7 @@ class JobManagerFragment : BaseFragment() {
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_job_manager, container, false).apply {
         setActivitySupportActionBar(findViewById(R.id.toolbar))
+        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,13 +75,15 @@ class JobManagerFragment : BaseFragment() {
         collapsingToolbar.statusBarScrim = gradient.getDrawable()
         val scrollRange by lazy { appBarLayout.totalScrollRange }
         val drawable = toolbar.getTag(R.id.toolbar_slide_drawable) as DrawerArrowDrawable
-        appBarLayout.addOnOffsetChangedListener { _, offset ->
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset: Int ->
             if (scrollRange + offset == 0) {
                 drawable.color = Color.WHITE
+                toolbar.overflowIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 drawable.color = Color.BLACK
+                toolbar.overflowIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
             }
-        }
+        })
 
 
         with(recyclerViewContainer) {
@@ -107,6 +117,49 @@ class JobManagerFragment : BaseFragment() {
         createJobFab.setOnClickListener {
             startActivity(Intent(requireContext(), JobMakerActivity::class.java))
         }
+
+        recyclerViewContainer.getRecyclerView().onFlingListener = object : RecyclerView.OnFlingListener() {
+            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+                if (velocityY < 0) {
+                    createJobFab.show()
+                } else if (velocityY > 0
+                        && viewModel.getAdapterModel().value.orEmpty().isNotEmpty()) {
+                    createJobFab.hide()
+                }
+                return false
+            }
+
+        }
     }
 
+    @SuppressLint("RestrictedApi")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.fragment_job_manager, menu)
+        if (menu is MenuBuilder) {
+            menu.setOptionalIconsVisible(true)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_clear_finished_jobs -> {
+                AlertDialog.Builder(context!!)
+                        .setMessage(R.string.message_clear_finished_jobs)
+                        .setPositiveButton(R.string.action_ok) { _, _ ->
+                            SingletonInstances.getJobWorkerManager().clearFinishedJobs()
+                            // delete all logs
+                            catchAll {
+                                makeWorkingPaths(context!!).getAllLogFiles()
+                                        .forEach { log -> log.delete() }
+                            }
+                            toast(getString(R.string.message_cleared_all_finished_jobs))
+                        }
+                        .setNegativeButton(R.string.action_cancel, null)
+                        .show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.util.onTextChanged
-import kotlin.math.max
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class InputDialogFragment : DialogFragment() {
 
@@ -42,8 +41,8 @@ class InputDialogFragment : DialogFragment() {
         arguments?.getInt(ARG_MAX_LINES, 1) ?: 1
     }
 
-    private val textInputLayout by lazy { dialog.findViewById<TextInputLayout>(R.id.textInputLayout) }
-    private val textInputEditText by lazy { dialog.findViewById<TextInputEditText>(R.id.editText) }
+    private val textInputLayout by lazy { dialog?.findViewById<TextInputLayout>(R.id.textInputLayout) }
+    private val textInputEditText by lazy { dialog?.findViewById<TextInputEditText>(R.id.editText) }
 
     private lateinit var inputText: String
 
@@ -57,7 +56,7 @@ class InputDialogFragment : DialogFragment() {
 
     private fun getCallbacks(): Callbacks {
         return (activity as? Callbacks) ?: (parentFragment as? Callbacks)
-            ?: throw IllegalStateException(
+        ?: throw IllegalStateException(
                 "Parent activity/fragment must implement InputDialogFragment.Callbacks")
     }
 
@@ -67,10 +66,11 @@ class InputDialogFragment : DialogFragment() {
             setCancelable(cancelable)
             setPositiveButton(positiveButText) { _, _ ->
                 getCallbacks().onInputEntered(this@InputDialogFragment,
-                        textInputEditText.text.toString())
+                        textInputEditText?.text.toString())
             }
             if (negativeButText != null || cancelable) {
-                setNegativeButton(negativeButText ?: getString(R.string.action_cancel)) { dialog, _ ->
+                setNegativeButton(negativeButText
+                        ?: getString(R.string.action_cancel)) { dialog, _ ->
                     dialog.cancel()
                 }
             }
@@ -81,29 +81,29 @@ class InputDialogFragment : DialogFragment() {
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
-        textInputLayout.isErrorEnabled = enableError
-        textInputLayout.hint = hint
+        textInputLayout?.isErrorEnabled = enableError
+        textInputLayout?.hint = hint
         if (maxLines != 1) {
-            textInputEditText.setSingleLine(false)
-            textInputEditText.maxLines = maxLines
-            textInputEditText.minLines = Math.max(3, maxLines)
+            textInputEditText?.setSingleLine(false)
+            textInputEditText?.maxLines = maxLines
+            textInputEditText?.minLines = Math.max(3, maxLines)
         }
-        textInputEditText.setText(inputText)
+        textInputEditText?.setText(inputText)
         dialog as AlertDialog
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
 
-        textInputEditText.onTextChanged { text ->
+        textInputEditText?.onTextChanged { text ->
             inputText = text.toString()
             if (enableError) {
                 val error = checkInputCallback?.getInputError(this, inputText)
-                textInputLayout.error = error
+                textInputLayout?.error = error
                 positiveButton.isEnabled = error == null
             }
         }
         positiveButton.isEnabled = checkInputCallback?.getInputError(this, inputText) == null
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         getCallbacks().onInputCancelled(this@InputDialogFragment)
     }
@@ -133,7 +133,7 @@ class InputDialogFragment : DialogFragment() {
         fun setMaxLines(maxLines: Int) = apply { bundle.putInt(ARG_MAX_LINES, maxLines) }
 
         fun setExtra(key: String, value: Any) = apply {
-            when(value) {
+            when (value) {
                 is Int -> bundle.putInt(key, value)
                 is String -> bundle.putString(key, value)
                 else -> RuntimeException("Add type ${value.javaClass} here")

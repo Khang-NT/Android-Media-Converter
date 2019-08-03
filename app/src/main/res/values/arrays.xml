@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="aacVbrBitrate">
+        <item>96–112 kbps/channel</item>
+        <item>64–72 kbps/channel</item>
+        <item>48–56 kbps/channel</item>
+        <item>32–40 kbps/channel</item>
+        <item>20–32 kbps/channel</item>
+    </string-array>
     <string-array name="mp3Encoders">
         <item>Libmp3lame (High quality)</item>
         <item>Libshine (High speed)</item>
+    </string-array>
+    <string-array name="mp3VbrBitrate">
+        <item>220–260 kbps</item>
+        <item>190–250 kbps</item>
+        <item>170–210 kbps</item>
+        <item>150–195 kbps</item>
+        <item>140–185 kbps</item>
+        <item>120–150 kbps</item>
+        <item>100–130 kbps</item>
+        <item>80–120 kbps</item>
+        <item>70–105 kbps</item>
+        <item>45–85 kbps</item>
+    </string-array>
+    <string-array name="cbrBitrate">
+        <item>320 kbps</item>
+        <item>256 kbps</item>
+        <item>224 kbps</item>
+        <item>192 kbps</item>
+        <item>128 kbps</item>
+        <item>96 kbps</item>
+        <item>80 kbps</item>
+        <item>64 kbps</item>
+        <item>48 kbps</item>
+        <item>32 kbps</item>
     </string-array>
     <string-array name="mp4VideoQuality">
         <item>Ultra quality (~95%)</item>
@@ -10,5 +41,23 @@
         <item>Medium quality (~60%)</item>
         <item>Low quality (~40%)</item>
         <item>Draft (~15%)</item>
+    </string-array>
+    <string-array name="cleanUpInterval">
+        <item>Never</item>
+        <item>Every day</item>
+        <item>Every 3 days</item>
+        <item>Every 7 days</item>
+        <item>Every 15 days</item>
+        <item>Every 30 days</item>
+        <item>Every 90 days</item>
+    </string-array>
+    <string-array name="cleanUpIntervalValues">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>7</item>
+        <item>15</item>
+        <item>30</item>
+        <item>90</item>
     </string-array>
 </resources>

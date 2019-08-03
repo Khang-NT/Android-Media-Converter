@@ -18,6 +18,7 @@
     <string name="empty_job_list">No Job found\nTap (+) button to create a new one.</string>
     <string name="empty_selected_files">No files selected</string>
     <string name="loading_job_list">Loading jobs…</string>
+    <string name="clear_finish_jobs">Clear finished jobs</string>
 
     <string name="file_list_load_error_message">Load file list failed</string>
 
@@ -65,6 +66,8 @@
     <string name="user_denied_permission">Permissions were not granted. Please click retry and grant permission to access this folder.</string>
     <string name="go_to_sd_card">Go to SD card</string>
     <string name="go_to_phone_storage">Go to phone\'s storage</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
@@ -101,7 +104,10 @@
     <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
 
     <string name="mp3_encoder_header">MP3 Encoder:</string>
-    <string name="quality_header">Quality:</string>
+    <string name="bitrate_type_header">Bitrate type:</string>
+    <string name="bitrate_type_vbr">VBR</string>
+    <string name="bitrate_type_cbr">CBR (faster)</string>
+    <string name="bitrate_header">Bitrate:</string>
     <string name="compression_level_header">Compression level:</string>
     <string name="trim_silence_header">Trim audio silence</string>
     <string name="start_conversion_button">Start conversion</string>
@@ -178,7 +184,31 @@
     <string name="tap_again_to_exit">Tap back again to exit</string>
 
     <string name="hint_quality_level">The higher the value, the better the quality</string>
+    <string name="hint_quality_type">Use VBR to get optimized file size</string>
     <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
     <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
+
+    <string name="title_category_command_configs">Command Configurations</string>
+    <string name="title_remember_command_summary_off">Load default configurations</string>
+    <string name="title_remember_command_summary_on">Restore last output command configurations</string>
+    <string name="title_remember_command">Remember command configs</string>
+    <string name="title_restore_default_commands">Restore command configs to default</string>
+    <string name="title_default_output_folder">Default output folder</string>
+    <string name="title_category_file_browser">File Browser</string>
+    <string name="title_exclude_file_extension">Exclude file extensions</string>
+    <string name="title_hide_excluded_files_summary_off">Show excluded files but make them unselectable</string>
+    <string name="title_hide_excluded_files_summary_on">Hide excluded files from file browser</string>
+    <string name="title_hide_excluded_files">Hide excluded files</string>
+    <string name="title_category_miscellaneous">Miscellaneous</string>
+    <string name="title_auto_clear">Auto clear logs and finished jobs</string>
+    <string name="title_set_as_default_output_folder">Set as default output folder</string>
+    <string name="title_start">START</string>
+
+    <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
+    <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>
+    <string name="message_restore_default_commands">Are you sure to restore default command configs</string>
+    <string name="message_restored_default_commands_success">Restored default command configs successfully!</string>
+
+    <string name="default_excluded_file_extension">apk lrc rar zip</string>
 
 </resources>

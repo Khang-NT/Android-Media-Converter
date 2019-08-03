@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.db
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.github.khangnt.mcp.db.job.Command
 import org.json.JSONObject
 

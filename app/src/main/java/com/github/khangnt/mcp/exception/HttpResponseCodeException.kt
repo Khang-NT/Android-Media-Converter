@@ -11,4 +11,4 @@ class HttpResponseCodeException(
         val code: Int,
         val statusMessage: String,
         val errorBody: String
-): IOException("$code - $statusMessage\n$errorBody")
+) : IOException("$code - $statusMessage\n$errorBody")

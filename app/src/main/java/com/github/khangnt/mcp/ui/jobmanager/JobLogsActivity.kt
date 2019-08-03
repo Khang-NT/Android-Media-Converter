@@ -3,10 +3,10 @@ package com.github.khangnt.mcp.ui.jobmanager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.JobStatus
@@ -126,8 +126,8 @@ class JobLogsActivity : BaseActivity() {
                 .getJobsByStatus(JobStatus.RUNNING, JobStatus.COMPLETED, JobStatus.FAILED)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { tvJobTitle.isEnabled = true }
-                .subscribe ({ jobList ->
-                    val selectOptions = Array(jobList.size, { index -> jobList[index].title})
+                .subscribe({ jobList ->
+                    val selectOptions = Array(jobList.size, { index -> jobList[index].title })
                     selected[0] = jobList.indexOfFirst { it.id == jobId }
 
                     AlertDialog.Builder(this)

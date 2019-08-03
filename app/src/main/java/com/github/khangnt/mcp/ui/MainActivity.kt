@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.Toolbar
-import android.view.Gravity
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
 import com.github.khangnt.mcp.R
@@ -20,6 +19,7 @@ import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
+import com.github.khangnt.mcp.ui.prefs.SettingsActivity
 import com.github.khangnt.mcp.util.appPermissions
 import com.github.khangnt.mcp.util.hasWriteStoragePermission
 import com.github.khangnt.mcp.util.openPlayStore
@@ -27,9 +27,9 @@ import com.github.khangnt.mcp.util.viewChangelog
 import com.github.khangnt.mcp.worker.ACTION_JOB_DONE
 import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit.*
 
 private const val EXTRA_OPEN_JOB_MANAGER = "EXTRA:openJobManager"
@@ -124,8 +124,8 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(Gravity.START)) {
-            drawerLayout.closeDrawer(Gravity.START)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
@@ -143,15 +143,13 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        drawerLayout.closeDrawer(Gravity.START)
+        drawerLayout.closeDrawer(GravityCompat.START)
         when (item.itemId) {
             R.id.item_nav_job_manager -> {
                 if (!item.isChecked) replaceFragment(createSelectedFragment(item.itemId))
             }
             R.id.item_nav_about -> AboutActivity.launch(this)
-            R.id.item_nav_setting -> {
-                // todo: open settings page here
-            }
+            R.id.item_nav_setting -> SettingsActivity.launch(this)
         }
         return true
     }
@@ -161,18 +159,18 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
         AlertDialog.Builder(this)
                 .setTitle(R.string.rate_us_title)
                 .setMessage(R.string.rate_us_message)
-                .setPositiveButton(R.string.rate_us_love_it, { _, _ ->
+                .setPositiveButton(R.string.rate_us_love_it) { _, _ ->
                     openPlayStore(this, PLAY_STORE_PACKAGE)
                     getSharedPrefs().isRated = true
-                })
-                .setNeutralButton(R.string.rate_us_not_now, { _, _ ->
+                }
+                .setNeutralButton(R.string.rate_us_not_now) { _, _ ->
                     // don't show this dialog again, until next day
                     getSharedPrefs().delayRateDialogUntil =
                             System.currentTimeMillis() + MILLISECONDS.convert(1, DAYS)
-                })
-                .setNegativeButton(R.string.rate_us_never, { _, _ ->
+                }
+                .setNegativeButton(R.string.rate_us_never) { _, _ ->
                     getSharedPrefs().isRated = true
-                })
+                }
                 .show()
     }
 

@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.ui
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
  * Email: khang.neon.1997@gmail.com
  */
 
-open class RxAppCompatActivity: AppCompatActivity() {
+open class RxAppCompatActivity : AppCompatActivity() {
 
     private var disposableOnPaused = CompositeDisposable()
     private val disposableOnDestroyed = CompositeDisposable()

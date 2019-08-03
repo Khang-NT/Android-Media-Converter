@@ -33,7 +33,7 @@ class ItemFileViewHolder(
         ivRemoveFile.setOnClickListener {
             onRemoveFile.invoke(checkNotNull(currentFile))
         }
-        vDragHandle.setOnTouchListener { v, event ->
+        vDragHandle.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 onStartDrag(this)
             }

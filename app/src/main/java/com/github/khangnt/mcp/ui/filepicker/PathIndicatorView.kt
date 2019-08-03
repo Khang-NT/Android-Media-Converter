@@ -3,9 +3,9 @@ package com.github.khangnt.mcp.ui.filepicker
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.ui.common.MixAdapter
 import timber.log.Timber
 import java.io.File

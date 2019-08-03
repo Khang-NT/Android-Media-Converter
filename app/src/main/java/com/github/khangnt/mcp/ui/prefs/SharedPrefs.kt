@@ -3,7 +3,7 @@ package com.github.khangnt.mcp.ui.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.github.khangnt.mcp.R
 
 class SharedPrefs(private val mContext: Context) {
@@ -29,6 +29,42 @@ class SharedPrefs(private val mContext: Context) {
         get() = getInt(R.string.pref_key_last_version_code, 0)
         set(lastVersionCode) = putInt(R.string.pref_key_last_version_code, lastVersionCode)
 
+    var rememberCommandConfig: Boolean
+        get() = getBoolean(R.string.pref_key_remember_commands, true)
+        set(rememberCommandConfig) = putBoolean(R.string.pref_key_remember_commands, rememberCommandConfig)
+
+    var lastMp3Configs: String?
+        get() = getString(R.string.pref_key_last_mp3_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_mp3_configs, commandConfigs)
+
+    var lastAacConfigs: String?
+        get() = getString(R.string.pref_key_last_aac_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_aac_configs, commandConfigs)
+
+    var lastFlacConfigs: String?
+        get() = getString(R.string.pref_key_last_flac_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_flac_configs, commandConfigs)
+
+    var lastMp4Configs: String?
+        get() = getString(R.string.pref_key_last_mp4_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_mp4_configs, commandConfigs)
+
+    var lastOggConfigs: String?
+        get() = getString(R.string.pref_key_last_ogg_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_ogg_configs, commandConfigs)
+
+    var lastOpusConfigs: String?
+        get() = getString(R.string.pref_key_last_opus_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_opus_configs, commandConfigs)
+
+    var excludedFileExtensions: String?
+        get() = getString(R.string.pref_key_excluded_file_extensions, "")
+        set(fileExtensions) = putString(R.string.pref_key_excluded_file_extensions, fileExtensions)
+
+    var hideExcludedFiles: Boolean
+        get() = getBoolean(R.string.pref_key_hide_excluded_files, false)
+        set(hideExcludedFiles) = putBoolean(R.string.pref_key_hide_excluded_files, hideExcludedFiles)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }
@@ -50,7 +86,7 @@ class SharedPrefs(private val mContext: Context) {
     }
 
     private fun getStringSet(@StringRes keyRes: Int): Set<String> {
-        return mPrefs.getStringSet(mContext.getString(keyRes), emptySet())
+        return mPrefs.getStringSet(mContext.getString(keyRes), emptySet()) as Set<String>
     }
 
     private fun putBoolean(@StringRes keyRes: Int, value: Boolean) {

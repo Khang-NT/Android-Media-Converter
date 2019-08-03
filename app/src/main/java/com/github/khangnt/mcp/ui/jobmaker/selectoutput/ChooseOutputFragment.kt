@@ -9,12 +9,11 @@ import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.provider.DocumentFile
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.documentfile.provider.DocumentFile
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.dialog.InputDialogFragment
@@ -25,7 +24,6 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
 import com.github.khangnt.mcp.util.*
-import io.fabric.sdk.android.services.network.HttpRequest.post
 import kotlinx.android.synthetic.main.fragment_choose_output.*
 import java.io.File
 import kotlin.concurrent.thread
@@ -38,6 +36,8 @@ import kotlin.concurrent.thread
 
 class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         InputDialogFragment.CheckInputCallback {
+
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
         private const val RC_PICK_DOCUMENT_TREE = 2
@@ -83,7 +83,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
 
         edOutputPath.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                val intent = Intent(ACTION_OPEN_DOCUMENT_TREE)
                         .putExtra("android.content.extra.SHOW_ADVANCED", true)
                 try {
                     startActivityForResult(intent, RC_PICK_DOCUMENT_TREE)
@@ -177,7 +177,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
             val documentFile = DocumentFile.fromTreeUri(requireContext(),
                     outputFolderUri)
             createFinalOutput = { fileName ->
-                val file = documentFile.createFile(null, fileName)
+                val file = documentFile?.createFile("", fileName)
                 if (file == null) {
                     toast(R.string.error_can_not_create_output_file)
                     throw IllegalStateException()
@@ -198,6 +198,10 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 // abort
                 return
             }
+        }
+
+        if (cbSetDefaultOutputFolder.isChecked) {
+            sharedPrefs.lastOutputFolderUri = outputFolderUri.toString()
         }
 
         jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs).forEach { job ->
@@ -244,13 +248,13 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                 .setTitle(R.string.dialog_error_file_exists)
                 .setMessage(getString(R.string.dialog_error_file_exists_message, currentFileName))
                 .setCancelable(true)
-                .setPositiveButton(R.string.action_rename, { _, _ ->
+                .setPositiveButton(R.string.action_rename) { _, _ ->
                     // show rename dialog
                     onEdit(index, currentFileName)
-                })
-                .setNegativeButton(R.string.action_override, { _, _ ->
+                }
+                .setNegativeButton(R.string.action_override) { _, _ ->
                     chooseOutputViewModel.updateOutput(index, allowOverride = true)
-                })
+                }
                 .setNeutralButton(R.string.action_cancel, null)
                 .show()
     }

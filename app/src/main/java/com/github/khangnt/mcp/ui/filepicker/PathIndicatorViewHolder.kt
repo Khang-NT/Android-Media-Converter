@@ -33,7 +33,7 @@ class PathIndicatorViewHolder(
         tvPathIndicator.text = if (model.path.name.isNotEmpty()) model.path.name else "/"
     }
 
-    class Factory(init: Factory.() -> Unit): ViewHolderFactory {
+    class Factory(init: Factory.() -> Unit) : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_path_indicator
         lateinit var onClick: (model: PathIndicatorModel) -> Unit
 

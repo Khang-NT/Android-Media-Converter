@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.db.job
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -20,7 +20,7 @@ interface JobDao {
         ORDER BY status DESC, _id ASC""")
     fun getIncompleteJobs(): Flowable<List<Job>>
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertJob(job: Job): Long
 
     @Update
@@ -28,6 +28,9 @@ interface JobDao {
 
     @Query("DELETE FROM jobs_v2 WHERE _id == :jobId")
     fun deleteJob(jobId: Long)
+
+    @Query("DELETE FROM jobs_v2 WHERE status == $COMPLETED OR status == $FAILED")
+    fun deleteFinishedJobs()
 
     @Query("SELECT * FROM jobs_v2 WHERE status == $READY ORDER BY _id ASC LIMIT 1")
     fun getReadyJob(): Single<Job>

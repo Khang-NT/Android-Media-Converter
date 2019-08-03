@@ -1,12 +1,12 @@
 package com.github.khangnt.mcp.ui.filepicker
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.common.MixAdapter
@@ -95,7 +95,7 @@ class FileBrowserFragment : BaseFragment() {
             if (model.selected) {
                 // unselected it
                 viewModel.unselectedFile(model.path)
-                getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+                refreshOnSelectedFilesChanged()
             } else {
                 val isFull = viewModel.getSelectedFiles().size == limitSelectCount
                 if (isFull && limitSelectCount != 1) {
@@ -105,12 +105,20 @@ class FileBrowserFragment : BaseFragment() {
                         viewModel.unselectedFile(viewModel.getSelectedFiles()[0])
                     }
                     viewModel.selectFile(model.path)
-                    getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+                    refreshOnSelectedFilesChanged()
                 }
             }
         } else {
-            toast(R.string.message_disallow_change_selected_files)
+            showFileSelectionLockedMessage()
         }
+    }
+
+    private fun refreshOnSelectedFilesChanged() {
+        getCallbacks()?.onSelectFilesChanged(viewModel.getSelectedFiles())
+    }
+
+    private fun showFileSelectionLockedMessage() {
+        toast(R.string.message_disallow_change_selected_files)
     }
 
     fun goto(dir: File) {
@@ -132,6 +140,35 @@ class FileBrowserFragment : BaseFragment() {
     fun getSelectedFiles() = viewModel.getSelectedFiles()
 
     fun setSelectedFiles(files: List<File>) = viewModel.setSelectedFiles(files)
+
+    fun selectAllFilesInCurrentFolder() {
+        if (getCallbacks()?.allowChangeSelectedFile() != false) {
+            viewModel.getFileModels().value.orEmpty().forEach { model ->
+                val isFull = viewModel.getSelectedFiles().size == limitSelectCount
+                if (model.type == TYPE_FILE
+                        && !isFull
+                        && !model.selected) {
+                    viewModel.selectFile(model.path)
+                }
+            }
+            refreshOnSelectedFilesChanged()
+        } else {
+            showFileSelectionLockedMessage()
+        }
+    }
+
+    fun deselectAllFilesInCurrentFolder() {
+        if (getCallbacks()?.allowChangeSelectedFile() != false) {
+            viewModel.getFileModels().value.orEmpty().forEach { model ->
+                if (model.type == TYPE_FILE && model.selected) {
+                    viewModel.unselectedFile(model.path)
+                }
+            }
+            refreshOnSelectedFilesChanged()
+        } else {
+            showFileSelectionLockedMessage()
+        }
+    }
 
     private fun getCallbacks(): Callbacks? {
         return (activity as? Callbacks) ?: (parentFragment as Callbacks)

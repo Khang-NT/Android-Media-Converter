@@ -7,8 +7,6 @@ import com.liulishuo.filedownloader.exception.FileDownloadHttpException
 import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException
 import java.io.EOFException
 import java.io.InterruptedIOException
-import java.lang.ClassCastException
-import java.lang.Exception
 import java.net.HttpRetryException
 import java.net.ProtocolException
 import java.net.SocketException

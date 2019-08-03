@@ -1,9 +1,10 @@
 package com.github.khangnt.mcp.ui.filepicker
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.common.Status
 import com.github.khangnt.mcp.util.listFilesNotNull
 import io.reactivex.BackpressureStrategy
@@ -26,6 +27,10 @@ class FileBrowserViewModel : ViewModel() {
 
     private val createFolderItem = FileListModel(File("+folder"), TYPE_CREATE_FOLDER, false)
 
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
+    private val excludedFileExtensions = sharedPrefs.excludedFileExtensions
+    private val hideExcludedFiles = sharedPrefs.hideExcludedFiles
+
     private val backStack = Stack<File>()
     private var currentDirectory: File? = null
 
@@ -45,10 +50,18 @@ class FileBrowserViewModel : ViewModel() {
                 .observeOn(Schedulers.computation())
                 .map<List<FileListModel>> { directory ->
                     statusLiveData.postValue(Status.Loading)
-                    val files = directory.listFilesNotNull().map {
-                        val type = if (it.isDirectory) TYPE_FOLDER else TYPE_FILE
-                        FileListModel(it, type)
-                    }.toMutableList()
+                    val files = mutableListOf<FileListModel>()
+                    directory.listFilesNotNull().forEach {
+                        val type = when {
+                            it.isDirectory -> TYPE_FOLDER
+                            excludedFileExtensions!!.contains(it.extension, true)
+                                    && it.extension.isNotEmpty() -> TYPE_FILE_EXCLUDED
+                            else -> TYPE_FILE
+                        }
+                        if (type != TYPE_FILE_EXCLUDED || !hideExcludedFiles) {
+                            files.add(FileListModel(it, type))
+                        }
+                    }
                     files.sortWith(fileListComparator)
                     if (directory.canWrite()) {
                         files.add(0, createFolderItem)

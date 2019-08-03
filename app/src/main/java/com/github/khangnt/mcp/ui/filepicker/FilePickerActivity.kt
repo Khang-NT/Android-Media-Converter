@@ -5,20 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import com.github.khangnt.mcp.util.catchAll
 import kotlinx.android.synthetic.main.activity_file_picker.*
-import timber.log.Timber
 import java.io.File
 import java.util.*
 
@@ -63,7 +59,7 @@ class FilePickerActivity : SingleFragmentActivity(), FileBrowserFragment.Callbac
                 startUpDir: File? = null,
                 maxFileCanPick: Int = 1
         ): Intent {
-            check(maxFileCanPick > 0, { "maxFileCanPick must greater than 0" })
+            check(maxFileCanPick > 0) { "maxFileCanPick must greater than 0" }
             val startUpDirNonNull = (startUpDir ?: Environment.getExternalStorageDirectory())
             return Intent(context, FilePickerActivity::class.java)
                     .putExtra(EXTRA_PICK_TYPE, TYPE_PICK_FILE)

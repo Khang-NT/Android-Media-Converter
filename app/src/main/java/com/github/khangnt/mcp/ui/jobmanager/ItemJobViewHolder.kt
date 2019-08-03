@@ -11,16 +11,15 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
-import android.support.v4.content.ContextCompat
-import android.support.v4.provider.DocumentFile
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AlertDialog
 import android.util.SparseArray
 import android.view.View
 import android.webkit.MimeTypeMap
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.documentfile.provider.DocumentFile
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
-import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.annotation.JobStatus.*
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.common.AdapterModel
@@ -63,12 +62,12 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
     companion object {
         private fun jobStatusName(jobStatus: Int): String {
             return when (jobStatus) {
-                JobStatus.RUNNING -> "RUNNING"
-                JobStatus.PENDING -> "PENDING"
-                JobStatus.PREPARING -> "PREPARING"
-                JobStatus.READY -> "READY"
-                JobStatus.FAILED -> "FAILED"
-                JobStatus.COMPLETED -> "SUCCESS"
+                RUNNING -> "RUNNING"
+                PENDING -> "PENDING"
+                PREPARING -> "PREPARING"
+                READY -> "READY"
+                FAILED -> "FAILED"
+                COMPLETED -> "SUCCESS"
                 else -> "$jobStatus"
             }
         }
@@ -170,9 +169,9 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_confirm_delete_job_output)
                     .setMessage(context.getString(R.string.dialog_confirm_delete_job_output_mess, path))
-                    .setPositiveButton(R.string.action_yes, { _, _ ->
+                    .setPositiveButton(R.string.action_yes) { _, _ ->
                         cancelJob(context, job, true)
-                    })
+                    }
                     .setNegativeButton(R.string.action_cancel, null)
                     .show()
         }
@@ -229,14 +228,14 @@ class ItemJobViewHolder(itemView: View) : CustomViewHolder<JobModel>(itemView) {
             tvJobLocation.text = context.getString(R.string.job_output_location,
                     path ?: command.output)
 
-            buttonLayout.visibility = if (status == JobStatus.COMPLETED) {
+            buttonLayout.visibility = if (status == COMPLETED) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
-            ivLogs.visibility = if (status == JobStatus.COMPLETED
-                    || status == JobStatus.RUNNING
-                    || status == JobStatus.FAILED) {
+            ivLogs.visibility = if (status == COMPLETED
+                    || status == RUNNING
+                    || status == FAILED) {
                 View.VISIBLE
             } else {
                 View.GONE

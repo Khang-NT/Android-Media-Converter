@@ -18,7 +18,7 @@ import timber.log.Timber
  * Email: khang.neon.1997@gmail.com
  */
 
-class MainApplication: Application() {
+class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

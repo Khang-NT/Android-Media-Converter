@@ -6,16 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.transition.Fade
-import android.support.transition.Slide
-import android.support.transition.TransitionManager
-import android.support.transition.TransitionSet
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.Gravity
 import android.view.View
 import android.widget.ScrollView
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.transition.Fade
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.github.khangnt.mcp.*
 import com.github.khangnt.mcp.util.*
+import com.google.android.material.appbar.AppBarLayout
 import de.psdev.licensesdialog.LicensesDialog
 import kotlinx.android.synthetic.main.activity_about.*
 
@@ -38,7 +39,6 @@ class AboutActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val scrollRange by lazy {
             // decrease scrim visible height (-1/4)
@@ -47,17 +47,17 @@ class AboutActivity : BaseActivity() {
             appBarLayout.totalScrollRange
         }
 
-        appBarLayout.addOnOffsetChangedListener { _, offset ->
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset ->
             if (scrollRange + offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.WHITE) }
             } else if (offset == 0) {
                 toolbar.navigationIcon?.let { DrawableCompat.setTint(it, Color.BLACK) }
             }
-        }
+        })
 
         tvAppVersion.text = getString(R.string.app_version_format, BuildConfig.VERSION_NAME)
 
-        changelog.setOnClickListener{
+        changelog.setOnClickListener {
             viewChangelog(this)
         }
 
@@ -119,9 +119,9 @@ class AboutActivity : BaseActivity() {
             )
         }
 
-        edFeedbackDetails.setOnFocusChangeListener { _, focused ->
+        edFeedbackDetails.onFocusChangeListener = View.OnFocusChangeListener { _, focused ->
             if (focused) {
-                scrollView.post({ scrollView.fullScroll(ScrollView.FOCUS_DOWN) })
+                scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
             }
         }
 

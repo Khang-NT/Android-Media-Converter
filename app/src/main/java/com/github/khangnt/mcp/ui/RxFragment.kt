@@ -1,8 +1,8 @@
 package com.github.khangnt.mcp.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable
  * Email: khang.neon.1997@gmail.com
  */
 
-open class RxFragment: Fragment() {
+open class RxFragment : Fragment() {
     private var disposableOnPaused: CompositeDisposable = CompositeDisposable()
     private var disposableOnDestroyed: CompositeDisposable = CompositeDisposable()
     private var disposableOnViewDestroyed: CompositeDisposable = CompositeDisposable()

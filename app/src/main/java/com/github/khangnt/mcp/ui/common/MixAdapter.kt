@@ -1,15 +1,13 @@
 package com.github.khangnt.mcp.ui.common
 
-import android.support.annotation.LayoutRes
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.util.checkMainThread
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 /**
  * Created by Khang NT on 3/23/18.
@@ -17,7 +15,9 @@ import java.lang.IllegalStateException
  */
 
 interface ViewHolderFactory {
-    @get:LayoutRes val layoutRes: Int
+    @get:LayoutRes
+    val layoutRes: Int
+
     fun create(itemView: View): CustomViewHolder<*>
 }
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.github.khangnt.mcp">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.github.khangnt.mcp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MainApplication"
@@ -15,15 +16,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -33,38 +35,44 @@
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="${applicationId}.action.add_job"/>
-                <action android:name="${applicationId}.action.cancel_job"/>
+                <action android:name="${applicationId}.action.add_job" />
+                <action android:name="${applicationId}.action.cancel_job" />
             </intent-filter>
         </service>
 
         <activity
             android:name=".ui.PermissionTransparentActivity"
-            android:theme="@style/AppTheme.NoActionBar.Translucent"/>
+            android:theme="@style/AppTheme.NoActionBar.Translucent" />
 
         <activity
             android:name=".ui.jobmanager.JobLogsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/nav_feedback"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"
-            android:windowSoftInputMode="adjustPan|stateUnchanged"/>
+            android:windowSoftInputMode="adjustPan|stateUnchanged" />
 
         <activity
             android:name=".ui.filepicker.FilePickerActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--todo: export label to string res-->
-        <activity android:name=".ui.jobmaker.JobMakerActivity"
+        <activity
+            android:name=".ui.jobmaker.JobMakerActivity"
             android:label="@string/new_job_title"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
-            android:theme="@style/CustomActivityOnCrashTheme"
-            android:process=":error_activity" />
+            android:process=":error_activity"
+            android:theme="@style/CustomActivityOnCrashTheme" />
+
+        <activity
+            android:name=".ui.prefs.SettingsActivity"
+            android:label="@string/nav_settings"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
 
     </application>
 

@@ -2,8 +2,8 @@ package com.github.khangnt.mcp.ui.decorator
 
 import android.content.Context
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by Khang NT on 2/6/18.

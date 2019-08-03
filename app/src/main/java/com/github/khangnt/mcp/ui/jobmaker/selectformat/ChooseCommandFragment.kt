@@ -1,12 +1,11 @@
 package com.github.khangnt.mcp.ui.jobmaker.selectformat
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.github.khangnt.mcp.ConvertCommand
-import com.github.khangnt.mcp.EditCommand
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
@@ -15,7 +14,6 @@ import com.github.khangnt.mcp.ui.common.MixAdapter
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel
 import com.github.khangnt.mcp.ui.jobmaker.StepFragment
-import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputViewModel
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
 import kotlinx.android.synthetic.main.fragment_choose_command.*

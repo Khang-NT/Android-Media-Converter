@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
@@ -14,8 +14,9 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_drag_handle_black_24dp"
-        android:tint="?android:textColorSecondary"
+        android:tint="@color/secondary_text_material_light"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -25,7 +26,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_close_black_24dp"
-        android:tint="?android:textColorSecondary"
+        android:tint="@color/secondary_text_material_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,14 +35,14 @@
         android:id="@+id/tvFileId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:layout_marginRight="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
         android:ems="2"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@color/secondary_text_material_light"
         android:textSize="@dimen/text_size_title"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +59,7 @@
         android:layout_marginRight="@dimen/margin_small"
         android:ellipsize="middle"
         android:singleLine="true"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@color/secondary_text_material_light"
         android:textSize="@dimen/text_size_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/tvFileId"
@@ -66,4 +67,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="File abc xxxxxxxxxxxxxxxxxxxxx xyz.mp4" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

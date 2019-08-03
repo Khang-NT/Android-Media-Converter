@@ -2,9 +2,7 @@ package com.github.khangnt.mcp.ui.jobmaker
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Environment.getExternalStorageDirectory
-import android.support.design.widget.BottomSheetBehavior
 import android.view.Menu
 import android.view.MenuItem
 import com.github.khangnt.mcp.R
@@ -15,6 +13,7 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_CHOOS
 import com.github.khangnt.mcp.util.catchAll
 import com.github.khangnt.mcp.util.doOnPreDraw
 import com.github.khangnt.mcp.util.toast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_job_maker.*
 import java.io.File
 
@@ -103,11 +102,19 @@ class JobMakerActivity : BaseActivity(), FileBrowserFragment.Callbacks {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_goto_internal_storage -> {
-                fileBrowserFragment.goto(Environment.getExternalStorageDirectory())
+                fileBrowserFragment.goto(getExternalStorageDirectory())
                 return true
             }
             R.id.item_goto_sd_card -> {
                 fileBrowserFragment.goto(checkNotNull(SingletonInstances.getSdCardPath()))
+                return true
+            }
+            R.id.item_select_all -> {
+                fileBrowserFragment.selectAllFilesInCurrentFolder()
+                return true
+            }
+            R.id.item_deselect_all -> {
+                fileBrowserFragment.deselectAllFilesInCurrentFolder()
                 return true
             }
         }

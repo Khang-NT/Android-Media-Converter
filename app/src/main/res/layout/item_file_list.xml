@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
@@ -8,13 +7,17 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivFileIcon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="@dimen/margin_small"
-        app:tint="?android:textColorSecondary"
-        tools:src="@drawable/ic_folder_black_24dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvFileName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/secondary_text_material_light"
+        tools:src="@drawable/ic_folder_black_24dp" />
 
     <TextView
         android:id="@+id/tvFileName"
@@ -31,6 +34,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:drawableRight="@drawable/ic_tick_green_24dp"
-        tools:text="Folder abc xyz"/>
+        tools:text="Folder abc xyz" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,6 @@ class ItemLiveHeaderViewHolder(itemView: View) : CustomViewHolder<LiveHeaderMode
     }
 
 
-
     class Factory : ViewHolderFactory {
         override val layoutRes: Int = R.layout.item_header
 

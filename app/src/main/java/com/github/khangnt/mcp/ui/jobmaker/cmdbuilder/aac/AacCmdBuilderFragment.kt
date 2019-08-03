@@ -1,18 +1,18 @@
 package com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.annotation.Muxer
 import com.github.khangnt.mcp.db.job.Command
 import com.github.khangnt.mcp.db.job.Job
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandConfig
-import com.github.khangnt.mcp.util.onSeekBarChanged
 import kotlinx.android.synthetic.main.fragment_convert_aac.*
+import org.json.JSONObject
 
 /**
  * Created by Khang NT on 4/10/18.
@@ -21,10 +21,13 @@ import kotlinx.android.synthetic.main.fragment_convert_aac.*
 
 class AacCmdBuilderFragment : CommandBuilderFragment() {
 
+    private val sharedPrefs = SingletonInstances.getSharedPrefs()
+
     companion object {
-        private const val CBR_MIN = 45  // 45 kbps
-        private const val CBR_MAX = 320 // 320 kbps
-        private const val CBR_RECOMMEND = 256
+        private val cbrBitrate = arrayOf(
+                320, 256, 224, 192, 128,
+                96, 80, 64, 48, 32
+        )
     }
 
     override fun onCreateView(
@@ -35,23 +38,32 @@ class AacCmdBuilderFragment : CommandBuilderFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sbQuality.max = CBR_MAX - CBR_MIN
-        sbQuality.progress = CBR_RECOMMEND - CBR_MIN
-        sbQuality.onSeekBarChanged { updateQualityText() }
+
+        // restore command configs
+        if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
+            val lastConfig = JSONObject(sharedPrefs.lastAacConfigs)
+            val spinnerBitratePos = lastConfig.optInt("spinnerBitratePos",
+                    spinnerBitrate.selectedItemPosition)
+            val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
+                    cbTrimSilence.isChecked)
+            spinnerBitrate.setSelection(spinnerBitratePos)
+            cbTrimSilence.isChecked = isTrimSilence
+        }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        updateQualityText()
+    override fun onDestroyView() {
+        // save command configs
+        if (sharedPrefs.rememberCommandConfig) {
+            val lastConfig = JSONObject()
+            lastConfig.put("spinnerBitratePos", spinnerBitrate.selectedItemPosition)
+            lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
+            sharedPrefs.lastAacConfigs = lastConfig.toString()
+        }
+        super.onDestroyView()
     }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateQualityText() {
-        tvQualityValue.text = "${sbQuality.progress + CBR_MIN} kbps"
-    }
-
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        onSuccess(AacCmdConfig(inputFileUris, CBR_MIN + sbQuality.progress, cbTrimSilence.isChecked))
+        val quality = cbrBitrate[spinnerBitrate.selectedItemPosition]
+        onSuccess(AacCmdConfig(inputFileUris, quality, cbTrimSilence.isChecked))
     }
 }
 
@@ -64,7 +76,7 @@ class AacCmdConfig(
     override fun getNumberOfOutput(): Int = inputFileUris.size // 1 input - 1 output
 
     override fun generateOutputFiles(): List<AutoGenOutput> {
-        return List(inputFileUris.size, { i -> AutoGenOutput(getFileNameFromInputs(i), "aac") })
+        return List(inputFileUris.size) { i -> AutoGenOutput(getFileNameFromInputs(i), "aac") }
     }
 
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {

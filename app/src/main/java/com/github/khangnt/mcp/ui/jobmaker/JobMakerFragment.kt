@@ -2,10 +2,10 @@ package com.github.khangnt.mcp.ui.jobmaker
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.BaseFragment
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_ADVERTISEMENT
@@ -14,10 +14,7 @@ import com.github.khangnt.mcp.ui.jobmaker.JobMakerViewModel.Companion.STEP_SELEC
 import com.github.khangnt.mcp.ui.jobmaker.selectfile.SelectedFilesFragment
 import com.github.khangnt.mcp.ui.jobmaker.selectformat.ChooseCommandFragment
 import com.github.khangnt.mcp.ui.jobmaker.selectoutput.ChooseOutputFragment
-import com.github.khangnt.mcp.util.disableInHalfSecond
-import com.github.khangnt.mcp.util.getViewModel
-import com.github.khangnt.mcp.util.invisible
-import com.github.khangnt.mcp.util.visible
+import com.github.khangnt.mcp.util.*
 import kotlinx.android.synthetic.main.fragment_job_maker.*
 
 
@@ -103,24 +100,29 @@ class JobMakerFragment : BaseFragment() {
             JobMakerViewModel.STEP_SELECT_FILES -> {
                 showNumberSelectedFileTitle()
                 ivNext.visible()
+                tvStart.gone()
                 showFragment(tag, reverseAnim) { SelectedFilesFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_COMMAND -> {
                 showNumberSelectedFileTitle()
                 ivNext.invisible()
+                tvStart.gone()
                 showFragment(tag, reverseAnim) { ChooseCommandFragment() }
             }
             JobMakerViewModel.STEP_CONFIGURE_COMMAND -> {
                 tvTitle.text = jobMakerViewModel.getSelectCommand().getTitle(resources)
                 ivNext.visible()
+                tvStart.gone()
                 showFragment(tag, reverseAnim) { ConfigureCommandFragment() }
             }
             JobMakerViewModel.STEP_CHOOSE_OUTPUT_FOLDER_AND_REVIEW -> {
                 tvTitle.text = getString(R.string.title_configure_output)
+                tvStart.visible()
                 showFragment(tag, reverseAnim) { ChooseOutputFragment() }
             }
             JobMakerViewModel.STEP_ADVERTISEMENT -> {
                 tvTitle.text = getString(R.string.title_create_job_success)
+                tvStart.gone()
                 showFragment(tag, reverseAnim) { AdvertiseFragment() }
             }
         }

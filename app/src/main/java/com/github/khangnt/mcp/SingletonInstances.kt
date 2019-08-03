@@ -1,9 +1,9 @@
 package com.github.khangnt.mcp
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.persistence.room.Room
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.github.khangnt.mcp.db.DB_NAME
 import com.github.khangnt.mcp.db.MainDatabase
 import com.github.khangnt.mcp.db.Migration1To2

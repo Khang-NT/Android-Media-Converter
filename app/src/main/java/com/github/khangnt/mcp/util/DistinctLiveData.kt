@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp.util
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 
 /**
  * Created by Khang NT on 3/29/18.
@@ -9,7 +9,7 @@ import android.arch.lifecycle.MutableLiveData
 
 @Suppress("unused")
 class DistinctLiveData<T>() : MutableLiveData<T>() {
-    constructor(init: T): this() {
+    constructor(init: T) : this() {
         setValue(init)
     }
 

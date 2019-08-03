@@ -2,9 +2,8 @@ package com.github.khangnt.mcp.ui.jobmaker.selectoutput
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.ui.common.*
 import kotlinx.android.synthetic.main.item_output_files.view.*

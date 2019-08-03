@@ -3,10 +3,6 @@ package com.github.khangnt.mcp.util
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import android.support.annotation.StringRes
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,6 +10,10 @@ import android.view.View.*
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.StringRes
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import com.google.android.material.textfield.TextInputLayout
 
 
 /**
@@ -53,7 +53,6 @@ fun TextView.onTextChanged(listener: (text: CharSequence) -> Unit): TextWatcher 
     addTextChangedListener(textWatcher)
     return textWatcher
 }
-
 
 
 private fun showToast(context: Context, message: String?, duration: Int = Toast.LENGTH_SHORT) {
@@ -141,7 +140,7 @@ fun getSpanCount(minWidth: Int, columnSpace: Int = 0): Int {
 }
 
 fun View.doOnPreDraw(action: () -> Unit) {
-    viewTreeObserver.addOnPreDrawListener(object: ViewTreeObserver.OnPreDrawListener {
+    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
         override fun onPreDraw(): Boolean {
             action()
             viewTreeObserver.removeOnPreDrawListener(this)
