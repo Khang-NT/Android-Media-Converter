@@ -123,6 +123,25 @@ class FileBrowserViewModel : ViewModel() {
 
     fun getFileModels(): LiveData<List<FileListModel>> = fileModelsLiveData
 
+    fun selectAllFilesInCurrentFolder(limitSelectCount: Int = Int.MAX_VALUE) {
+        fileModelsLiveData.value.orEmpty().forEach { model ->
+            val isFull = selectedFilesReadOnly.size == limitSelectCount
+            if (model.type == TYPE_FILE
+                    && !isFull
+                    && !model.selected) {
+                selectFile(model.path)
+            }
+        }
+    }
+
+    fun deselectAllFilesInCurrentFolder() {
+        fileModelsLiveData.value.orEmpty().forEach { model ->
+            if (model.type == TYPE_FILE && model.selected) {
+                unselectedFile(model.path)
+            }
+        }
+    }
+
     @MainThread
     fun selectFile(file: File) {
         selectedFiles.add(file)
