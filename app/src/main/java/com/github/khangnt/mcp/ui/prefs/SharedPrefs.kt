@@ -69,6 +69,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getBoolean(R.string.pref_key_enable_ads, true)
         set(enabledAds) = putBoolean(R.string.pref_key_enable_ads, enabledAds)
 
+    var conversionCountLeftBeforeShowAds: Int
+        get() = getInt(R.string.pref_key_conversion_count_left, 3)
+        set(count) = putInt(R.string.pref_key_conversion_count_left, count)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

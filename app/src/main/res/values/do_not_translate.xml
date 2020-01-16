@@ -17,4 +17,5 @@
     <string name="pref_key_hide_excluded_files" translatable="false">hide_excluded_files</string>
     <string name="pref_key_clean_up_interval" translatable="false">clean_up_interval</string>
     <string name="pref_key_enable_ads" translatable="false">enable_ads</string>
+    <string name="pref_key_conversion_count_left" translatable="false">pref_key_conversion_count_left</string>
 </resources>
