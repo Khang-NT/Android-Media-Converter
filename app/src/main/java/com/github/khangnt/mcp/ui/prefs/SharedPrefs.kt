@@ -65,6 +65,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getBoolean(R.string.pref_key_hide_excluded_files, false)
         set(hideExcludedFiles) = putBoolean(R.string.pref_key_hide_excluded_files, hideExcludedFiles)
 
+    var enabledAds: Boolean
+        get() = getBoolean(R.string.pref_key_enable_ads, true)
+        set(enabledAds) = putBoolean(R.string.pref_key_enable_ads, enabledAds)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

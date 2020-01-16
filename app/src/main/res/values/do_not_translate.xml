@@ -16,4 +16,5 @@
     <string name="pref_key_excluded_file_extensions" translatable="false">excluded_file_extensions</string>
     <string name="pref_key_hide_excluded_files" translatable="false">hide_excluded_files</string>
     <string name="pref_key_clean_up_interval" translatable="false">clean_up_interval</string>
+    <string name="pref_key_enable_ads" translatable="false">enable_ads</string>
 </resources>
