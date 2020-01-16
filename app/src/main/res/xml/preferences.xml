@@ -31,14 +31,25 @@
             android:title="@string/title_hide_excluded_files" />
     </PreferenceCategory>
 
-    <!--<PreferenceCategory android:title="@string/title_category_miscellaneous">-->
-        <!--<ListPreference-->
-            <!--android:defaultValue="30"-->
-            <!--android:dialogTitle=""-->
-            <!--android:entries="@array/cleanUpInterval"-->
-            <!--android:entryValues="@array/cleanUpIntervalValues"-->
-            <!--android:key="@string/pref_key_clean_up_interval"-->
-            <!--android:title="@string/title_auto_clear"-->
-            <!--app:useSimpleSummaryProvider="true" />-->
-    <!--</PreferenceCategory>-->
+    <!--    <PreferenceCategory android:title="@string/title_category_miscellaneous">-->
+    <!--        <ListPreference-->
+    <!--            android:defaultValue="30"-->
+    <!--            android:dialogTitle=""-->
+    <!--            android:entries="@array/cleanUpInterval"-->
+    <!--            android:entryValues="@array/cleanUpIntervalValues"-->
+    <!--            android:key="@string/pref_key_clean_up_interval"-->
+    <!--            android:title="@string/title_auto_clear"-->
+    <!--            app:useSimpleSummaryProvider="true" />-->
+    <!--    </PreferenceCategory>-->
+
+    <PreferenceCategory
+        android:title="@string/title_category_ads_settings"
+        app:summary="@string/title_category_ads_settings_summary">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_enable_ads"
+            android:summaryOff="@string/title_enable_ads_summary_off"
+            android:summaryOn="@string/title_enable_ads_summary_on"
+            android:title="@string/title_enable_ads" />
+    </PreferenceCategory>
 </PreferenceScreen>

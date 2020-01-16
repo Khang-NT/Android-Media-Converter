@@ -203,6 +203,11 @@
     <string name="title_auto_clear">Auto clear logs and finished jobs</string>
     <string name="title_set_as_default_output_folder">Set as default output folder</string>
     <string name="title_start">START</string>
+    <string name="title_category_ads_settings">Ads Settings</string>
+    <string name="title_category_ads_settings_summary">Enable ads to support the developer.</string>
+    <string name="title_enable_ads">Enable ads</string>
+    <string name="title_enable_ads_summary_off">Hide ads after create jobs</string>
+    <string name="title_enable_ads_summary_on">Display ads after create jobs</string>
 
     <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
     <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>
