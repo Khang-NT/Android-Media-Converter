@@ -13,9 +13,10 @@ import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3.Mp3CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4.Mp4CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.ogg.OggCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.opus.OpusCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.wav.WavCmdBuilderFragment
 
 private fun colorArrayOf(vararg longValues: Long): IntArray {
-    return IntArray(longValues.size, { longValues[it].toInt() })
+    return IntArray(longValues.size) { longValues[it].toInt() }
 }
 
 enum class Gradient(val colors: IntArray) {
@@ -30,7 +31,8 @@ enum class Gradient(val colors: IntArray) {
     SoundCloud(colorArrayOf(0xfffe8c00, 0xfff83600)),
     Mini(colorArrayOf(0xff30e8bf, 0xffff8235)),
     EasyMed(colorArrayOf(0xffdce35b, 0xff45b649)),
-    Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff))
+    Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff)),
+    BlueSkies(colorArrayOf(0xff56ccf2, 0xff2f80ed)),
     ;
 
     fun getDrawable(
@@ -73,6 +75,11 @@ enum class ConvertCommand(
             type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_ogg,
             gradient = Gradient.Friday,
             fragmentFactory = ::OggCmdBuilderFragment
+    ),
+    CONVERT_WAV(
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_wav,
+            gradient = Gradient.BlueSkies,
+            fragmentFactory = ::WavCmdBuilderFragment
     ),
     CONVERT_MP4(
             type = ConvertType.TYPE_ENCODE_VIDEO, shortName = R.string.short_name_mp4,
