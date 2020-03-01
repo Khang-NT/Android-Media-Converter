@@ -1,10 +1,11 @@
 package com.github.khangnt.mcp
 
-import android.app.Application
 import android.os.StrictMode
+import androidx.multidex.MultiDexApplication
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.util.IMMLeaks
+import com.google.android.gms.ads.MobileAds
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.database.NoDatabaseImpl
 import com.squareup.leakcanary.LeakCanary
@@ -18,7 +19,7 @@ import timber.log.Timber
  * Email: khang.neon.1997@gmail.com
  */
 
-class MainApplication : Application() {
+class MainApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
@@ -55,6 +56,8 @@ class MainApplication : Application() {
         }
 
         setUpRxPlugins()
+
+        MobileAds.initialize(this)
     }
 
     private fun setupStrictMode() {

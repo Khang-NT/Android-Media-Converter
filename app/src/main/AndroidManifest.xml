@@ -74,6 +74,9 @@
             android:label="@string/nav_settings"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8469309022192575~2742857805"/>
     </application>
 
 </manifest>
