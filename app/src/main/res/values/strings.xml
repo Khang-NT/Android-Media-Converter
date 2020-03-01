@@ -71,6 +71,8 @@
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
+    <string name="exit_to_job_manager">Exit to Job Manager</string>
+    <string name="convert_other_files">Convert other files</string>
 
     <string name="error_can_not_create_output_file">Can\'t create output file, please try again or change output folder</string>
     <string name="error_input_too_short">Input too short</string>
@@ -185,7 +187,7 @@
 
     <string name="hint_quality_level">The higher the value, the better the quality</string>
     <string name="hint_quality_type">Use VBR to get optimized file size</string>
-    <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
+    <string name="hint_compression_level">Lower the compression level reduces the time to convert but generates a larger file size</string>
     <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
 
     <string name="title_category_command_configs">Command Configurations</string>

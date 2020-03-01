@@ -1,34 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/margin_normal"
+    android:paddingEnd="@dimen/margin_normal">
+
+    <include
+        android:id="@+id/unifiedNativeAdView"
+        layout="@layout/ad_unified"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/btnExit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnExit"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_normal"
-        android:text="Exit to Job Manager"
+        android:text="@string/exit_to_job_manager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnContinue"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btnContinue"
+        app:layout_constraintEnd_toStartOf="@id/spacer"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Space
+        android:id="@+id/spacer"
+        android:layout_width="@dimen/margin_tiny"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnExit"
+        app:layout_constraintEnd_toStartOf="@id/btnContinue"
+        app:layout_constraintStart_toEndOf="@id/btnExit" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnContinue"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_normal"
-        android:text="Convert other files"
+        android:text="@string/convert_other_files"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/btnExit"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnExit" />
+        app:layout_constraintStart_toEndOf="@id/spacer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

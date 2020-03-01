@@ -32,3 +32,5 @@ const val GITHUB_NEW_ISSUE_URL = "$GITHUB_ISSUE_URL/new"
 const val PRIVACY_POLICY_URL = "https://khang-nt.github.io/Android-Media-Converter/privacy_policy.html"
 const val TRANSLATE_PAGE = "http://translate.ymusicapp.com/projects/media-converter/strings/"
 const val CHANGELOG_URL = "file:///android_asset/changelog.html"
+
+const val STEP_FIVE_AD_UNIT_ID = "ca-app-pub-8469309022192575/1023553194"
