@@ -22,11 +22,11 @@ apply plugin: 'io.fabric'
 def keyStorePass = hasProperty("key_store_password") ? key_store_password : ""
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.github.khangnt.mcp"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
         versionName "0.9.2"

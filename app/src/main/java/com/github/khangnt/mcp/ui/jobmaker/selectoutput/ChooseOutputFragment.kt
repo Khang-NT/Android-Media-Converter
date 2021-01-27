@@ -151,7 +151,7 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
                         (FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_WRITE_URI_PERMISSION)
                 if (data.flags and FLAG_GRANT_PERSISTABLE_URI_PERMISSION
                         == FLAG_GRANT_PERSISTABLE_URI_PERMISSION) {
-                    context!!.contentResolver.takePersistableUriPermission(uri, takeFlags)
+                    context!!.contentResolver.takePersistableUriPermission(uri!!, takeFlags)
                 }
 
                 chooseOutputViewModel.setOutputFolderUri(uri)

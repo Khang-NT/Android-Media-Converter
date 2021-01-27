@@ -29,7 +29,7 @@ fun <T : Throwable> rootCauseIs(clazz: Class<T>, error: Throwable): Boolean {
     return false
 }
 
-fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T {
+fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T? {
     var temp: Throwable? = this
     while (temp !== null) {
         if (clazz.isInstance(temp)) {
@@ -73,10 +73,14 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
         return context.getString(R.string.network_error)
     } else if (rootCauseIs(FileDownloadHttpException::class.java, error)) {
         val httpException = error.castTo(FileDownloadHttpException::class.java)
-        return "Link broken, response: ${httpException.code}"
+        if (httpException != null) {
+            return "Link broken, response: ${httpException.code}"
+        }
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
-        return "Link broken, response: ${httpResponseCodeException.message}"
+        if (httpResponseCodeException != null) {
+            return "Link broken, response: ${httpResponseCodeException.message}"
+        }
     } else if (error.message?.contains("ENOSPC") == true ||
             rootCauseIs(FileDownloadOutOfSpaceException::class.java, error)) {
         return "Your device's storage is full"

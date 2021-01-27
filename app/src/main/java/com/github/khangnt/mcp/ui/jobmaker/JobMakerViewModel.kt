@@ -46,13 +46,13 @@ class JobMakerViewModel : ViewModel() {
     }
 
     fun moveSelectedFiles(fromPos: Int, toPos: Int) {
-        val newList = ArrayList(selectedFilesLiveData.value)
+        val newList = ArrayList(selectedFilesLiveData.value!!)
         newList.add(toPos, newList.removeAt(fromPos))
         selectedFilesLiveData.value = newList
     }
 
     fun removeSelectedFiles(file: File) {
-        val newList = ArrayList(selectedFilesLiveData.value)
+        val newList = ArrayList(selectedFilesLiveData.value!!)
         newList.remove(file)
         selectedFilesLiveData.value = newList
     }

@@ -92,7 +92,7 @@ class AboutActivity : BaseActivity() {
             // copy device info to clipboard
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Device Info", device.toMarkdown())
-            clipboard.primaryClip = clip
+            clipboard.setPrimaryClip(clip)
             toast(getString(R.string.prompt_device_info_copied))
 
             openUrl(this, GITHUB_NEW_ISSUE_URL, getString(R.string.open_github_issues))
