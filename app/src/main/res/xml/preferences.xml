@@ -47,9 +47,13 @@
         app:summary="@string/title_category_ads_settings_summary">
         <SwitchPreference
             android:defaultValue="true"
+            android:enabled="false"
             android:key="@string/pref_key_enable_ads"
             android:summaryOff="@string/title_enable_ads_summary_off"
             android:summaryOn="@string/title_enable_ads_summary_on"
             android:title="@string/title_enable_ads" />
+        <Preference
+            android:key="@string/pref_key_watch_an_ad"
+            android:title="@string/title_watch_an_ad" />
     </PreferenceCategory>
 </PreferenceScreen>
