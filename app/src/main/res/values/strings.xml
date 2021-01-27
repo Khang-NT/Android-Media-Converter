@@ -105,13 +105,15 @@
     <string name="dialog_confirm_quit_title">Do you want to exit?</string>
     <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
 
-    <string name="mp3_encoder_header">MP3 Encoder:</string>
+    <string name="encoder_header">Encoder:</string>
     <string name="bitrate_type_header">Bitrate type:</string>
     <string name="bitrate_type_vbr">VBR</string>
     <string name="bitrate_type_cbr">CBR (faster)</string>
     <string name="bitrate_header">Bitrate:</string>
     <string name="compression_level_header">Compression level:</string>
     <string name="trim_silence_header">Trim audio silence</string>
+    <string name="sampling_header">Sampling rate:</string>
+    <string name="audio_channel_header">Audio channel:</string>
     <string name="start_conversion_button">Start conversion</string>
 
     <string name="audio_quality_header">Audio quality:</string>

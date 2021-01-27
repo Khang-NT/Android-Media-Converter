@@ -24,9 +24,9 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
-        private val cbrBitrate = arrayOf(
-                320, 256, 224, 192, 128,
-                96, 80, 64, 48, 32
+        private val samplingRate = arrayOf(
+                8000, 11025, 16000, 22050, 44100, 48000,
+                88200, 96000, 176400, 192000, 352800
         )
     }
 
@@ -41,12 +41,12 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
 
         // restore command configs
         if (sharedPrefs.rememberCommandConfig && savedInstanceState == null) {
-            val lastConfig = JSONObject(sharedPrefs.lastAacConfigs)
-            val spinnerBitratePos = lastConfig.optInt("spinnerBitratePos",
-                    spinnerBitrate.selectedItemPosition)
+            val lastConfig = JSONObject(sharedPrefs.lastWavConfigs)
+            val spinnerSamplingRatePos = lastConfig.optInt("spinnerSamplingRatePos",
+                    spinnerSamplingRate.selectedItemPosition)
             val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
                     cbTrimSilence.isChecked)
-            spinnerBitrate.setSelection(spinnerBitratePos)
+            spinnerSamplingRate.setSelection(spinnerSamplingRatePos)
             cbTrimSilence.isChecked = isTrimSilence
         }
     }
@@ -55,22 +55,22 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
         // save command configs
         if (sharedPrefs.rememberCommandConfig) {
             val lastConfig = JSONObject()
-            lastConfig.put("spinnerBitratePos", spinnerBitrate.selectedItemPosition)
+            lastConfig.put("spinnerSamplingRatePos", spinnerSamplingRate.selectedItemPosition)
             lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
-            sharedPrefs.lastAacConfigs = lastConfig.toString()
+            sharedPrefs.lastWavConfigs = lastConfig.toString()
         }
         super.onDestroyView()
     }
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
-        val quality = cbrBitrate[spinnerBitrate.selectedItemPosition]
-        onSuccess(WavCmdConfig(inputFileUris, quality, cbTrimSilence.isChecked))
+        val samplingRate = samplingRate[spinnerSamplingRate.selectedItemPosition]
+        onSuccess(WavCmdConfig(inputFileUris, samplingRate, cbTrimSilence.isChecked))
     }
 }
 
 class WavCmdConfig(
         inputFiles: List<String>,
-        private val quality: Int,
+        private val samplingRate: Int,
         private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
 
@@ -80,11 +80,12 @@ class WavCmdConfig(
         return List(inputFileUris.size) { i -> AutoGenOutput(getFileNameFromInputs(i), "wav") }
     }
 
+    // -ac 1 || - ac 2      audio channel
+    // -ar                  sampling rate
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
         check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
-                .append("-codec:a aac ")
-                .append("-b:a ${quality}k ")
+                .append("-codec:a pcm_s16le -ar $samplingRate ")
                 .append(when (isTrimSilence) {
                     true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
                     false -> ""
@@ -95,7 +96,7 @@ class WavCmdConfig(
                     title = output.title,
                     command = Command(
                             listOf(inputFileUris[index]), output.outputUri, // single input output
-                            Muxer.IPOD, cmdArgs, emptyMap()
+                            Muxer.WAV, cmdArgs, emptyMap()
                     )
             )
         }

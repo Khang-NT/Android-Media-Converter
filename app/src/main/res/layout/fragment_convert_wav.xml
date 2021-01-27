@@ -12,35 +12,61 @@
         android:padding="@dimen/fragment_convert_padding">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/bitrateHeader"
+            android:id="@+id/encoderHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/bitrate_header"
+            android:text="@string/encoder_header"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
-            android:id="@+id/spinnerBitrate"
+            android:id="@+id/spinnerWavEncoder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/cbrBitrate"
-            app:layout_constraintBaseline_toBaselineOf="@+id/bitrateHeader"
-            app:layout_constraintLeft_toRightOf="@+id/bitrateHeader" />
+            android:entries="@array/samplingRate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/encoderHeader"
+            app:layout_constraintLeft_toRightOf="@+id/encoderHeader" />
 
-        <TextView
-            android:id="@+id/qualityLevelHint"
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/samplingHeader"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_normal"
-            android:paddingRight="@dimen/margin_normal"
-            android:text="@string/hint_quality_level"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/sampling_header"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bitrateHeader" />
+            app:layout_constraintTop_toBottomOf="@id/spinnerWavEncoder" />
+
+        <Spinner
+            android:id="@+id/spinnerSamplingRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/samplingRate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/samplingHeader"
+            app:layout_constraintLeft_toRightOf="@+id/samplingHeader" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/audioChannelHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/audio_channel_header"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinnerSamplingRate" />
+
+        <Spinner
+            android:id="@+id/spinnerAudioChannel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/audioChannel"
+            app:layout_constraintBaseline_toBaselineOf="@+id/audioChannelHeader"
+            app:layout_constraintLeft_toRightOf="@+id/audioChannelHeader" />
 
         <CheckBox
             android:id="@+id/cbTrimSilence"
@@ -50,7 +76,7 @@
             android:text="@string/trim_silence_header"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qualityLevelHint" />
+            app:layout_constraintTop_toBottomOf="@id/spinnerAudioChannel" />
 
         <TextView
             android:id="@+id/trimSilenceHint"

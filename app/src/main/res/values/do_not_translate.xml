@@ -12,6 +12,7 @@
     <string name="pref_key_last_mp4_configs" translatable="false">last_mp4_configs</string>
     <string name="pref_key_last_ogg_configs" translatable="false">last_ogg_configs</string>
     <string name="pref_key_last_opus_configs" translatable="false">last_opus_configs</string>
+    <string name="pref_key_last_wav_configs" translatable="false">last_wav_configs</string>
     <string name="pref_key_restore_default_commands" translatable="false">restore_default_commands</string>
     <string name="pref_key_excluded_file_extensions" translatable="false">excluded_file_extensions</string>
     <string name="pref_key_hide_excluded_files" translatable="false">hide_excluded_files</string>
