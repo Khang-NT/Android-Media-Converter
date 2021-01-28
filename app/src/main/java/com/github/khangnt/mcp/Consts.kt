@@ -14,7 +14,7 @@ const val APP_TEMP_FOLDER = "temp"
 const val JOB_TEMP_FOLDER = "jobTemp"
 const val JOB_LOG_FOLDER = "jobLogs"
 
-const val FFMPEG_FILE = "ffmpeg"
+const val FFMPEG_FILE = "libffmpeg.so"
 const val FFMPEG_SIZE_FILE = "ffmpeg_size.txt"
 const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_out.temp"
 

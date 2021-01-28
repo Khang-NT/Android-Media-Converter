@@ -94,31 +94,32 @@ object FFmpegPathResolver {
     @Throws(FFmpegBinaryPrepareException::class)
     fun resolvePath(context: Context, ffmpegPath: File): File {
         synchronized(globalLock) {
-            try {
-                val assetManager = context.assets
-                val ffmpegSize = InputStreamReader(assetManager.open(FFMPEG_SIZE_FILE))
-                        .use { it.readText().trim() }
-                        .toLongOrNull()
-                if (!ffmpegPath.exists() || ffmpegPath.length() != ffmpegSize) {
-                    Timber.d("Start copying FFmpeg to: $ffmpegPath")
-                    assetManager.open(FFMPEG_FILE).use { inputStream ->
-                        val copyTo = context.contentResolver.openOutputStream(Uri.fromFile(ffmpegPath))
-                        BufferedOutputStream(copyTo).use { bufferedOutputStream ->
-                            inputStream.copyTo(bufferedOutputStream)
-                        }
-                    }
-                    Timber.d("Successfully copy FFmpeg binary to: $ffmpegPath")
-                }
-            } catch (error: Throwable) {
-                throw FFmpegBinaryPrepareException("Copy ffmpeg failed", error)
-            }
-            if (ffmpegPath.canExecute() ||
-                    catchAll(printLog = true) { ffmpegPath.setExecutable(true) } == true) {
-                Timber.d("Grant executable permission success on $ffmpegPath")
-                return ffmpegPath
-            } else {
-                throw FFmpegBinaryPrepareException("Can't grant executable permission on: $ffmpegPath", null)
-            }
+//            try {
+//                val assetManager = context.assets
+//                val ffmpegSize = InputStreamReader(assetManager.open(FFMPEG_SIZE_FILE))
+//                        .use { it.readText().trim() }
+//                        .toLongOrNull()
+//                if (!ffmpegPath.exists() || ffmpegPath.length() != ffmpegSize) {
+//                    Timber.d("Start copying FFmpeg to: $ffmpegPath")
+//                    assetManager.open(FFMPEG_FILE).use { inputStream ->
+//                        val copyTo = context.contentResolver.openOutputStream(Uri.fromFile(ffmpegPath))
+//                        BufferedOutputStream(copyTo).use { bufferedOutputStream ->
+//                            inputStream.copyTo(bufferedOutputStream)
+//                        }
+//                    }
+//                    Timber.d("Successfully copy FFmpeg binary to: $ffmpegPath")
+//                }
+//            } catch (error: Throwable) {
+//                throw FFmpegBinaryPrepareException("Copy ffmpeg failed", error)
+//            }
+//            if (ffmpegPath.canExecute() ||
+//                    catchAll(printLog = true) { ffmpegPath.setExecutable(true) } == true) {
+//                Timber.d("Grant executable permission success on $ffmpegPath")
+//                return ffmpegPath
+//            } else {
+//                throw FFmpegBinaryPrepareException("Can't grant executable permission on: $ffmpegPath", null)
+//            }
+            return ffmpegPath
         }
     }
 

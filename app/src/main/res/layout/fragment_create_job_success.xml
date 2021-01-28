@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:enabled="false"
         android:id="@+id/btnExit"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
@@ -38,6 +39,7 @@
         app:layout_constraintStart_toEndOf="@id/btnExit" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:enabled="false"
         android:id="@+id/btnContinue"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
