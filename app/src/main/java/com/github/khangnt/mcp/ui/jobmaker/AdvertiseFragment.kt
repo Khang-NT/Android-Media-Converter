@@ -13,6 +13,7 @@ import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.STEP_FIVE_AD_UNIT_ID
 import com.github.khangnt.mcp.ui.MainActivity.Companion.openJobManagerIntent
 import com.github.khangnt.mcp.util.getViewModel
+import com.github.khangnt.mcp.util.toast
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.VideoOptions
@@ -46,6 +47,8 @@ class AdvertiseFragment : StepFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        toast(getString(R.string.title_loading_ads_wait))
 
         initializeAds(context, unifiedNativeAdView)
 
@@ -162,5 +165,8 @@ class AdvertiseFragment : StepFragment() {
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.
         adView.setNativeAd(newAd)
+
+        btnContinue.isEnabled = true
+        btnExit.isEnabled = true
     }
 }

@@ -69,7 +69,7 @@ class SettingsFragment(private val mRewardedVideoAd: RewardedVideoAd) : Preferen
                 if (mRewardedVideoAd.isLoaded) {
                     mRewardedVideoAd.show()
                 } else {
-                    toast(R.string.title_loading_ads)
+                    toast(R.string.title_loading_ads_try_again)
                 }
                 true
             }
