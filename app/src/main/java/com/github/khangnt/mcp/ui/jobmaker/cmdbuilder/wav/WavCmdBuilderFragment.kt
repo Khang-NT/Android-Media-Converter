@@ -24,6 +24,11 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
+        private val wavFormats = arrayOf(
+                "alaw", "f32be", "f32le", "f64be", "f64le",
+                "mulaw", "s16be", "s16le", "s24be", "s24le", "s32be", "s32le",
+                "s8", "u16be", "u16le", "u24be", "u24le", "u32be", "u32le", "u8"
+        )
         private val samplingRate = arrayOf(
                 8000, 11025, 16000, 22050, 44100, 48000,
                 88200, 96000, 176400, 192000, 352800
@@ -44,6 +49,8 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
             val lastConfig = JSONObject(sharedPrefs.lastWavConfigs)
             val spinnerSamplingRatePos = lastConfig.optInt("spinnerSamplingRatePos",
                     spinnerSamplingRate.selectedItemPosition)
+            val spinnerWavEncoderPos = lastConfig.optInt("spinnerWavEncoderPos",
+                    spinnerWavEncoder.selectedItemPosition)
             val isTrimSilence = lastConfig.optBoolean("isTrimSilence",
                     cbTrimSilence.isChecked)
             spinnerSamplingRate.setSelection(spinnerSamplingRatePos)
@@ -56,6 +63,7 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
         if (sharedPrefs.rememberCommandConfig) {
             val lastConfig = JSONObject()
             lastConfig.put("spinnerSamplingRatePos", spinnerSamplingRate.selectedItemPosition)
+            lastConfig.put("spinnerWavEncoderPos", spinnerWavEncoder.selectedItemPosition)
             lastConfig.put("isTrimSilence", cbTrimSilence.isChecked)
             sharedPrefs.lastWavConfigs = lastConfig.toString()
         }
@@ -64,12 +72,14 @@ class WavCmdBuilderFragment : CommandBuilderFragment() {
 
     override fun validateConfig(onSuccess: (CommandConfig) -> Unit) {
         val samplingRate = samplingRate[spinnerSamplingRate.selectedItemPosition]
-        onSuccess(WavCmdConfig(inputFileUris, samplingRate, cbTrimSilence.isChecked))
+        val wavFormat = wavFormats[spinnerWavEncoder.selectedItemPosition]
+        onSuccess(WavCmdConfig(inputFileUris, wavFormat, samplingRate, cbTrimSilence.isChecked))
     }
 }
 
 class WavCmdConfig(
         inputFiles: List<String>,
+        private val wavFormat: String,
         private val samplingRate: Int,
         private val isTrimSilence: Boolean
 ) : CommandConfig(inputFiles) {
@@ -85,7 +95,7 @@ class WavCmdConfig(
     override fun makeJobs(finalFinalOutputs: List<FinalOutput>): List<Job> {
         check(finalFinalOutputs.size == getNumberOfOutput())
         val cmdArgs = StringBuffer("-hide_banner -map 0:a -map_metadata 0:g ")
-                .append("-codec:a pcm_s16le -ar $samplingRate ")
+                .append("-f $wavFormat -codec:a pcm_$wavFormat -ar $samplingRate ")
                 .append(when (isTrimSilence) {
                     true -> "-af silenceremove=1:0:-50dB:1:1:-50dB "
                     false -> ""
