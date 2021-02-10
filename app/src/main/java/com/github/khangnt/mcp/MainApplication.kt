@@ -1,15 +1,14 @@
 package com.github.khangnt.mcp
 
+import android.os.Build
 import android.os.StrictMode
 import androidx.multidex.MultiDexApplication
 import cat.ereza.customactivityoncrash.config.CaocConfig
-import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.util.IMMLeaks
 import com.google.android.gms.ads.MobileAds
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.database.NoDatabaseImpl
 import com.squareup.leakcanary.LeakCanary
-import io.fabric.sdk.android.Fabric
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
@@ -39,8 +38,6 @@ class MainApplication : MultiDexApplication() {
                 .database { NoDatabaseImpl() }
                 .maxNetworkThreadCount(4)
                 .commit()
-
-        Fabric.with(this, Crashlytics())
 
         CaocConfig.Builder.create()
                 .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT)

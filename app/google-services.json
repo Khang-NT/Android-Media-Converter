@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "606153105698",
+    "project_id": "media-converter-pro",
+    "storage_bucket": "media-converter-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606153105698:android:186c9eade52a523550c57b",
+        "android_client_info": {
+          "package_name": "com.github.khangnt.mcp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606153105698-oeul6bdpn4re614mc2l8pnm7nekvihn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9BbG5hdgWB_qpGAAJm1al3rlTj8c_nNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606153105698-oeul6bdpn4re614mc2l8pnm7nekvihn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

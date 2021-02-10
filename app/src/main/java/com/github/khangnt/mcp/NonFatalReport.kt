@@ -1,8 +1,8 @@
 package com.github.khangnt.mcp
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException
 import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException
 import java.io.EOFException
@@ -58,8 +58,8 @@ private fun inWhiteList(error: Throwable): Boolean =
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
     if (!BuildConfig.DEBUG && !inWhiteList(throwable)) {
-        Crashlytics.setString("where", "Non-fatal at '$where': ${message ?: throwable.message}")
-        Crashlytics.logException(throwable)
+        FirebaseCrashlytics.getInstance().setCustomKey("where", "Non-fatal at '$where': ${message ?: throwable.message}")
+        FirebaseCrashlytics.getInstance().log(message ?: throwable.message.toString())
     }
 }
 

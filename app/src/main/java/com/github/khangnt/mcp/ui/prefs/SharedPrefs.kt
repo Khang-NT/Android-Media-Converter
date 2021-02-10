@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.ui.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.preference.PreferenceManager
 import androidx.annotation.StringRes
 import com.github.khangnt.mcp.R
@@ -82,7 +83,7 @@ class SharedPrefs(private val mContext: Context) {
         set(count) = putInt(R.string.pref_key_conversion_count_left, count)
 
     var legacyMode: Boolean
-        get() = getBoolean(R.string.pref_key_legacy_mode, true)
+        get() = getBoolean(R.string.pref_key_legacy_mode, Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q)
         set(legacyMode) = putBoolean(R.string.pref_key_legacy_mode, legacyMode)
 
     private operator fun contains(@StringRes keyRes: Int): Boolean {

@@ -1,6 +1,6 @@
 package com.github.khangnt.mcp
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 /**
@@ -10,6 +10,6 @@ import timber.log.Timber
 
 class CrashlyticsTree : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        Crashlytics.log(message)
+        FirebaseCrashlytics.getInstance().log(message)
     }
 }
