@@ -56,4 +56,13 @@
             android:key="@string/pref_key_watch_an_ad"
             android:title="@string/title_watch_an_ad" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_category_compatibility_settings">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_legacy_mode"
+            android:summaryOff="@string/title_legacy_mode_summary_off"
+            android:summaryOn="@string/title_legacy_mode_summary_on"
+            android:title="@string/title_legacy_mode" />
+    </PreferenceCategory>
 </PreferenceScreen>

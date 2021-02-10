@@ -8,6 +8,7 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.REWARD_AD_UNIT_ID
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.util.toast
 import com.google.android.gms.ads.AdRequest
@@ -25,7 +26,7 @@ class SettingsFragment(private val mRewardedVideoAd: RewardedVideoAd) : Preferen
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        mRewardedVideoAd.loadAd(getString(R.string.reward_ad_unit_id), AdRequest.Builder().build())
+        mRewardedVideoAd.loadAd(REWARD_AD_UNIT_ID, AdRequest.Builder().build())
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 

@@ -129,7 +129,6 @@ android {
 
     sourceSets {
         main {
-            jni.srcDirs = []
         }
     }
 }

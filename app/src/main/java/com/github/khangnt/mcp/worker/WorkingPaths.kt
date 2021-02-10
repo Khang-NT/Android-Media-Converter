@@ -17,7 +17,7 @@ data class WorkingPaths(
         val tempDir: File,
         val fileDir: File,
         val ffmpegFolder: String,
-        val ffmpegPath: File = File(ffmpegFolder, FFMPEG_FILE)
+        val ffmpegPath: File = if (ffmpegFolder.isEmpty()) File(fileDir, FFMPEG_FILE) else File(ffmpegFolder, FFMPEG_FILE)
 ) {
     private val jobTempRootDir: File by lazy { File(tempDir, JOB_TEMP_FOLDER).ensureDirExists() }
     private val jobLogRootDir: File by lazy { File(fileDir, JOB_LOG_FOLDER).ensureDirExists() }
@@ -53,7 +53,11 @@ fun makeWorkingPaths(context: Context): WorkingPaths {
         context.getDir(APP_TEMP_FOLDER, Context.MODE_PRIVATE)
     }
 
-    var ffmpegFolder = ""
+    if (SingletonInstances.getSharedPrefs().legacyMode) {
+        return WorkingPaths(tempDir, fileDir, "")
+    }
+
+    val ffmpegFolder: String
     val archFolder = Build.SUPPORTED_ABIS[0]
 
     ffmpegFolder = context.packageResourcePath.replace(Regex("/([^/]+)\$"), "/lib/") + archFolder + "/"

@@ -77,6 +77,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getInt(R.string.pref_key_conversion_count_left, 3)
         set(count) = putInt(R.string.pref_key_conversion_count_left, count)
 
+    var legacyMode: Boolean
+        get() = getBoolean(R.string.pref_key_legacy_mode, true)
+        set(legacyMode) = putBoolean(R.string.pref_key_legacy_mode, legacyMode)
+
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))
     }

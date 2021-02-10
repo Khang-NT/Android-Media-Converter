@@ -213,6 +213,10 @@
     <string name="title_enable_ads">Enable ads</string>
     <string name="title_enable_ads_summary_off">Hide ads after create jobs</string>
     <string name="title_enable_ads_summary_on">Display ads after create jobs</string>
+    <string name="title_category_compatibility_settings">Compatibility Settings</string>
+    <string name="title_legacy_mode">Use Legacy FFMPEG</string>
+    <string name="title_legacy_mode_summary_off">Using new method to works with Android 11 and up</string>
+    <string name="title_legacy_mode_summary_on">Using legacy method. Disable if you are using Android 11 and up</string>
 
     <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
     <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>

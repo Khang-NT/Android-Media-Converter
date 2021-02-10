@@ -62,24 +62,12 @@
     </string-array>
     <string-array name="wavFormats">
         <item>PCM A-law</item>
-        <item>PCM 32-bit floating-point big-endian</item>
         <item>PCM 32-bit floating-point little-endian</item>
-        <item>PCM 64-bit floating-point big-endian</item>
         <item>PCM 64-bit floating-point little-endian</item>
         <item>PCM mu-law</item>
-        <item>PCM signed 16-bit big-endian</item>
         <item>PCM signed 16-bit little-endian</item>
-        <item>PCM signed 24-bit big-endian</item>
         <item>PCM signed 24-bit little-endian</item>
-        <item>PCM signed 32-bit big-endian</item>
         <item>PCM signed 32-bit little-endian</item>
-        <item>PCM signed 8-bit</item>
-        <item>PCM unsigned 16-bit big-endian</item>
-        <item>PCM unsigned 16-bit little-endian</item>
-        <item>PCM unsigned 24-bit big-endian</item>
-        <item>PCM unsigned 24-bit little-endian</item>
-        <item>PCM unsigned 32-bit big-endian</item>
-        <item>PCM unsigned 32-bit little-endian</item>
         <item>PCM unsigned 8-bit</item>
     </string-array>
     <string-array name="samplingRate">
