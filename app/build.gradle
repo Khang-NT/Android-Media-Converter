@@ -29,7 +29,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
-        versionName "0.9.2"
+        versionName "0.10.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -72,7 +72,7 @@ android {
         }
     }
 
-    final _versionCode = 28
+    final _versionCode = 29
 
     flavorDimensions 'cpuArch'
     productFlavors {
