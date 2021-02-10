@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/fragment_convert_padding">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ffmpegCustomParamsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/ffmpeg_custom_params"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edCustomCommand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="ffmpegParams"
+            android:hint="@string/ffmpeg_custom_params_hint"
+            android:importantForAutofill="yesExcludeDescendants"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minLines="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ffmpegCustomParamsHeader" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/edFileExtensionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/file_extension"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edCustomCommand" />
+
+        <EditText
+            android:id="@+id/edFileExtension"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:autofillHints="ffmpegOutputFileExtension"
+            android:hint="@string/file_extension_hint"
+            android:importantForAutofill="yesExcludeDescendants"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edFileExtensionHeader"
+            app:layout_constraintTop_toBottomOf="@id/edCustomCommand" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/edOutputFormatHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/output_muxer"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edFileExtension" />
+
+        <EditText
+            android:id="@+id/edOutputMuxer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:autofillHints="ffmpegOutputMuxer"
+            android:hint="@string/output_muxer_hint"
+            android:importantForAutofill="yesExcludeDescendants"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/edOutputFormatHeader"
+            app:layout_constraintTop_toBottomOf="@id/edFileExtension" />
+
+        <TextView
+            android:id="@+id/edOutputMuxerHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="-y -f mp3"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintStart_toEndOf="@id/edOutputFormatHeader"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edOutputMuxer" />
+        <CheckBox
+            android:id="@+id/cbAddRecommendParams"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:checked="true"
+            android:text="@string/add_recommended_params"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edOutputMuxerHint" />
+
+        <TextView
+            android:id="@+id/cbAddRecommendParamsHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="@string/add_recommended_params_hint"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbAddRecommendParams" />
+
+        <CheckBox
+            android:id="@+id/cbMapAudio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/recommend_for_audio"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbAddRecommendParamsHint" />
+
+        <TextView
+            android:id="@+id/cbMapAudioHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="@string/recommend_for_audio_hint"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbMapAudio" />
+
+        <CheckBox
+            android:id="@+id/cbMapAudioVideoSrt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/recommend_for_video"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbMapAudioHint" />
+
+        <TextView
+            android:id="@+id/cbMapAudioVideoSrtHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="-map 0:v -map '0:a?' -map '0:s?' -c:v mpeg4 -c:a aac -c:s srt"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbMapAudioVideoSrt"
+            tools:ignore="HardcodedText" />
+
+        <CheckBox
+            android:id="@+id/cbTrimSilence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/trim_silence_header"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbMapAudioVideoSrtHint" />
+
+        <TextView
+            android:id="@+id/trimSilenceHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingRight="@dimen/margin_normal"
+            android:text="-af silenceremove=1:0:-50dB:1:1:-50dB"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbTrimSilence"
+            tools:ignore="HardcodedText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

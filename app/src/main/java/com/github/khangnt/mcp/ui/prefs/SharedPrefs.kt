@@ -2,6 +2,7 @@ package com.github.khangnt.mcp.ui.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.preference.PreferenceManager
 import androidx.annotation.StringRes
 import com.github.khangnt.mcp.R
@@ -57,6 +58,14 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_opus_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_opus_configs, commandConfigs)
 
+    var lastWavConfigs: String?
+        get() = getString(R.string.pref_key_last_wav_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_wav_configs, commandConfigs)
+
+    var lastCustomConfigs: String?
+        get() = getString(R.string.pref_key_last_custom_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_custom_configs, commandConfigs)
+
     var excludedFileExtensions: String?
         get() = getString(R.string.pref_key_excluded_file_extensions, "")
         set(fileExtensions) = putString(R.string.pref_key_excluded_file_extensions, fileExtensions)
@@ -64,6 +73,18 @@ class SharedPrefs(private val mContext: Context) {
     var hideExcludedFiles: Boolean
         get() = getBoolean(R.string.pref_key_hide_excluded_files, false)
         set(hideExcludedFiles) = putBoolean(R.string.pref_key_hide_excluded_files, hideExcludedFiles)
+
+    var enabledAds: Boolean
+        get() = getBoolean(R.string.pref_key_enable_ads, true)
+        set(enabledAds) = putBoolean(R.string.pref_key_enable_ads, enabledAds)
+
+    var conversionCountLeftBeforeShowAds: Int
+        get() = getInt(R.string.pref_key_conversion_count_left, 0)
+        set(count) = putInt(R.string.pref_key_conversion_count_left, count)
+
+    var legacyMode: Boolean
+        get() = getBoolean(R.string.pref_key_legacy_mode, Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q)
+        set(legacyMode) = putBoolean(R.string.pref_key_legacy_mode, legacyMode)
 
     private operator fun contains(@StringRes keyRes: Int): Boolean {
         return mPrefs.contains(mContext.getString(keyRes))

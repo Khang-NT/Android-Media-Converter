@@ -71,6 +71,8 @@
     <string name="edit_text_uri_hint">Enter file path or an URL</string>
     <string name="output_folder_hint">Output folder (click to edit)</string>
     <string name="output_file_name_hint">Output file name</string>
+    <string name="exit_to_job_manager">Exit to Job Manager</string>
+    <string name="convert_other_files">Convert other files</string>
 
     <string name="error_can_not_create_output_file">Can\'t create output file, please try again or change output folder</string>
     <string name="error_input_too_short">Input too short</string>
@@ -103,13 +105,15 @@
     <string name="dialog_confirm_quit_title">Do you want to exit?</string>
     <string name="dialog_confirm_quit_message">Your settings won\'t be saved</string>
 
-    <string name="mp3_encoder_header">MP3 Encoder:</string>
+    <string name="encoder_header">Encoder:</string>
     <string name="bitrate_type_header">Bitrate type:</string>
     <string name="bitrate_type_vbr">VBR</string>
     <string name="bitrate_type_cbr">CBR (faster)</string>
     <string name="bitrate_header">Bitrate:</string>
     <string name="compression_level_header">Compression level:</string>
     <string name="trim_silence_header">Trim audio silence</string>
+    <string name="sampling_header">Sampling rate:</string>
+    <string name="audio_channel_header">Audio channel:</string>
     <string name="start_conversion_button">Start conversion</string>
 
     <string name="audio_quality_header">Audio quality:</string>
@@ -156,6 +160,7 @@
     <string name="short_name_flac">FLAC</string>
     <string name="short_name_opus">OPUS</string>
     <string name="short_name_ogg">OGG</string>
+    <string name="short_name_wav">WAV</string>
     <string name="short_name_mp4">MP4</string>
     
     <string name="label_cut_length">Cut video/audio length</string>
@@ -185,7 +190,7 @@
 
     <string name="hint_quality_level">The higher the value, the better the quality</string>
     <string name="hint_quality_type">Use VBR to get optimized file size</string>
-    <string name="hint_compression_level">Lower the compression level results in better quality, but generates a larger file size</string>
+    <string name="hint_compression_level">Lower the compression level reduces the time to convert but generates a larger file size</string>
     <string name="hint_trim_silence">Enable this will remove silence at the start/end of the audio</string>
 
     <string name="title_category_command_configs">Command Configurations</string>
@@ -203,6 +208,15 @@
     <string name="title_auto_clear">Auto clear logs and finished jobs</string>
     <string name="title_set_as_default_output_folder">Set as default output folder</string>
     <string name="title_start">START</string>
+    <string name="title_category_ads_settings">Ads Settings</string>
+    <string name="title_category_ads_settings_summary">Enable ads to support the developer.</string>
+    <string name="title_enable_ads">Enable ads</string>
+    <string name="title_enable_ads_summary_off">Hide ads after create jobs</string>
+    <string name="title_enable_ads_summary_on">Display ads after create jobs</string>
+    <string name="title_category_compatibility_settings">Compatibility Settings</string>
+    <string name="title_legacy_mode">Use Legacy FFMPEG</string>
+    <string name="title_legacy_mode_summary_off">Using new method to works with Android 11 and up</string>
+    <string name="title_legacy_mode_summary_on">Using legacy method. Disable if you are using Android 11 and up</string>
 
     <string name="message_clear_finished_jobs">Are you sure to clear all the finished jobs?\n(This will NOT delete any of your media files)</string>
     <string name="message_cleared_all_finished_jobs">Cleared all finished jobs!</string>
@@ -210,5 +224,22 @@
     <string name="message_restored_default_commands_success">Restored default command configs successfully!</string>
 
     <string name="default_excluded_file_extension">apk lrc rar zip</string>
+    <string name="title_watch_an_ad">Watch an ad to disable ads for 5 conversions</string>
+    <string name="title_loading_ads_try_again">Loading ads. Please try again…</string>
+    <string name="title_loading_ads_wait">Loading ads. Please wait…</string>
+    <string name="ffmpeg_custom_params">FFMPEG custom params:</string>
+    <string name="ffmpeg_custom_params_hint">-codec:a libmp3lame -b:a 128k</string>
+    <string name="add_recommended_params">Add recommended params</string>
+    <string name="add_recommended_params_hint">-hide_banner -map_metadata 0:g</string>
+    <string name="recommend_for_audio">Recommend for audio</string>
+    <string name="recommend_for_audio_hint">-map 0:a</string>
+    <string name="recommend_for_video">Recommend for video</string>
+    <string name="output_muxer">Output Muxer:</string>
+    <string name="output_muxer_hint">Default: mp3</string>
+    <string name="file_extension">File extension:</string>
+    <string name="file_extension_hint">mp3</string>
+    <string name="header_advanced">Advanced (enable ads to use)</string>
+    <string name="custom">Custom</string>
+    <string name="please_enable_ads">Please enable ads to use custom format.</string>
 
 </resources>

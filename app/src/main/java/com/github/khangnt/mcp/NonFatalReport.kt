@@ -1,8 +1,8 @@
 package com.github.khangnt.mcp
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
 import com.github.khangnt.mcp.exception.HttpResponseCodeException
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException
 import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException
 import java.io.EOFException
@@ -29,7 +29,7 @@ fun <T : Throwable> rootCauseIs(clazz: Class<T>, error: Throwable): Boolean {
     return false
 }
 
-fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T {
+fun <T : Throwable> Throwable.castTo(clazz: Class<T>): T? {
     var temp: Throwable? = this
     while (temp !== null) {
         if (clazz.isInstance(temp)) {
@@ -58,8 +58,8 @@ private fun inWhiteList(error: Throwable): Boolean =
 
 fun reportNonFatal(throwable: Throwable, where: String, message: String? = null) {
     if (!BuildConfig.DEBUG && !inWhiteList(throwable)) {
-        Crashlytics.setString("where", "Non-fatal at '$where': ${message ?: throwable.message}")
-        Crashlytics.logException(throwable)
+        FirebaseCrashlytics.getInstance().setCustomKey("where", "Non-fatal at '$where': ${message ?: throwable.message}")
+        FirebaseCrashlytics.getInstance().log(message ?: throwable.message.toString())
     }
 }
 
@@ -73,10 +73,14 @@ fun getKnownReasonOf(error: Throwable, context: Context, fallback: String): Stri
         return context.getString(R.string.network_error)
     } else if (rootCauseIs(FileDownloadHttpException::class.java, error)) {
         val httpException = error.castTo(FileDownloadHttpException::class.java)
-        return "Link broken, response: ${httpException.code}"
+        if (httpException != null) {
+            return "Link broken, response: ${httpException.code}"
+        }
     } else if (rootCauseIs(HttpResponseCodeException::class.java, error)) {
         val httpResponseCodeException = error.castTo(HttpResponseCodeException::class.java)
-        return "Link broken, response: ${httpResponseCodeException.message}"
+        if (httpResponseCodeException != null) {
+            return "Link broken, response: ${httpResponseCodeException.message}"
+        }
     } else if (error.message?.contains("ENOSPC") == true ||
             rootCauseIs(FileDownloadOutOfSpaceException::class.java, error)) {
         return "Your device's storage is full"

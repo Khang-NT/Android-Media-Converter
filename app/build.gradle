@@ -1,34 +1,21 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        //noinspection GradleDynamicVersion
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
-
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 def keyStorePass = hasProperty("key_store_password") ? key_store_password : ""
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.github.khangnt.mcp"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 29
+        multiDexEnabled true
         versionCode 1
-        versionName "0.9.2"
+        versionName "0.10.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -71,7 +58,7 @@ android {
         }
     }
 
-    final _versionCode = 28
+    final _versionCode = 29
 
     flavorDimensions 'cpuArch'
     productFlavors {
@@ -128,7 +115,6 @@ android {
 
     sourceSets {
         main {
-            jni.srcDirs = []
         }
     }
 }
@@ -155,6 +141,14 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+
+    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+
+    implementation platform('com.google.firebase:firebase-bom:26.4.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
@@ -165,10 +159,6 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.0'
 
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
-        transitive = true
-    }
 
     implementation 'com.liulishuo.filedownloader:library:1.7.1'
 

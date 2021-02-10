@@ -143,14 +143,7 @@ class FileBrowserFragment : BaseFragment() {
 
     fun selectAllFilesInCurrentFolder() {
         if (getCallbacks()?.allowChangeSelectedFile() != false) {
-            viewModel.getFileModels().value.orEmpty().forEach { model ->
-                val isFull = viewModel.getSelectedFiles().size == limitSelectCount
-                if (model.type == TYPE_FILE
-                        && !isFull
-                        && !model.selected) {
-                    viewModel.selectFile(model.path)
-                }
-            }
+            viewModel.selectAllFilesInCurrentFolder(limitSelectCount)
             refreshOnSelectedFilesChanged()
         } else {
             showFileSelectionLockedMessage()
@@ -159,11 +152,7 @@ class FileBrowserFragment : BaseFragment() {
 
     fun deselectAllFilesInCurrentFolder() {
         if (getCallbacks()?.allowChangeSelectedFile() != false) {
-            viewModel.getFileModels().value.orEmpty().forEach { model ->
-                if (model.type == TYPE_FILE && model.selected) {
-                    viewModel.unselectedFile(model.path)
-                }
-            }
+            viewModel.deselectAllFilesInCurrentFolder()
             refreshOnSelectedFilesChanged()
         } else {
             showFileSelectionLockedMessage()

@@ -14,8 +14,9 @@ const val APP_TEMP_FOLDER = "temp"
 const val JOB_TEMP_FOLDER = "jobTemp"
 const val JOB_LOG_FOLDER = "jobLogs"
 
-const val FFMPEG_FILE = "ffmpeg"
-const val FFMPEG_SIZE_FILE = "ffmpeg_size.txt"
+const val FFMPEG_FILE = "libffmpeg.so"
+const val FFMPEG_FILE_LEGACY = "ffmpeg"
+const val FFMPEG_SIZE_FILE = "ffmpeg.txt"
 const val FFMPEG_TEMP_OUTPUT_FILE = "ffmpeg_out.temp"
 
 
@@ -32,3 +33,7 @@ const val GITHUB_NEW_ISSUE_URL = "$GITHUB_ISSUE_URL/new"
 const val PRIVACY_POLICY_URL = "https://khang-nt.github.io/Android-Media-Converter/privacy_policy.html"
 const val TRANSLATE_PAGE = "http://translate.ymusicapp.com/projects/media-converter/strings/"
 const val CHANGELOG_URL = "file:///android_asset/changelog.html"
+
+const val STEP_FIVE_AD_UNIT_ID = "ca-app-pub-8469309022192575/1023553194"
+const val REWARD_AD_UNIT_ID = "ca-app-pub-8469309022192575/3405656686"
+const val JOB_MANAGER_AD_UNIT_ID = "ca-app-pub-8469309022192575/8215920221"

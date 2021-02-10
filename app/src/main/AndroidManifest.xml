@@ -12,8 +12,10 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -74,6 +76,9 @@
             android:label="@string/nav_settings"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8469309022192575~2742857805" />
     </application>
 
 </manifest>

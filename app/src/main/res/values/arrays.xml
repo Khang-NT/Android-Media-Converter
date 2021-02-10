@@ -60,4 +60,31 @@
         <item>30</item>
         <item>90</item>
     </string-array>
+    <string-array name="wavFormats">
+        <item>PCM A-law</item>
+        <item>PCM 32-bit floating-point little-endian</item>
+        <item>PCM 64-bit floating-point little-endian</item>
+        <item>PCM mu-law</item>
+        <item>PCM signed 16-bit little-endian</item>
+        <item>PCM signed 24-bit little-endian</item>
+        <item>PCM signed 32-bit little-endian</item>
+        <item>PCM unsigned 8-bit</item>
+    </string-array>
+    <string-array name="samplingRate">
+        <item>8,000 Hz</item>
+        <item>11,025 Hz</item>
+        <item>16,000 Hz</item>
+        <item>22,050 Hz</item>
+        <item>44,100 Hz	(recommended)</item>
+        <item>48,000 Hz	(recommended)</item>
+        <item>88,200 Hz</item>
+        <item>96,000 Hz</item>
+        <item>176,400 Hz</item>
+        <item>192,000 Hz</item>
+        <item>352,800 Hz</item>
+    </string-array>
+    <string-array name="audioChannel">
+        <item>1 (Mono)</item>
+        <item>2 (Stereo)</item>
+    </string-array>
 </resources>

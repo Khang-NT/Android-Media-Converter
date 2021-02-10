@@ -8,14 +8,16 @@ import androidx.annotation.StringRes
 import com.github.khangnt.mcp.annotation.ConvertType
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac.AacCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.custom.CustomCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.flac.FlacCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3.Mp3CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4.Mp4CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.ogg.OggCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.opus.OpusCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.wav.WavCmdBuilderFragment
 
 private fun colorArrayOf(vararg longValues: Long): IntArray {
-    return IntArray(longValues.size, { longValues[it].toInt() })
+    return IntArray(longValues.size) { longValues[it].toInt() }
 }
 
 enum class Gradient(val colors: IntArray) {
@@ -30,7 +32,9 @@ enum class Gradient(val colors: IntArray) {
     SoundCloud(colorArrayOf(0xfffe8c00, 0xfff83600)),
     Mini(colorArrayOf(0xff30e8bf, 0xffff8235)),
     EasyMed(colorArrayOf(0xffdce35b, 0xff45b649)),
-    Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff))
+    Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff)),
+    BlueSkies(colorArrayOf(0xff56ccf2, 0xff2f80ed)),
+    Behongo(colorArrayOf(0xff52c234, 0xff061700)),
     ;
 
     fun getDrawable(
@@ -74,6 +78,11 @@ enum class ConvertCommand(
             gradient = Gradient.Friday,
             fragmentFactory = ::OggCmdBuilderFragment
     ),
+    CONVERT_WAV(
+            type = ConvertType.TYPE_ENCODE_AUDIO, shortName = R.string.short_name_wav,
+            gradient = Gradient.BlueSkies,
+            fragmentFactory = ::WavCmdBuilderFragment
+    ),
     CONVERT_MP4(
             type = ConvertType.TYPE_ENCODE_VIDEO, shortName = R.string.short_name_mp4,
             gradient = Gradient.Nighthawk,
@@ -89,6 +98,27 @@ enum class ConvertCommand(
 
     override fun getTag(): String = name
 
+}
+
+enum class AdvancedCommand(
+        @StringRes val shortName: Int, val gradient: Gradient,
+        val fragmentFactory: () -> CommandBuilderFragment
+
+) : PresetCommand {
+    CUSTOM(
+            shortName = R.string.custom,
+            gradient = Gradient.Behongo,
+            fragmentFactory = ::CustomCmdBuilderFragment
+    )
+    ;
+
+    override fun createCommandBuilderFragment(): CommandBuilderFragment = fragmentFactory()
+
+    override fun getTitle(resources: Resources): String {
+        return resources.getString(R.string.title_convert, resources.getString(shortName))
+    }
+
+    override fun getTag(): String = name
 }
 
 enum class EditCommand(

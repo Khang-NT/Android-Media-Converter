@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.BuildConfig
 import com.github.khangnt.mcp.PLAY_STORE_PACKAGE
 import com.github.khangnt.mcp.R
-import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.annotation.JobStatus
 import com.github.khangnt.mcp.ui.jobmanager.JobManagerFragment
@@ -29,6 +28,7 @@ import com.github.khangnt.mcp.worker.EXTRA_JOB_ID
 import com.github.khangnt.mcp.worker.EXTRA_JOB_STATUS
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_job_manager.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit.*
 
@@ -59,12 +59,11 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
             requestPermissions(appPermissions, 0)
         }
 
-        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        val sharedPrefs = getSharedPrefs()
         if (sharedPrefs.lastKnownVersionCode < BuildConfig.VERSION_CODE) {
             viewChangelog(this)
             sharedPrefs.lastKnownVersionCode = BuildConfig.VERSION_CODE
         }
-
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
@@ -176,7 +175,7 @@ class MainActivity : SingleFragmentActivity(), NavigationView.OnNavigationItemSe
 
     private fun onJobDone(jobId: Long, @JobStatus jobStatus: Int) {
         Timber.d("onJobDone called($jobId, $jobStatus)")
-        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        val sharedPrefs = getSharedPrefs()
         if (jobStatus == JobStatus.COMPLETED
                 && !sharedPrefs.isRated
                 && sharedPrefs.successJobsCount >= 3

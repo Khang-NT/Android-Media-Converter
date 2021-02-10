@@ -7,7 +7,14 @@ import android.os.Bundle
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.REWARD_AD_UNIT_ID
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_settings.*
 
@@ -18,6 +25,8 @@ import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : SingleFragmentActivity() {
 
+    private val mRewardedVideoAd: RewardedVideoAd by lazy { MobileAds.getRewardedVideoAdInstance(this) }
+
     companion object {
 
         fun launch(context: Context) {
@@ -26,7 +35,8 @@ class SettingsActivity : SingleFragmentActivity() {
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
-        return SettingsFragment()
+        mRewardedVideoAd.loadAd(REWARD_AD_UNIT_ID, AdRequest.Builder().build())
+        return SettingsFragment(mRewardedVideoAd)
     }
 
     override fun onCreateLayout(savedInstanceState: Bundle?) {
@@ -54,5 +64,20 @@ class SettingsActivity : SingleFragmentActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun onResume() {
+        mRewardedVideoAd.resume(this)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        mRewardedVideoAd.pause(this)
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        mRewardedVideoAd.destroy(this)
+        super.onDestroy()
     }
 }

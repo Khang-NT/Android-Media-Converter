@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import com.github.khangnt.mcp.AdvancedCommand
 import com.github.khangnt.mcp.ConvertCommand
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.common.AdapterModel
 import com.github.khangnt.mcp.ui.common.HeaderModel
 import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
@@ -34,6 +36,11 @@ class ChooseCommandFragment : StepFragment() {
             withModel<ConvertCommandModel> {
                 ItemConvertCommandViewHolder.Factory {
                     onClick = { onSelectConvertCommand(it) }
+                }
+            }
+            withModel<AdvancedCommandModel> {
+                ItemAdvancedCommandViewHolder.Factory {
+                    onClick = { onSelectAdvancedCommand(it) }
                 }
             }
             withModel<EditCommandModel> {
@@ -82,6 +89,12 @@ class ChooseCommandFragment : StepFragment() {
             ConvertCommandModel(it, selectedFileCount > 0)
         })
 
+        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        adapterModels.add(HeaderModel(getString(R.string.header_advanced)))
+        adapterModels.addAll(AdvancedCommand.values().map {
+            AdvancedCommandModel(it, sharedPrefs.enabledAds)
+        })
+
         // TODO: add other features
 //        adapterModels.add(HeaderModel(getString(R.string.header_other_feature)))
 //        EditCommand.values().forEach {
@@ -97,6 +110,15 @@ class ChooseCommandFragment : StepFragment() {
             return
         }
         jobMakerViewModel.setSelectedCommand(convertCommandModel.command)
+        jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_CONFIGURE_COMMAND)
+    }
+
+    private fun onSelectAdvancedCommand(advancedCommandModel: AdvancedCommandModel) {
+        if (!advancedCommandModel.enabled) {
+            toast(getString(R.string.please_enable_ads))
+            return
+        }
+        jobMakerViewModel.setSelectedCommand(advancedCommandModel.command)
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_CONFIGURE_COMMAND)
     }
 
