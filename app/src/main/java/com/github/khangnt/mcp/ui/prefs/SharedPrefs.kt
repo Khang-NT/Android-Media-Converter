@@ -61,6 +61,10 @@ class SharedPrefs(private val mContext: Context) {
         get() = getString(R.string.pref_key_last_wav_configs, "{}")
         set(commandConfigs) = putString(R.string.pref_key_last_wav_configs, commandConfigs)
 
+    var lastCustomConfigs: String?
+        get() = getString(R.string.pref_key_last_custom_configs, "{}")
+        set(commandConfigs) = putString(R.string.pref_key_last_custom_configs, commandConfigs)
+
     var excludedFileExtensions: String?
         get() = getString(R.string.pref_key_excluded_file_extensions, "")
         set(fileExtensions) = putString(R.string.pref_key_excluded_file_extensions, fileExtensions)

@@ -14,7 +14,6 @@ import org.json.JSONObject
 data class Command(
         val inputs: List<String>,
         val output: String,
-        @Muxer
         val outputFormat: String,
         val args: String,
         val environmentVars: Map<String, String>

@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import com.github.khangnt.mcp.annotation.ConvertType
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.CommandBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.aac.AacCmdBuilderFragment
+import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.custom.CustomCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.flac.FlacCmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp3.Mp3CmdBuilderFragment
 import com.github.khangnt.mcp.ui.jobmaker.cmdbuilder.mp4.Mp4CmdBuilderFragment
@@ -33,6 +34,7 @@ enum class Gradient(val colors: IntArray) {
     EasyMed(colorArrayOf(0xffdce35b, 0xff45b649)),
     Friday(colorArrayOf(0xff83a4d4, 0xffb6fbff)),
     BlueSkies(colorArrayOf(0xff56ccf2, 0xff2f80ed)),
+    Behongo(colorArrayOf(0xff52c234, 0xff061700)),
     ;
 
     fun getDrawable(
@@ -96,6 +98,27 @@ enum class ConvertCommand(
 
     override fun getTag(): String = name
 
+}
+
+enum class AdvancedCommand(
+        @StringRes val shortName: Int, val gradient: Gradient,
+        val fragmentFactory: () -> CommandBuilderFragment
+
+) : PresetCommand {
+    CUSTOM(
+            shortName = R.string.custom,
+            gradient = Gradient.Behongo,
+            fragmentFactory = ::CustomCmdBuilderFragment
+    )
+    ;
+
+    override fun createCommandBuilderFragment(): CommandBuilderFragment = fragmentFactory()
+
+    override fun getTitle(resources: Resources): String {
+        return resources.getString(R.string.title_convert, resources.getString(shortName))
+    }
+
+    override fun getTag(): String = name
 }
 
 enum class EditCommand(
