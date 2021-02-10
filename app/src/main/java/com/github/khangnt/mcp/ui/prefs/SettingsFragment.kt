@@ -26,7 +26,6 @@ class SettingsFragment(private val mRewardedVideoAd: RewardedVideoAd) : Preferen
     private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        mRewardedVideoAd.loadAd(REWARD_AD_UNIT_ID, AdRequest.Builder().build())
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
@@ -49,6 +48,7 @@ class SettingsFragment(private val mRewardedVideoAd: RewardedVideoAd) : Preferen
 
             override fun onRewarded(p0: RewardItem?) {
                 sharedPrefs.enabledAds = false
+                sharedPrefs.conversionCountLeftBeforeShowAds += 5
                 switchAds?.isChecked = false
                 switchAds?.isEnabled = true
             }

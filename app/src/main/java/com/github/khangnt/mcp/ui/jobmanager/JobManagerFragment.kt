@@ -8,17 +8,16 @@ import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.khangnt.mcp.Gradient
 import com.github.khangnt.mcp.R
 import com.github.khangnt.mcp.SingletonInstances
+import com.github.khangnt.mcp.SingletonInstances.Companion.getSharedPrefs
 import com.github.khangnt.mcp.ui.BaseFragment
-import com.github.khangnt.mcp.ui.common.HeaderModel
-import com.github.khangnt.mcp.ui.common.ItemHeaderViewHolder
-import com.github.khangnt.mcp.ui.common.MixAdapter
-import com.github.khangnt.mcp.ui.common.Status
+import com.github.khangnt.mcp.ui.common.*
 import com.github.khangnt.mcp.ui.decorator.ItemOffsetDecoration
 import com.github.khangnt.mcp.ui.jobmaker.JobMakerActivity
 import com.github.khangnt.mcp.util.catchAll
@@ -26,6 +25,7 @@ import com.github.khangnt.mcp.util.getSpanCount
 import com.github.khangnt.mcp.util.getViewModel
 import com.github.khangnt.mcp.util.toast
 import com.github.khangnt.mcp.worker.makeWorkingPaths
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_job_manager.*
 import java.util.*
@@ -46,6 +46,8 @@ class JobManagerFragment : BaseFragment() {
         }.build()
     }
 
+    private lateinit var adRequest: AdRequest
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SingletonInstances.getJobWorkerManager().maybeLaunchWorker()
@@ -55,6 +57,10 @@ class JobManagerFragment : BaseFragment() {
         if (latestStatus is Status.Error // auto reload
                 || latestStatus != Status.Loading && latestJobs.isEmpty()) {
             viewModel.reload()
+        }
+
+        if (getSharedPrefs().enabledAds) {
+            adRequest = AdRequest.Builder().build()
         }
     }
 
@@ -129,6 +135,10 @@ class JobManagerFragment : BaseFragment() {
                 return false
             }
 
+        }
+
+        if (getSharedPrefs().enabledAds) {
+            adView.loadAd(adRequest)
         }
     }
 

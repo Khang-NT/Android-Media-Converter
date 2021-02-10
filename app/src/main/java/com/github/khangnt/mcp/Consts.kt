@@ -36,4 +36,4 @@ const val CHANGELOG_URL = "file:///android_asset/changelog.html"
 
 const val STEP_FIVE_AD_UNIT_ID = "ca-app-pub-8469309022192575/1023553194"
 const val REWARD_AD_UNIT_ID = "ca-app-pub-8469309022192575/3405656686"
-const val JOB_MANAGER_AD_UNIT_ID = "ca-app-pub-8469309022192575/9041916737"
+const val JOB_MANAGER_AD_UNIT_ID = "ca-app-pub-8469309022192575/8215920221"

@@ -207,6 +207,9 @@ class ChooseOutputFragment : StepFragment(), InputDialogFragment.Callbacks,
         jobMakerViewModel.getCommandConfig().makeJobs(finalOutputs).forEach { job ->
             SingletonInstances.getJobWorkerManager().addJob(job)
         }
+
+        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        sharedPrefs.conversionCountLeftBeforeShowAds -= 1
         jobMakerViewModel.setCurrentStep(JobMakerViewModel.STEP_ADVERTISEMENT)
     }
 

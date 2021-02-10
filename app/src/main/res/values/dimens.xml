@@ -21,6 +21,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="progress_bar_size">60dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="ads_offset">50dp</dimen>
 
     <dimen name="item_job_min_width">300dp</dimen>
     <dimen name="item_preset_cmd_min_width">64dp</dimen>

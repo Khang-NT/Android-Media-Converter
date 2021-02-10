@@ -16,8 +16,8 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:expandedTitleGravity="start|bottom"
             app:collapsedTitleTextAppearance="@style/ToolbarTitle.Inverse"
+            app:expandedTitleGravity="start|bottom"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="@string/nav_job_manager"
             app:titleEnabled="true">
@@ -53,10 +53,21 @@
         android:id="@+id/createJobFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_huge"
+        android:layout_marginHorizontal="@dimen/margin_huge"
+        android:layout_marginBottom="@dimen/ads_offset"
         android:src="@drawable/ic_add_white_24dp"
         app:fabSize="normal"
         app:layout_anchor="@id/recyclerViewContainer"
         app:layout_anchorGravity="bottom|end" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|center"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-8469309022192575/8215920221" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -224,7 +224,7 @@
     <string name="message_restored_default_commands_success">Restored default command configs successfully!</string>
 
     <string name="default_excluded_file_extension">apk lrc rar zip</string>
-    <string name="title_watch_an_ad">Watch an ad to disable ads</string>
+    <string name="title_watch_an_ad">Watch an ad to disable ads for 5 conversions</string>
     <string name="title_loading_ads_try_again">Loading ads. Please try again…</string>
     <string name="title_loading_ads_wait">Loading ads. Please wait…</string>
 

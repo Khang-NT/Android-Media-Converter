@@ -58,6 +58,12 @@ class MainApplication : MultiDexApplication() {
         setUpRxPlugins()
 
         MobileAds.initialize(this)
+
+        val sharedPrefs = SingletonInstances.getSharedPrefs()
+        if (sharedPrefs.conversionCountLeftBeforeShowAds <= 0) {
+            sharedPrefs.enabledAds = true
+            sharedPrefs.conversionCountLeftBeforeShowAds = 0
+        }
     }
 
     private fun setupStrictMode() {

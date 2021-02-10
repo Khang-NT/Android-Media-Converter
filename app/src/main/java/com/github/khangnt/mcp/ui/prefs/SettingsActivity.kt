@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import com.github.khangnt.mcp.R
+import com.github.khangnt.mcp.REWARD_AD_UNIT_ID
 import com.github.khangnt.mcp.SingletonInstances
 import com.github.khangnt.mcp.ui.SingleFragmentActivity
 import com.google.android.gms.ads.AdRequest
@@ -25,7 +26,6 @@ import kotlinx.android.synthetic.main.activity_settings.*
 class SettingsActivity : SingleFragmentActivity() {
 
     private val mRewardedVideoAd: RewardedVideoAd by lazy { MobileAds.getRewardedVideoAdInstance(this) }
-    private val sharedPrefs = SingletonInstances.getSharedPrefs()
 
     companion object {
 
@@ -35,6 +35,7 @@ class SettingsActivity : SingleFragmentActivity() {
     }
 
     override fun onCreateFragment(savedInstanceState: Bundle?): Fragment {
+        mRewardedVideoAd.loadAd(REWARD_AD_UNIT_ID, AdRequest.Builder().build())
         return SettingsFragment(mRewardedVideoAd)
     }
 
